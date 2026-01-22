@@ -1,0 +1,116 @@
+[tool.poetry]
+name = "ehrsequencing"
+version = "0.1.0"
+description = "Biological language model for Electronic Health Records - disease progression modeling and temporal phenotyping"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/yourusername/ehr-sequencing"
+repository = "https://github.com/yourusername/ehr-sequencing"
+keywords = ["ehr", "medical-codes", "disease-progression", "temporal-phenotyping", "deep-learning"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.0.0"
+pandas = "^2.0.0"
+numpy = "^1.24.0"
+scikit-learn = "^1.3.0"
+gensim = "^4.3.0"
+lifelines = "^0.27.0"
+umap-learn = "^0.5.0"
+matplotlib = "^3.7.0"
+seaborn = "^0.12.0"
+plotly = "^5.17.0"
+tqdm = "^4.66.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+black = "^23.7.0"
+ruff = "^0.0.285"
+mypy = "^1.5.0"
+jupyter = "^1.0.0"
+ipykernel = "^6.25.0"
+notebook = "^7.0.0"
+
+[tool.poetry.group.bio.dependencies]
+biopython = "^1.81"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | legacy
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    "legacy",
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+exclude = [
+    "legacy/",
+    "tests/",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--cov=ehrsequencing",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+]

@@ -1,0 +1,58 @@
+name: ehrsequencing
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  # Python
+  - python=3.10
+  
+  # Core ML/DL (default: macOS with MPS support)
+  # For CUDA support, use environment-cuda.yml
+  # For CPU-only, use environment-cpu.yml
+  - pytorch>=2.0
+  - torchvision
+  - torchaudio
+  
+  # Data Science
+  - pandas>=2.0
+  - numpy>=1.24
+  - scikit-learn>=1.3
+  - scipy
+  
+  # Visualization
+  - matplotlib>=3.7
+  - seaborn>=0.12
+  - plotly>=5.17
+  
+  # Jupyter
+  - jupyter
+  - ipykernel
+  - notebook
+  
+  # Survival analysis
+  - lifelines>=0.27.0
+  
+  # Dimensionality reduction
+  - umap-learn>=0.5.0
+  
+  # NLP/Embeddings
+  - gensim>=4.3.0
+  
+  # Biology
+  - biopython>=1.81
+  
+  # Progress bars
+  - tqdm>=4.66.0
+  
+  # Development
+  - pip
+  - pytest>=7.4.0
+  - pytest-cov>=4.1.0
+  - black>=23.7.0
+  - ruff>=0.0.285
+  - mypy>=1.5.0
+  
+  # Install via pip (only packages not in conda-forge)
+  - pip:
+    - transformers>=4.30.0
