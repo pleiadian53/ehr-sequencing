@@ -136,16 +136,21 @@ class PatientSequenceBuilder:
         
         logger.info(f"Initialized PatientSequenceBuilder with vocab_size={len(self.vocab)}")
     
+    @property
+    def vocabulary_size(self) -> int:
+        """Get the size of the vocabulary."""
+        return len(self.vocab)
+    
     def build_sequences(
         self,
-        patient_visits: Dict[str, List[Visit]],
+        patient_visits: List[List[Visit]],
         min_visits: int = 2
     ) -> List[PatientSequence]:
         """
         Build patient sequences from visit data.
         
         Args:
-            patient_visits: Dictionary mapping patient_id to list of visits
+            patient_visits: List of lists of visits, where each inner list is for one patient
             min_visits: Minimum number of visits required (default: 2)
         
         Returns:
@@ -153,9 +158,12 @@ class PatientSequenceBuilder:
         """
         sequences = []
         
-        for patient_id, visits in patient_visits.items():
-            if len(visits) < min_visits:
+        for visits in patient_visits:
+            if not visits or len(visits) < min_visits:
                 continue
+            
+            # Assume all visits in the list belong to the same patient
+            patient_id = visits[0].patient_id
             
             sequence = PatientSequence(
                 patient_id=patient_id,
@@ -173,14 +181,14 @@ class PatientSequenceBuilder:
     
     def build_vocabulary(
         self,
-        patient_visits: Dict[str, List[Visit]],
+        patient_visits: List[List[Visit]],
         min_frequency: int = 1
     ) -> Dict[str, int]:
         """
         Build vocabulary from patient visit data.
         
         Args:
-            patient_visits: Dictionary mapping patient_id to list of visits
+            patient_visits: List of lists of visits
             min_frequency: Minimum code frequency to include in vocab
         
         Returns:
@@ -188,7 +196,7 @@ class PatientSequenceBuilder:
         """
         # Count code frequencies
         code_counts = {}
-        for visits in patient_visits.values():
+        for visits in patient_visits:
             for visit in visits:
                 for code in visit.get_all_codes():
                     code_counts[code] = code_counts.get(code, 0) + 1

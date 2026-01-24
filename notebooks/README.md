@@ -22,6 +22,10 @@ notebooks/
 │   ├── 01a_lstm_data_preparation.ipynb
 │   ├── data_shape_transformations.md
 │   └── README.md
+├── 02_survival_analysis/
+│   ├── 01_discrete_time_survival_lstm.ipynb
+│   ├── validate_survival_model.py
+│   └── README.md
 └── (future topics)/
 ```
 
@@ -54,6 +58,40 @@ Comprehensive exploration of Synthea synthetic EHR data and preparation for mode
 #### Documentation:
 
 - **`data_shape_transformations.md`**: Comprehensive reference for all data shape transformations from raw CSV to model predictions
+
+### 02. Survival Analysis
+
+**Directory:** `02_survival_analysis/`
+
+Discrete-time survival analysis for disease progression modeling using LSTMs.
+
+#### Notebooks:
+
+1. **`01_discrete_time_survival_lstm.ipynb`**
+   - Understanding the C-index (concordance index)
+   - Research questions and clinical applications
+   - Data labeling strategies for survival outcomes
+   - Synthetic survival outcome generation
+   - Training discrete-time survival LSTM models
+   - Memory estimation and cloud training setup
+   - Handling censored data and competing risks
+
+#### Scripts:
+
+- **`validate_survival_model.py`**: Validation script for quick model testing with options for:
+  - Patient subsampling for local testing
+  - Example patient sequence display
+  - Adjustable model complexity
+  - Memory estimation
+  - Synthetic outcome quality checks
+
+#### Key Features:
+
+- **Memory management**: Subsample patients for local testing (200 patients) or use full dataset on cloud GPUs
+- **Cloud training guide**: Instructions for RunPods/Vast.ai setup with GPU recommendations
+- **Synthetic outcomes**: Risk-based survival outcome generation with controllable censoring rates
+- **C-index evaluation**: Proper concordance index computation for survival models
+- **Diagnostic tools**: Correlation checks to validate synthetic outcome quality
 
 ## Getting Started
 

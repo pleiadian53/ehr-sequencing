@@ -1,6 +1,6 @@
 # EHR Sequencing Project Roadmap
 
-**Last Updated:** January 19, 2026
+**Last Updated:** January 24, 2026
 
 ---
 
@@ -14,16 +14,18 @@ Build a biological language model for Electronic Health Records that treats medi
 
 ---
 
-## Current Status: Phase 1 - Foundation
+## Current Status: Phase 1.5 - Survival Analysis
 
-**Progress:** 75% Complete
+**Progress:** Phase 1 Complete (100%) | Phase 1.5 In Progress (80%)
 
-**Recent Updates (January 20, 2026):**
-- ✅ Implemented complete data pipeline with visit grouping
-- ✅ Created platform-specific environments (macOS, CUDA, CPU)
-- ✅ Comprehensive installation documentation
-- ✅ Unit tests for data pipeline
-- 🔄 Next: LSTM baseline model implementation
+**Recent Updates (January 24, 2026):**
+- ✅ Implemented discrete-time survival LSTM model
+- ✅ Created synthetic survival outcome generator with validated correlation
+- ✅ Developed fast validation script for synthetic data quality
+- ✅ Implemented save/load functionality for pre-generated outcomes
+- ✅ Resolved C-index calculation issues (achieved 0.65-0.70)
+- ✅ Created comprehensive survival analysis notebook
+- 🔄 Next: Documentation and tutorial materials
 
 ---
 
@@ -74,6 +76,57 @@ Build a biological language model for Electronic Health Records that treats medi
 - ✅ Data exploration notebook
 
 **Phase 1 Status: ✅ COMPLETE (100%)**
+
+---
+
+## Phase 1.5: Survival Analysis (Week 2.5)
+
+### Objectives
+- Implement discrete-time survival analysis for EHR sequences
+- Create synthetic outcome generator with realistic risk-time correlation
+- Develop validation tools for synthetic data quality
+- Build complete training pipeline with proper evaluation metrics
+
+### Tasks Completed
+- [x] Implement `DiscreteTimeSurvivalLSTM` model
+  - Visit-level hazard prediction
+  - Proper handling of variable-length sequences
+  - Integration with PyTorch DataLoader
+- [x] Implement `DiscreteTimeSurvivalLoss`
+  - Negative log-likelihood for discrete-time survival
+  - Proper masking for censored observations
+  - Numerical stability (epsilon clamping)
+- [x] Create `DiscreteTimeSurvivalGenerator`
+  - Risk factor computation (comorbidity, frequency, diversity)
+  - Controlled noise for realistic correlation (r = -0.5)
+  - Configurable censoring rate and time scale
+- [x] Develop `test_synthetic_outcomes.py`
+  - Fast validation without full notebook execution
+  - Correlation diagnostics and distribution checks
+  - Save/load functionality for pre-validated data
+- [x] Resolve C-index calculation issues
+  - Identified length bias in cumulative hazard approach
+  - Implemented fixed-horizon risk score (mean of first 10 visits)
+  - Achieved C-index 0.65-0.70 (aligned with synthetic correlation)
+- [x] Create comprehensive notebook `01_discrete_time_survival_lstm.ipynb`
+  - Educational content on C-index and survival analysis
+  - Complete workflow from data loading to model evaluation
+  - Visualization of training progress and outcomes
+
+### Key Learnings
+1. **Length bias in survival models**: Summing hazards across all visits creates bias where longer sequences get higher cumulative risk
+2. **Risk score formulation**: Fixed-horizon approach (first N visits) removes length bias while capturing baseline risk
+3. **Synthetic data validation**: Strong correlation (r < -0.5) is essential for meaningful model training
+4. **C-index interpretation**: With r=-0.5 synthetic correlation, C-index of 0.65-0.70 is realistic and appropriate
+
+### Deliverables
+- ✅ Discrete-time survival LSTM model
+- ✅ Synthetic outcome generator with validation
+- ✅ Fast validation script with save/load
+- ✅ Complete survival analysis notebook
+- 🔄 Tutorial documentation (in progress)
+
+**Phase 1.5 Status: 🔄 IN PROGRESS (80%)**
 
 ---
 
