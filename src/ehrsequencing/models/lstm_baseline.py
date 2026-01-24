@@ -247,6 +247,8 @@ class LSTMBaseline(nn.Module):
             visit_mask_flat = visit_mask.view(batch_size * num_visits, max_codes)
         else:
             visit_mask_flat = None
+
+        # VisitEncoder treats each visit independently
         
         # Get visit representations
         visit_vectors = self.visit_encoder(code_embeddings_flat, visit_mask_flat)

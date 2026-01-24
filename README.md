@@ -186,10 +186,22 @@ Patient sequences are encoded using:
 
 ## Documentation
 
+### Setup & Workflow
 - **[Project Setup](dev/workflow/PROJECT_SETUP.md)** - Complete setup guide
 - **[Roadmap](dev/workflow/ROADMAP.md)** - Development plan
+
+### Data Generation
+- **[Data Generation Guide](docs/data_generation/)** - Generating synthetic patient data with Synthea
+- **[CSV Export Troubleshooting](docs/data_generation/synthea_csv_export_troubleshooting.md)** - Solving Synthea CSV export issues
+- **[RunPods Training Guide](docs/runpods_training_guide.md)** - Cloud GPU training for large datasets
+
+### Methods & Theory
 - **[Methods](docs/methods/)** - Methodology documentation
+- **[Pretrained Embeddings](docs/pretrained_embeddings_guide.md)** - Using Med2Vec, CUI2Vec, Clinical BERT
+
+### Tutorials
 - **[Tutorials](docs/tutorials/)** - Getting started guides
+- **[Notebooks](notebooks/)** - Interactive demonstrations
 
 ---
 

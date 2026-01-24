@@ -1,6 +1,26 @@
 """
-Utility functions for tokenization, temporal encoding, etc.
+Utility functions for tokenization, temporal encoding, sampling, memory estimation, etc.
 """
 
-# from ehrsequencing.utils.tokenization import *
-# from ehrsequencing.utils.temporal import *
+from .sampling import (
+    subsample_patients,
+    subsample_sequences,
+    get_recommended_batch_size,
+)
+
+from .memory import (
+    estimate_memory_gb,
+    estimate_memory_from_sequences,
+    print_memory_recommendation,
+)
+
+__all__ = [
+    # Sampling utilities
+    'subsample_patients',
+    'subsample_sequences',
+    'get_recommended_batch_size',
+    # Memory estimation utilities
+    'estimate_memory_gb',
+    'estimate_memory_from_sequences',
+    'print_memory_recommendation',
+]
