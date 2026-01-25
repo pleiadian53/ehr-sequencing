@@ -632,9 +632,9 @@ class ThreeLevelLSTMEncoder(nn.Module):
 
 ### Within-Visit Structure: Recommended Approach
 
-**For your implementation, I recommend:**
+**Recommended primary approach:**
 
-**Primary: Semantic Grouping + Type Embeddings (Approach 1 + 4)**
+**Semantic Grouping + Type Embeddings (Approach 1 + 4)**
 
 ```python
 # 1. Order codes by semantic type
@@ -654,7 +654,7 @@ visit_embedding = lstm(code_embeds)
 - ✅ Can still use pre-trained code embeddings
 
 **Alternative: Attention-based (Approach 3)**
-- Use if you want order-invariance
+- Use when order-invariance is desired
 - More flexible but more complex
 - Better for Transformer models
 

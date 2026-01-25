@@ -46,3 +46,8 @@ dependencies:
     - mypy>=1.5.0
     - tqdm>=4.66.0
     - transformers>=4.30.0
+    # Documentation
+    - mkdocs>=1.5.3
+    - mkdocs-material>=9.5.3
+    - pymdown-extensions>=10.7
+    - mkdocs-jupyter>=0.24.6

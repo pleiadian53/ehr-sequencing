@@ -170,7 +170,7 @@ mkdir -p data/mimic
 
 ```bash
 # Download CEHR-BERT pre-trained embeddings
-# See: dev/installation/pretrained-models.md for details
+# See the pretrained embeddings guide for details
 
 mkdir -p checkpoints/cehrbert
 # Download from Hugging Face or model repository
@@ -190,10 +190,10 @@ python -c "import torch; print(f'MPS available: {torch.backends.mps.is_available
 
 ### RunPod / Cloud GPU
 
-For detailed setup on RunPod or cloud GPU instances, see:
-- **[RunPod Setup Guide](dev/installation/runpod-setup.md)**
+For detailed setup on RunPod or cloud GPU instances:
 - Includes A40, A100, RTX 4090 configurations
 - SSH setup, data transfer, and training workflows
+- See the [RunPods Training Guide](runpods_training_guide.md) for details
 
 ## Troubleshooting
 
@@ -254,18 +254,15 @@ export MIMIC_PASSWORD=your_password
 
 ## Detailed Installation Guides
 
-For more detailed installation instructions, see:
+For more detailed guides, see:
 
-- **[Local Development Setup](dev/installation/local-setup.md)** - M1 MacBook, Windows, Linux
-- **[RunPod Setup](dev/installation/runpod-setup.md)** - Cloud GPU training
-- **[Pre-trained Models](dev/installation/pretrained-models.md)** - CEHR-BERT, Med-BERT
-- **[Database Setup](dev/installation/database-setup.md)** - MIMIC-III/IV PostgreSQL
-- **[Troubleshooting Guide](dev/installation/troubleshooting.md)** - Common issues
+- **[Pretrained Embeddings Guide](pretrained_embeddings_guide.md)** - CEHR-BERT, Med-BERT
+- **[RunPods Training Guide](runpods_training_guide.md)** - Cloud GPU training
+- **[Data Generation Guide](data_generation/data_generation_guide.md)** - Synthea setup
 
 ## Getting Help
 
-- Check `docs/` for detailed documentation
-- Review `dev/workflow/` for internal notes (if you have access)
+- Check the documentation for detailed guides
 - Open an issue on GitHub
 
 ## Related Projects

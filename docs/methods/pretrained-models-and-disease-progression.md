@@ -716,12 +716,12 @@ class SurvivalProgressionModel(VisitGroupedProgressionModel):
 ## Next Steps
 
 1. **Choose pre-trained model:** CEHR-BERT or Med-BERT
-2. **Build visit-grouped sequences** for CKD cohort
-3. **Fine-tune** on your data (much cheaper than training from scratch)
+2. **Build visit-grouped sequences** for the target cohort
+3. **Fine-tune** on the data (much cheaper than training from scratch)
 4. **Evaluate** on disease progression metrics
 5. **Interpret** attention weights for clinical insights
 
-The visit-grouped approach is **perfect** for disease progression - your intuition is spot on! 🎯
+The visit-grouped approach is **ideal** for disease progression modeling.
 
 ---
 

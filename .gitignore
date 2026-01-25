@@ -108,8 +108,8 @@ test/
 ref_paper/
 archive/
 
-
-
-
+# MkDocs build output
+site/
+docs/_build/
 
 legacy/demo/word_rnn/
