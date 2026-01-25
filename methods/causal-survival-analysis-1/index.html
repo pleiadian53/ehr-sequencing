@@ -1,0 +1,2555 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Research framework for longitudinal EHR sequence modeling, exploring temporal representations, learning objectives, and model architectures for disease progression, survival analysis, and temporal phenotyping">
+      
+      
+        <meta name="author" content="EHR Sequencing Research Team">
+      
+      
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/causal-survival-analysis-1/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../causal-survival-analysis-2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Part 1 - EHR Sequencing</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#causal-survival-analysis-for-ehr-sequences-part-1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EHR Sequencing
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Part 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../INSTALL/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../notebooks/02_survival_analysis/" class="md-tabs__link">
+          
+  
+  
+  Survival Analysis
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Methods
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../data_generation/" class="md-tabs__link">
+          
+  
+  
+  Data Generation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pretrained_embeddings_guide/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EHR Sequencing
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../INSTALL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 1: Prediction Problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 2: Synthetic Data Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 3: Loss Function
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/01_discrete_time_survival_lstm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notebook: Discrete-Time Survival LSTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Causal Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Causal Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-disease-progression-modeling-is-different" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Disease Progression Modeling is Different
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-matters-the-diabetes-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters: The Diabetes Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-most-dangerous-leakage-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Most Dangerous Leakage Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Most Dangerous Leakage Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-setup-a-seemingly-reasonable-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Setup: A Seemingly Reasonable Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-leakage-not-just-suboptimal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Leakage (Not Just "Suboptimal")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-performance-looks-amazing-and-why-reviewers-miss-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Performance Looks Amazing (And Why Reviewers Miss It)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-prove-leakage-is-happening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Prove Leakage Is Happening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-designing-causal-progression-labels-the-right-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Designing Causal Progression Labels (The Right Way)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Designing Causal Progression Labels (The Right Way)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-decide-what-you-are-predicting-from-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Decide What You Are Predicting From When
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-a-discrete-time-horizon-labels-most-practical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Discrete-Time Horizon Labels (Most Practical)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option A: Discrete-Time Horizon Labels (Most Practical)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-causal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Causal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-its-statistically-efficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why It's Statistically Efficient
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loss-masking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loss Masking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-ckd-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: CKD Staging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-b-discrete-time-survival-modeling-cleaner-stronger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Discrete-Time Survival Modeling (Cleaner, Stronger)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option B: Discrete-Time Survival Modeling (Cleaner, Stronger)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-hazard-at-visit-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Define Hazard at Visit \(t\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#likelihood-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Likelihood Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-excellent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Excellent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-its-harder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why It's Harder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Preview
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-c-continuous-time-survival-cox-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C: Continuous-Time Survival (Cox-Style)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option C: Continuous-Time Survival (Cox-Style)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-this-shines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When This Shines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-its-overkill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When It's Overkill
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-avoid-throwing-away-data-statistical-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Avoid Throwing Away Data (Statistical Efficiency)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Avoid Throwing Away Data (Statistical Efficiency)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-patient-level-vs-visit-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison: Patient-Level vs. Visit-Level
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-final-sanity-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Final Sanity Rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A Final Sanity Rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-gold-standard-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Gold Standard Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-naturally-leads-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where This Naturally Leads Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../causal-survival-analysis-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modern-code-embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modern Code Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Generation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data_generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data_generation/data_generation_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthea CSV Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pretrained_embeddings_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretrained Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runpods_training_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RunPods Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-disease-progression-modeling-is-different" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Disease Progression Modeling is Different
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-matters-the-diabetes-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters: The Diabetes Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-most-dangerous-leakage-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Most Dangerous Leakage Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Most Dangerous Leakage Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-setup-a-seemingly-reasonable-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Setup: A Seemingly Reasonable Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-leakage-not-just-suboptimal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Leakage (Not Just "Suboptimal")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-performance-looks-amazing-and-why-reviewers-miss-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Performance Looks Amazing (And Why Reviewers Miss It)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-prove-leakage-is-happening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Prove Leakage Is Happening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-designing-causal-progression-labels-the-right-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Designing Causal Progression Labels (The Right Way)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Designing Causal Progression Labels (The Right Way)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-decide-what-you-are-predicting-from-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Decide What You Are Predicting From When
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-a-discrete-time-horizon-labels-most-practical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Discrete-Time Horizon Labels (Most Practical)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option A: Discrete-Time Horizon Labels (Most Practical)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-causal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Causal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-its-statistically-efficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why It's Statistically Efficient
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loss-masking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loss Masking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-ckd-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: CKD Staging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-b-discrete-time-survival-modeling-cleaner-stronger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Discrete-Time Survival Modeling (Cleaner, Stronger)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option B: Discrete-Time Survival Modeling (Cleaner, Stronger)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-hazard-at-visit-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Define Hazard at Visit \(t\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#likelihood-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Likelihood Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-excellent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Excellent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-its-harder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why It's Harder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Preview
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-c-continuous-time-survival-cox-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C: Continuous-Time Survival (Cox-Style)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option C: Continuous-Time Survival (Cox-Style)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-this-shines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When This Shines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-its-overkill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When It's Overkill
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-avoid-throwing-away-data-statistical-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Avoid Throwing Away Data (Statistical Efficiency)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Avoid Throwing Away Data (Statistical Efficiency)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-patient-level-vs-visit-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison: Patient-Level vs. Visit-Level
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-final-sanity-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Final Sanity Rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A Final Sanity Rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-gold-standard-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Gold Standard Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-naturally-leads-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where This Naturally Leads Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/causal-survival-analysis-1.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="causal-survival-analysis-for-ehr-sequences-part-1">Causal Survival Analysis for EHR Sequences (Part 1)<a class="headerlink" href="#causal-survival-analysis-for-ehr-sequences-part-1" title="Permanent link">&para;</a></h1>
+<h2 id="why-disease-progression-modeling-is-different">Why Disease Progression Modeling is Different<a class="headerlink" href="#why-disease-progression-modeling-is-different" title="Permanent link">&para;</a></h2>
+<p>When we move from simple classification tasks (like "does this patient have diabetes?") to <strong>disease progression modeling</strong>, we enter the realm of causal survival analysis. This is where many EHR sequence modeling papers go wrong—not because the neural networks are poorly designed, but because the <strong>prediction task itself violates causality</strong>.</p>
+<p>This tutorial has two parts:</p>
+<p><strong>Part 1 (this document):</strong></p>
+<ol>
+<li>Understanding the most dangerous data leakage pattern in temporal prediction</li>
+<li>Designing progression labels that are both causal and statistically efficient</li>
+</ol>
+<p><strong>Part 2 (<a href="../causal-survival-analysis-2/">causal-survival-analysis-2.md</a>):</strong></p>
+<ol>
+<li>Deep dive into discrete-time survival modeling</li>
+<li>Deriving the likelihood formula step-by-step</li>
+<li>Implementation details for PyTorch</li>
+</ol>
+<hr />
+<h2 id="why-this-matters-the-diabetes-example">Why This Matters: The Diabetes Example<a class="headerlink" href="#why-this-matters-the-diabetes-example" title="Permanent link">&para;</a></h2>
+<p>Consider our diabetes prediction task from the LSTM notebook:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Task: Does patient have diabetes?</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">label</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">diabetes_code</span> <span class="ow">in</span> <span class="n">patient_history</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+</span></code></pre></div>
+<p>This works, but it's <strong>not temporal</strong>. The answer depends only on the presence of certain codes—a rule-based system could do this. We're not really using the sequential structure.</p>
+<p><strong>Better question:</strong> Can we predict when a patient will progress from pre-diabetes to diabetes? Or from CKD stage 3 to stage 4? These are <strong>progression</strong> questions that require understanding disease dynamics over time.</p>
+<p>This is where sequence modeling becomes essential—and where most papers introduce subtle but fatal leakage.</p>
+<hr />
+<h2 id="part-i-the-most-dangerous-leakage-pattern">Part I: The Most Dangerous Leakage Pattern<a class="headerlink" href="#part-i-the-most-dangerous-leakage-pattern" title="Permanent link">&para;</a></h2>
+<h3 id="the-setup-a-seemingly-reasonable-approach">The Setup: A Seemingly Reasonable Approach<a class="headerlink" href="#the-setup-a-seemingly-reasonable-approach" title="Permanent link">&para;</a></h3>
+<p>Consider a common approach to predicting disease progression. First, define a patient-level outcome:</p>
+<blockquote>
+<p><strong>Clinical Question:</strong> "Did this patient progress to CKD stage 4 within 1 year?"</p>
+</blockquote>
+<p>This is a perfectly valid clinical question. Next, you build visit-level inputs:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>visit 1 → visit 2 → visit 3 → … → visit T
+</span></code></pre></div>
+<p>Then—and this is where the mistake happens—you train like this:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Patient-level label (same for all visits)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">y_patient</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># if progression occurred within 1 year, else 0</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Visit-level representations from LSTM</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lstm</span><span class="p">(</span><span class="n">visit_sequences</span><span class="p">)</span>  <span class="c1"># shape: [batch_size, num_visits, hidden_dim]</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Apply the SAME label at EVERY timestep</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_visits</span><span class="p">):</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">loss</span> <span class="o">+=</span> <span class="n">BCE</span><span class="p">(</span><span class="n">prediction_head</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="n">t</span><span class="p">]),</span> <span class="n">y_patient</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="why-this-is-leakage-not-just-suboptimal">Why This Is Leakage (Not Just "Suboptimal")<a class="headerlink" href="#why-this-is-leakage-not-just-suboptimal" title="Permanent link">&para;</a></h3>
+<p>This approach implicitly tells the model:</p>
+<blockquote>
+<p>"At visit 1, predict something that is only knowable <strong>after visit T</strong>."</p>
+</blockquote>
+<p><strong>This violates causality.</strong></p>
+<h4 id="the-formal-problem">The Formal Problem<a class="headerlink" href="#the-formal-problem" title="Permanent link">&para;</a></h4>
+<p>At visit <span class="arithmatex">\(t\)</span>:</p>
+<ul>
+<li>Your <strong>label</strong> depends on events in the window <span class="arithmatex">\([t, t+365]\)</span> days</li>
+<li>Your <strong>input</strong> includes information about the patient's <em>entire</em> trajectory</li>
+<li>The model can see that this patient <em>has</em> future visits (sequence length, padding patterns)</li>
+</ul>
+<h4 id="what-the-model-actually-learns">What the Model Actually Learns<a class="headerlink" href="#what-the-model-actually-learns" title="Permanent link">&para;</a></h4>
+<p>Instead of learning disease dynamics, the LSTM learns spurious correlations:</p>
+<ul>
+<li><strong>Number of future visits</strong>: Patients who progress tend to have longer follow-up</li>
+<li><strong>Visit density</strong>: Sicker patients have more frequent visits</li>
+<li><strong>Padding patterns</strong>: Sequence length reveals outcome</li>
+<li><strong>Time-to-last-visit</strong>: Abrupt termination signals events</li>
+</ul>
+<p>These are <strong>future-derived signals</strong> that won't be available at prediction time.</p>
+<hr />
+<h3 id="why-performance-looks-amazing-and-why-reviewers-miss-it">Why Performance Looks Amazing (And Why Reviewers Miss It)<a class="headerlink" href="#why-performance-looks-amazing-and-why-reviewers-miss-it" title="Permanent link">&para;</a></h3>
+<p>The model doesn't need to understand disease biology. It exploits dataset artifacts:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>What Model Learns</th>
+<th>Why It's Leakage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Follow-up length</strong></td>
+<td>Patients who progress → longer follow-up</td>
+<td>Not available prospectively</td>
+</tr>
+<tr>
+<td><strong>Sequence termination</strong></td>
+<td>Patients who die → abrupt ending</td>
+<td>Reveals outcome</td>
+</tr>
+<tr>
+<td><strong>Visit frequency</strong></td>
+<td>Severe disease → more frequent visits</td>
+<td>Confounds risk with surveillance</td>
+</tr>
+</tbody>
+</table>
+<h4 id="the-deceptive-metrics">The Deceptive Metrics<a class="headerlink" href="#the-deceptive-metrics" title="Permanent link">&para;</a></h4>
+<p>This is why you see:</p>
+<ul>
+<li><strong>AUC jumps</strong> from 0.72 → 0.92 (looks like a breakthrough!)</li>
+<li><strong>Perfect calibration</strong> on held-out test set</li>
+<li><strong>Collapse in prospective validation</strong> (the model fails in real deployment)</li>
+</ul>
+<p>The model is "cheating" by using information that won't exist at prediction time.</p>
+<hr />
+<h3 id="how-to-prove-leakage-is-happening">How to Prove Leakage Is Happening<a class="headerlink" href="#how-to-prove-leakage-is-happening" title="Permanent link">&para;</a></h3>
+<p>Here are three diagnostic tests that always catch temporal leakage:</p>
+<h4 id="test-1-shuffle-visits-within-patients">Test 1: Shuffle Visits Within Patients<a class="headerlink" href="#test-1-shuffle-visits-within-patients" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Randomly permute visit order for each patient</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">shuffled_visits</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">patient_visits</span><span class="p">)</span> <span class="k">for</span> <span class="n">patient_visits</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">performance_shuffled</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">shuffled_visits</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Interpretation:</strong> If performance stays high, the model is <strong>not using temporal disease dynamics</strong>. It's relying on visit-level features or sequence statistics, not temporal patterns.</p>
+<h4 id="test-2-truncate-sequences-at-random-times">Test 2: Truncate Sequences at Random Times<a class="headerlink" href="#test-2-truncate-sequences-at-random-times" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Cut each sequence at a random point</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span> <span class="n">patient</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">truncate_at</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">visits</span><span class="p">))</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">patient</span><span class="o">.</span><span class="n">visits</span> <span class="o">=</span> <span class="n">patient</span><span class="o">.</span><span class="n">visits</span><span class="p">[:</span><span class="n">truncate_at</span><span class="p">]</span>
+</span></code></pre></div>
+<p><strong>Interpretation:</strong> If performance drops sharply, the model was <strong>using future context</strong> (sequence length, padding, etc.).</p>
+<h4 id="test-3-predict-using-only-sequence-length">Test 3: Predict Using Only Sequence Length<a class="headerlink" href="#test-3-predict-using-only-sequence-length" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Simplest possible baseline</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">y_hat</span> <span class="o">=</span> <span class="n">logistic_regression</span><span class="p">(</span><span class="n">num_visits</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Interpretation:</strong> If this baseline is strong (AUC &gt; 0.75), the task is <strong>contaminated by follow-up artifacts</strong>. The outcome is predictable from metadata, not clinical content.</p>
+<hr />
+<h2 id="part-ii-designing-causal-progression-labels-the-right-way">Part II: Designing Causal Progression Labels (The Right Way)<a class="headerlink" href="#part-ii-designing-causal-progression-labels-the-right-way" title="Permanent link">&para;</a></h2>
+<p>Now the real work begins.</p>
+<h3 id="step-1-decide-what-you-are-predicting-from-when">Step 1: Decide What You Are Predicting <em>From When</em><a class="headerlink" href="#step-1-decide-what-you-are-predicting-from-when" title="Permanent link">&para;</a></h3>
+<p>Every prediction must answer this question:</p>
+<blockquote>
+<p>"At visit <span class="arithmatex">\(t\)</span>, using information up to <span class="arithmatex">\(t\)</span>, what am I predicting about the future?"</p>
+</blockquote>
+<p>Examples of well-defined questions:</p>
+<ul>
+<li>Progression within next 6 months</li>
+<li>Progression before next visit</li>
+<li>Time to next disease stage</li>
+<li>Hazard of progression at this moment</li>
+</ul>
+<p>If this question cannot be answered with "from when," the label is ill-defined.</p>
+<hr />
+<h2 id="option-a-discrete-time-horizon-labels-most-practical">Option A: Discrete-Time Horizon Labels (Most Practical)<a class="headerlink" href="#option-a-discrete-time-horizon-labels-most-practical" title="Permanent link">&para;</a></h2>
+<p>This is the workhorse approach for most applications.</p>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p>For each visit <span class="arithmatex">\(t\)</span>, define:</p>
+<div class="arithmatex">\[
+y_t = \begin{cases}
+1 &amp; \text{if progression occurs in } (t, t + \Delta] \\
+0 &amp; \text{if no progression in } (t, t + \Delta] \\
+\text{censored} &amp; \text{if follow-up} &lt; \Delta
+\end{cases}
+\]</div>
+<p>Where <span class="arithmatex">\(\Delta\)</span> is a fixed horizon (e.g., 180 days).</p>
+<h3 id="implementation-logic">Implementation Logic<a class="headerlink" href="#implementation-logic" title="Permanent link">&para;</a></h3>
+<p>For each visit:</p>
+<ol>
+<li>Look forward <span class="arithmatex">\(\Delta\)</span> days from visit <span class="arithmatex">\(t\)</span></li>
+<li>If progression occurs → label = 1 (positive)</li>
+<li>If patient is observed beyond <span class="arithmatex">\(t + \Delta\)</span> with no progression → label = 0 (negative)</li>
+<li>Otherwise → drop or mark as censored</li>
+</ol>
+<h3 id="why-this-is-causal">Why This Is Causal<a class="headerlink" href="#why-this-is-causal" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Label</strong> uses only future after visit <span class="arithmatex">\(t\)</span></li>
+<li><strong>Input</strong> uses only history before visit <span class="arithmatex">\(t\)</span></li>
+<li>No information flows backward in time</li>
+</ul>
+<h3 id="why-its-statistically-efficient">Why It's Statistically Efficient<a class="headerlink" href="#why-its-statistically-efficient" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Each patient contributes <em>multiple labeled visits</em></li>
+<li>You're not collapsing the trajectory into one datapoint</li>
+<li>More training signal from the same data</li>
+</ul>
+<h3 id="loss-masking">Loss Masking<a class="headerlink" href="#loss-masking" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Only compute loss on valid (non-censored) visits</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">valid_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">labels</span> <span class="o">!=</span> <span class="n">CENSORED</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">loss</span> <span class="o">=</span> <span class="n">BCE</span><span class="p">(</span><span class="n">logits</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">])</span>
+</span></code></pre></div>
+<h3 id="example-ckd-staging">Example: CKD Staging<a class="headerlink" href="#example-ckd-staging" title="Permanent link">&para;</a></h3>
+<p>At visit <span class="arithmatex">\(t\)</span>:</p>
+<ul>
+<li><strong>Inputs</strong>: diagnoses, labs, medications, time since last visit</li>
+<li><strong>Label</strong>: Did CKD stage increase within next 180 days?</li>
+<li>If yes → positive</li>
+<li>If no but follow-up ≥ 180 days → negative</li>
+<li>Else → censored</li>
+</ul>
+<p>Repeat for each visit in the patient's sequence.</p>
+<hr />
+<h2 id="option-b-discrete-time-survival-modeling-cleaner-stronger">Option B: Discrete-Time Survival Modeling (Cleaner, Stronger)<a class="headerlink" href="#option-b-discrete-time-survival-modeling-cleaner-stronger" title="Permanent link">&para;</a></h2>
+<p>Instead of predicting a binary event in a fixed window, you predict <strong>hazard</strong> at each visit.</p>
+<h3 id="define-hazard-at-visit-t">Define Hazard at Visit <span class="arithmatex">\(t\)</span><a class="headerlink" href="#define-hazard-at-visit-t" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[
+h_t = P(\text{progression at } t+1 \mid \text{no progression before } t)
+\]</div>
+<p>Read this as:</p>
+<blockquote>
+<p>"Given the patient has not progressed up to visit <span class="arithmatex">\(t\)</span>, what is the probability they progress before the next visit?"</p>
+</blockquote>
+<p>The LSTM model outputs <span class="arithmatex">\(h_t \in (0, 1)\)</span> for each visit.</p>
+<h3 id="likelihood-function">Likelihood Function<a class="headerlink" href="#likelihood-function" title="Permanent link">&para;</a></h3>
+<p>For each patient, the likelihood of their observed sequence is:</p>
+<div class="arithmatex">\[
+\mathcal{L} = \prod_{t &lt; T^*} (1 - h_t) \times \begin{cases}
+h_{T^*} &amp; \text{if event occurred} \\
+1 &amp; \text{if censored}
+\end{cases}
+\]</div>
+<p>Where <span class="arithmatex">\(T^*\)</span> is the event or censoring time.</p>
+<p><strong>Intuition:</strong></p>
+<ul>
+<li><span class="arithmatex">\(\prod_{t &lt; T^*} (1 - h_t)\)</span>: Patient survived (didn't progress) through all visits before <span class="arithmatex">\(T^*\)</span></li>
+<li><span class="arithmatex">\(h_{T^*}\)</span>: Patient progressed at visit <span class="arithmatex">\(T^*\)</span> (if event observed)</li>
+<li>No hazard term if censored (we don't know what happened after)</li>
+</ul>
+<h3 id="why-this-is-excellent">Why This Is Excellent<a class="headerlink" href="#why-this-is-excellent" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Naturally handles censoring</strong>: No need to drop data</li>
+<li><strong>No arbitrary horizon</strong>: Each visit contributes based on actual timing</li>
+<li><strong>Directly models disease dynamics</strong>: Hazard is the fundamental quantity</li>
+</ul>
+<h3 id="why-its-harder">Why It's Harder<a class="headerlink" href="#why-its-harder" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Must implement a custom loss function</li>
+<li>Interpretation is subtler than binary classification</li>
+<li>Requires understanding of survival analysis concepts</li>
+</ul>
+<h3 id="implementation-preview">Implementation Preview<a class="headerlink" href="#implementation-preview" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">discrete_time_survival_loss</span><span class="p">(</span><span class="n">hazards</span><span class="p">,</span> <span class="n">event_times</span><span class="p">,</span> <span class="n">event_indicators</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="sd">    hazards: [batch_size, num_visits] - predicted hazards</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="sd">    event_times: [batch_size] - time of event or censoring</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="sd">    event_indicators: [batch_size] - 1 if event, 0 if censored</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">log_likelihood</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="n">T</span> <span class="o">=</span> <span class="n">event_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="c1"># Survival through all visits before T</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="n">log_likelihood</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">hazards</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">T</span><span class="p">]))</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>        <span class="c1"># Event at T (if observed)</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>        <span class="k">if</span> <span class="n">event_indicators</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>            <span class="n">log_likelihood</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hazards</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">log_likelihood</span>  <span class="c1"># Negative log-likelihood</span>
+</span></code></pre></div>
+<p>We'll implement this fully in Part 2.</p>
+<hr />
+<h2 id="option-c-continuous-time-survival-cox-style">Option C: Continuous-Time Survival (Cox-Style)<a class="headerlink" href="#option-c-continuous-time-survival-cox-style" title="Permanent link">&para;</a></h2>
+<p>This is the "epidemiologist-approved" approach.</p>
+<p>The LSTM model outputs a <strong>risk score</strong> <span class="arithmatex">\(r_t\)</span>, not a probability. The hazard function is:</p>
+<div class="arithmatex">\[
+\lambda(t \mid x_t) = \lambda_0(t) \exp(r_t)
+\]</div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(\lambda_0(t)\)</span> is the baseline hazard (learned or assumed)</li>
+<li><span class="arithmatex">\(r_t\)</span> is the risk score from the LSTM</li>
+<li>This is the <strong>proportional hazards</strong> assumption</li>
+</ul>
+<p>Train with partial likelihood (Cox partial likelihood).</p>
+<h3 id="when-this-shines">When This Shines<a class="headerlink" href="#when-this-shines" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Irregular visit spacing (visits at unpredictable times)</li>
+<li>Strong censoring (many patients lost to follow-up)</li>
+<li>Long follow-up windows (years of data)</li>
+<li>Need to compare with classical epidemiology methods</li>
+</ul>
+<h3 id="when-its-overkill">When It's Overkill<a class="headerlink" href="#when-its-overkill" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Early-stage prototyping</li>
+<li>Small datasets (&lt; 1000 patients)</li>
+<li>Regular visit patterns (monthly check-ups)</li>
+</ul>
+<hr />
+<h2 id="how-to-avoid-throwing-away-data-statistical-efficiency">How to Avoid Throwing Away Data (Statistical Efficiency)<a class="headerlink" href="#how-to-avoid-throwing-away-data-statistical-efficiency" title="Permanent link">&para;</a></h2>
+<p>The fear people have:</p>
+<blockquote>
+<p>"If I censor aggressively, I'll lose half my visits."</p>
+</blockquote>
+<p>The fix is <strong>visit-level supervision</strong>, not patient-level.</p>
+<h3 id="key-principle">Key Principle<a class="headerlink" href="#key-principle" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>One patient = many training examples<br />
+One visit = one prediction moment</p>
+</blockquote>
+<p>This is why LSTMs + visit-level labels are powerful <em>when done correctly</em>.</p>
+<h3 id="comparison-patient-level-vs-visit-level">Comparison: Patient-Level vs. Visit-Level<a class="headerlink" href="#comparison-patient-level-vs-visit-level" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Training Examples</th>
+<th>Information Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Patient-level</strong></td>
+<td>1 per patient</td>
+<td>Entire trajectory collapsed</td>
+</tr>
+<tr>
+<td><strong>Visit-level</strong></td>
+<td><span class="arithmatex">\(T\)</span> per patient</td>
+<td>Each visit independently</td>
+</tr>
+</tbody>
+</table>
+<p>With 1000 patients averaging 10 visits each:</p>
+<ul>
+<li>Patient-level: 1,000 training examples</li>
+<li>Visit-level: 10,000 training examples</li>
+</ul>
+<p><strong>10x more data from the same patients!</strong></p>
+<hr />
+<h2 id="a-final-sanity-rule">A Final Sanity Rule<a class="headerlink" href="#a-final-sanity-rule" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>If a model can "predict" an outcome before the clinical evidence exists, you have leakage.</strong></p>
+</blockquote>
+<p>High AUC is not a virtue. <strong>Causality is.</strong></p>
+<h3 id="the-gold-standard-test">The Gold Standard Test<a class="headerlink" href="#the-gold-standard-test" title="Permanent link">&para;</a></h3>
+<p>Can you deploy this model prospectively?</p>
+<ul>
+<li>At visit <span class="arithmatex">\(t\)</span>, can you make a prediction using only data up to <span class="arithmatex">\(t\)</span>?</li>
+<li>Does the prediction make sense clinically?</li>
+<li>Would a clinician trust it?</li>
+</ul>
+<p>If the answer to any of these is "no," you have a problem.</p>
+<hr />
+<h2 id="where-this-naturally-leads-next">Where This Naturally Leads Next<a class="headerlink" href="#where-this-naturally-leads-next" title="Permanent link">&para;</a></h2>
+<p>Advanced topics for further exploration include:</p>
+<ul>
+<li><strong>Joint modeling</strong> of visit frequency + disease progression</li>
+<li><strong>Separating</strong> surveillance intensity from biological risk</li>
+<li><strong>Counterfactual</strong> progression curves ("what if no ACE inhibitor?")</li>
+<li><strong>Multi-state</strong> models (progression through multiple disease stages)</li>
+</ul>
+<p>That's where EHR sequencing becomes <em>scientific</em>, not just predictive.</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p><strong>The Problem:</strong></p>
+<ul>
+<li>Patient-level labels + visit-level inputs = temporal leakage</li>
+<li>Models learn dataset artifacts, not disease dynamics</li>
+</ul>
+<p><strong>The Solution:</strong></p>
+<ul>
+<li>Visit-level labels that respect causality</li>
+<li>Three options: fixed-horizon, discrete-time survival, continuous-time survival</li>
+<li>Choose based on the data characteristics and clinical question</li>
+</ul>
+<p><strong>Next Steps:</strong></p>
+<ul>
+<li>Part 2 dives deep into discrete-time survival modeling</li>
+<li>Derives the likelihood, implements the loss, and shows examples</li>
+<li>Demonstrates why this is the cleanest approach for visit-based EHR sequences</li>
+</ul>
+<hr />
+<p><strong>Continue to:</strong> <a href="../causal-survival-analysis-2/">Part 2: Discrete-Time Survival Modeling</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 EHR Sequencing Research Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pleiadian53/ehr-sequencing" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

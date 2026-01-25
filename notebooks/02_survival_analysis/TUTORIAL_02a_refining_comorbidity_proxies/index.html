@@ -1,0 +1,2461 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Research framework for longitudinal EHR sequence modeling, exploring temporal representations, learning objectives, and model architectures for disease progression, survival analysis, and temporal phenotyping">
+      
+      
+        <meta name="author" content="EHR Sequencing Research Team">
+      
+      
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_02a_refining_comorbidity_proxies/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Tutorial 2a: Refining Comorbidity Burden Proxies - EHR Sequencing</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tutorial-2a-refining-comorbidity-burden-proxies" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EHR Sequencing
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tutorial 2a: Refining Comorbidity Burden Proxies
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../INSTALL/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Survival Analysis
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../methods/" class="md-tabs__link">
+          
+  
+  
+  Methods
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../data_generation/" class="md-tabs__link">
+          
+  
+  
+  Data Generation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../pretrained_embeddings_guide/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EHR Sequencing
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../INSTALL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TUTORIAL_01_prediction_problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 1: Prediction Problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 2: Synthetic Data Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TUTORIAL_03_loss_function/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 3: Loss Function
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_discrete_time_survival_lstm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notebook: Discrete-Time Survival LSTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Causal Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Causal Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/causal-survival-analysis-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/causal-survival-analysis-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/modern-code-embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modern Code Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Generation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data_generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data_generation/data_generation_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthea CSV Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pretrained_embeddings_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretrained Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../runpods_training_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RunPods Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-with-aggregate-code-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem with Aggregate Code Counts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Problem with Aggregate Code Counts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-limitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Limitation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specific-concerns-by-code-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specific Concerns by Code Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#medical-code-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medical Code Taxonomy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Medical Code Taxonomy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-type-hierarchy-by-informative-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Type Hierarchy by Informative Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-type-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Type Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#refined-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refined Approaches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Refined Approaches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#approach-1-code-type-weighted-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 1: Code-Type Weighted Counts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-2-diagnosis-only-focus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 2: Diagnosis-Only Focus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-3-stratified-complexity-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 3: Stratified Complexity Scores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-4-clinical-condition-counting-gold-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 4: Clinical Condition Counting (Gold Standard)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategy-1-phased-refinement-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy 1: Phased Refinement (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-2-sensitivity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy 2: Sensitivity Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-3-ensemble-risk-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy 3: Ensemble Risk Score
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clinical-validity-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clinical Validity Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clinical Validity Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-face-validity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Face Validity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-predictive-validity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Predictive Validity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-construct-validity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Construct Validity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-discriminative-ability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Discriminative Ability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Approach
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended Approach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-synthetic-data-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Synthetic Data Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updated-risk-factor-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updated Risk Factor Computation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-old-vs-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison: Old vs. New
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Directions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Directions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-severity-weighted-icd-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Severity-Weighted ICD Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-temporal-comorbidity-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Temporal Comorbidity Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-medication-class-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Medication Class Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-procedure-invasiveness-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Procedure Invasiveness Scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#revised-risk-factor-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revised Risk Factor Equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/notebooks/02_survival_analysis/TUTORIAL_02a_refining_comorbidity_proxies.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="tutorial-2a-refining-comorbidity-burden-proxies">Tutorial 2a: Refining Comorbidity Burden Proxies<a class="headerlink" href="#tutorial-2a-refining-comorbidity-burden-proxies" title="Permanent link">&para;</a></h1>
+<p><strong>Supplementary to:</strong> <a href="../TUTORIAL_02_synthetic_data_design/">Tutorial 2: Synthetic Data Design</a><br />
+<strong>Part of:</strong> Discrete-Time Survival Analysis for EHR Sequences<br />
+<strong>Audience:</strong> Researchers building survival models for EHR data</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#the-problem-with-aggregate-code-counts">The Problem with Aggregate Code Counts</a></li>
+<li><a href="#medical-code-taxonomy">Medical Code Taxonomy</a></li>
+<li><a href="#refined-approaches">Refined Approaches</a></li>
+<li><a href="#implementation-strategies">Implementation Strategies</a></li>
+<li><a href="#clinical-validity-considerations">Clinical Validity Considerations</a></li>
+<li><a href="#recommended-approach">Recommended Approach</a></li>
+</ol>
+<hr />
+<h2 id="the-problem-with-aggregate-code-counts">The Problem with Aggregate Code Counts<a class="headerlink" href="#the-problem-with-aggregate-code-counts" title="Permanent link">&para;</a></h2>
+<h3 id="current-approach">Current Approach<a class="headerlink" href="#current-approach" title="Permanent link">&para;</a></h3>
+<p>The original tutorial uses <strong>total code count per visit</strong> as a proxy for comorbidity burden:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From TUTORIAL_02, lines 92, 135-145</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">risk_factors</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s1">&#39;comorbidity&#39;</span><span class="p">:</span> <span class="n">avg_codes_per_visit</span><span class="p">,</span>  <span class="c1"># All codes treated equally</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_comorbidity</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">):</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">codes_per_visit</span> <span class="o">=</span> <span class="p">[</span><span class="n">visit</span><span class="o">.</span><span class="n">num_codes</span><span class="p">()</span> <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">patient_sequence</span><span class="o">.</span><span class="n">visits</span><span class="p">]</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">avg_codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">codes_per_visit</span><span class="p">)</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="k">return</span> <span class="n">avg_codes</span>
+</span></code></pre></div>
+<h3 id="the-limitation">The Limitation<a class="headerlink" href="#the-limitation" title="Permanent link">&para;</a></h3>
+<p><strong>Key Issue:</strong> Not all medical codes are equal indicators of disease burden.</p>
+<p>Consider two patients with 10 codes per visit:</p>
+<p><strong>Patient A (High actual burden):</strong>
+- 5 ICD codes: CHF, COPD, CKD, Diabetes, Hypertension
+- 3 LOINC codes: BNP, Creatinine, HbA1c (monitoring)
+- 2 CPT codes: Echocardiogram, Chest X-ray (diagnostics)</p>
+<p><strong>Patient B (Lower actual burden):</strong>
+- 1 ICD code: Well-controlled Type 2 Diabetes
+- 2 LOINC codes: HbA1c, Lipid panel (routine monitoring)
+- 7 NDC codes: Metformin, Lisinopril, Atorvastatin, Aspirin, Vitamin D, Fish oil, Multivitamin</p>
+<p><strong>Observation:</strong> Patient B has similar code count but much lower disease severity.</p>
+<h3 id="specific-concerns-by-code-type">Specific Concerns by Code Type<a class="headerlink" href="#specific-concerns-by-code-type" title="Permanent link">&para;</a></h3>
+<h4 id="1-drug-codes-ndcrxnorm">1. Drug Codes (NDC/RxNorm)<a class="headerlink" href="#1-drug-codes-ndcrxnorm" title="Permanent link">&para;</a></h4>
+<p><strong>Problem:</strong> Medication count ≠ disease severity</p>
+<ul>
+<li><strong>Complex regimens for "small" diseases:</strong> </li>
+<li>Migraine prophylaxis might involve 3-4 medications</li>
+<li>Mild asthma might require 2-3 inhalers</li>
+<li><strong>Polypharmacy patterns:</strong></li>
+<li>Elderly patients on 10+ medications (preventive + treatment)</li>
+<li>Drug-drug interaction management adds more drugs</li>
+<li><strong>Supplements and OTC medications:</strong></li>
+<li>Vitamins, supplements inflate counts</li>
+<li>Not indicative of morbidity</li>
+</ul>
+<h4 id="2-labtest-codes-loinc">2. Lab/Test Codes (LOINC)<a class="headerlink" href="#2-labtest-codes-loinc" title="Permanent link">&para;</a></h4>
+<p><strong>Problem:</strong> More tests ≠ sicker patient</p>
+<ul>
+<li><strong>Monitoring intensity:</strong></li>
+<li>Well-controlled diabetes: frequent HbA1c checks</li>
+<li>Stable warfarin patient: weekly INR monitoring</li>
+<li><strong>Diagnostic workup:</strong></li>
+<li>Healthy patient with vague symptoms: extensive testing</li>
+<li>Established diagnosis: fewer confirmatory tests</li>
+<li><strong>Screening protocols:</strong></li>
+<li>Comprehensive metabolic panel = 1 order, 14 LOINC codes</li>
+<li>Doesn't indicate disease burden</li>
+</ul>
+<h4 id="3-procedure-codes-cpthcpcs">3. Procedure Codes (CPT/HCPCS)<a class="headerlink" href="#3-procedure-codes-cpthcpcs" title="Permanent link">&para;</a></h4>
+<p><strong>Problem:</strong> Procedures vary wildly in invasiveness</p>
+<ul>
+<li><strong>Minor vs. major:</strong></li>
+<li>5 outpatient minor procedures ≠ 1 open-heart surgery</li>
+<li>Wound dressing changes (frequent) vs. transplant (rare)</li>
+<li><strong>Preventive vs. therapeutic:</strong></li>
+<li>Colonoscopy (screening) vs. emergency surgery</li>
+<li>Both count as "1 procedure code"</li>
+</ul>
+<h4 id="4-diagnosis-codes-icd-910-cm">4. Diagnosis Codes (ICD-9/10-CM)<a class="headerlink" href="#4-diagnosis-codes-icd-910-cm" title="Permanent link">&para;</a></h4>
+<p><strong>Most informative:</strong> But still has nuances</p>
+<ul>
+<li><strong>Severity hierarchy:</strong></li>
+<li>"Essential hypertension" vs. "Hypertensive crisis"</li>
+<li>"Type 2 diabetes" vs. "Diabetes with complications"</li>
+<li><strong>Redundancy:</strong></li>
+<li>Multiple codes for same condition (primary + manifestations)</li>
+<li>Coding practices vary by institution</li>
+</ul>
+<hr />
+<h2 id="medical-code-taxonomy">Medical Code Taxonomy<a class="headerlink" href="#medical-code-taxonomy" title="Permanent link">&para;</a></h2>
+<h3 id="code-type-hierarchy-by-informative-value">Code Type Hierarchy by Informative Value<a class="headerlink" href="#code-type-hierarchy-by-informative-value" title="Permanent link">&para;</a></h3>
+<p>For comorbidity burden estimation:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Most Informative → Least Informative
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1. Diagnostic codes (ICD-9/10-CM)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   - Direct disease indicators
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   - Severity stratification possible
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   - Strong predictor of outcomes
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2. Procedure codes (CPT/HCPCS)
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   - Indicates interventions
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   - Complexity varies (need weighting)
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   - Major procedures = high burden
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>3. Lab/Test codes (LOINC)
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   - Indirect indicators (monitoring/diagnosis)
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   - High frequency ≠ high burden
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   - Pattern matters more than count
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>4. Medication codes (NDC/RxNorm)
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   - Treatment complexity
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   - Confounded by polypharmacy
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   - Class matters more than count
+</span></code></pre></div>
+<h3 id="code-type-characteristics">Code Type Characteristics<a class="headerlink" href="#code-type-characteristics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Code Type</th>
+<th>Namespace</th>
+<th>Count Meaning</th>
+<th>Severity Proxy</th>
+<th>Recommended Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Diagnosis</td>
+<td>ICD-9/10</td>
+<td>Number of conditions</td>
+<td>Strong</td>
+<td>1.0 (baseline)</td>
+</tr>
+<tr>
+<td>Procedure</td>
+<td>CPT/HCPCS</td>
+<td>Number of interventions</td>
+<td>Moderate</td>
+<td>0.7-0.9</td>
+</tr>
+<tr>
+<td>Lab/Test</td>
+<td>LOINC</td>
+<td>Monitoring intensity</td>
+<td>Weak</td>
+<td>0.3-0.5</td>
+</tr>
+<tr>
+<td>Medication</td>
+<td>NDC/RxNorm</td>
+<td>Treatment complexity</td>
+<td>Weak</td>
+<td>0.2-0.4</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="refined-approaches">Refined Approaches<a class="headerlink" href="#refined-approaches" title="Permanent link">&para;</a></h2>
+<h3 id="approach-1-code-type-weighted-counts">Approach 1: Code-Type Weighted Counts<a class="headerlink" href="#approach-1-code-type-weighted-counts" title="Permanent link">&para;</a></h3>
+<p><strong>Principle:</strong> Weight codes by their informative value for disease burden.</p>
+<h4 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_weighted_comorbidity</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">,</span> <span class="n">code_weights</span><span class="p">):</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sd">    Compute comorbidity burden using code-type-specific weights.</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="sd">    Args:</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="sd">        patient_sequence: Patient visit history</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="sd">        code_weights: Dict mapping code types to weights</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="sd">    Returns:</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="sd">        Weighted average code count per visit</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">weighted_codes_per_visit</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">patient_sequence</span><span class="o">.</span><span class="n">visits</span><span class="p">:</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="c1"># Count codes by type</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="n">icd_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">visit</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;ICD&#39;</span><span class="p">))</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="n">cpt_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">visit</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;CPT&#39;</span><span class="p">))</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="n">loinc_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">visit</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;LOINC&#39;</span><span class="p">))</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>        <span class="n">ndc_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">visit</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;NDC&#39;</span><span class="p">))</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>        <span class="c1"># Apply weights</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>        <span class="n">weighted_count</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>            <span class="n">code_weights</span><span class="p">[</span><span class="s1">&#39;ICD&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">icd_count</span> <span class="o">+</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>            <span class="n">code_weights</span><span class="p">[</span><span class="s1">&#39;CPT&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">cpt_count</span> <span class="o">+</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>            <span class="n">code_weights</span><span class="p">[</span><span class="s1">&#39;LOINC&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">loinc_count</span> <span class="o">+</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>            <span class="n">code_weights</span><span class="p">[</span><span class="s1">&#39;NDC&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">ndc_count</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>        <span class="p">)</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>        <span class="n">weighted_codes_per_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weighted_count</span><span class="p">)</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">weighted_codes_per_visit</span><span class="p">)</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># Recommended weights</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="n">code_weights</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>    <span class="s1">&#39;ICD&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>    <span class="c1"># Diagnoses: full weight</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>    <span class="s1">&#39;CPT&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>    <span class="c1"># Procedures: high weight</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>    <span class="s1">&#39;LOINC&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="c1"># Lab tests: moderate weight</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>    <span class="s1">&#39;NDC&#39;</span><span class="p">:</span> <span class="mf">0.3</span>     <span class="c1"># Medications: low weight</span>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="p">}</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>
+</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="c1"># Example comparison</span>
+</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="c1"># Patient with 5 ICD + 3 LOINC + 7 NDC codes</span>
+</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="n">unweighted</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">=</span> <span class="mi">15</span> <span class="n">codes</span>
+</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="n">weighted</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">*</span><span class="mi">5</span> <span class="o">+</span> <span class="mf">0.4</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="mf">0.3</span><span class="o">*</span><span class="mi">7</span> <span class="o">=</span> <span class="mf">8.3</span> <span class="n">effective</span> <span class="n">codes</span>
+</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="c1"># More accurately reflects disease burden</span>
+</span></code></pre></div>
+<h4 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Prioritizes diagnostic information:</strong> ICD codes get full weight</li>
+<li><strong>Down-weights less informative codes:</strong> Labs and meds contribute less</li>
+<li><strong>Clinically interpretable:</strong> "Effective code count" approximates true burden</li>
+<li><strong>Preserves correlation:</strong> High-burden patients still have higher scores</li>
+</ul>
+<hr />
+<h3 id="approach-2-diagnosis-only-focus">Approach 2: Diagnosis-Only Focus<a class="headerlink" href="#approach-2-diagnosis-only-focus" title="Permanent link">&para;</a></h3>
+<p><strong>Principle:</strong> Use only diagnosis codes for comorbidity burden.</p>
+<h4 id="implementation_1">Implementation<a class="headerlink" href="#implementation_1" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_diagnosis_burden</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">):</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="sd">    Compute comorbidity burden using only diagnosis codes.</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">icd_per_visit</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">patient_sequence</span><span class="o">.</span><span class="n">visits</span><span class="p">:</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="n">icd_codes</span> <span class="o">=</span> <span class="n">visit</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;ICD&#39;</span><span class="p">)</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">icd_per_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">icd_codes</span><span class="p">))</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">icd_per_visit</span><span class="p">)</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Normalization</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">norm_comorbidity</span> <span class="o">=</span> <span class="n">avg_icd_per_visit</span> <span class="o">/</span> <span class="mf">10.0</span>  <span class="c1"># Typical max: 10 diagnoses</span>
+</span></code></pre></div>
+<h4 id="advantages">Advantages<a class="headerlink" href="#advantages" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Maximum specificity:</strong> Direct measure of diagnosed conditions</li>
+<li><strong>Avoids confounders:</strong> Not affected by medication polypharmacy</li>
+<li><strong>Clear interpretation:</strong> "Average number of diagnoses per visit"</li>
+</ul>
+<h4 id="disadvantages">Disadvantages<a class="headerlink" href="#disadvantages" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Ignores treatment intensity:</strong> Complex procedures not captured</li>
+<li><strong>Sensitive to coding practices:</strong> Under-coding biases downward</li>
+<li><strong>May miss severity:</strong> Well-managed conditions with few active diagnoses</li>
+</ul>
+<hr />
+<h3 id="approach-3-stratified-complexity-scores">Approach 3: Stratified Complexity Scores<a class="headerlink" href="#approach-3-stratified-complexity-scores" title="Permanent link">&para;</a></h3>
+<p><strong>Principle:</strong> Create separate scores for each code type, then combine.</p>
+<h4 id="implementation_2">Implementation<a class="headerlink" href="#implementation_2" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_stratified_burden</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">):</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="sd">    Compute separate burden scores for each code type.</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="c1"># Compute type-specific averages</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">avg_icd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;ICD&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">visits</span><span class="p">])</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">avg_cpt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;CPT&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">visits</span><span class="p">])</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">avg_loinc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;LOINC&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">visits</span><span class="p">])</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">avg_ndc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;NDC&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">visits</span><span class="p">])</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="c1"># Normalize each separately</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">norm_icd</span> <span class="o">=</span> <span class="n">avg_icd</span> <span class="o">/</span> <span class="mf">10.0</span>      <span class="c1"># Typical max: 10 diagnoses</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">norm_cpt</span> <span class="o">=</span> <span class="n">avg_cpt</span> <span class="o">/</span> <span class="mf">5.0</span>       <span class="c1"># Typical max: 5 procedures</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">norm_loinc</span> <span class="o">=</span> <span class="n">avg_loinc</span> <span class="o">/</span> <span class="mf">15.0</span>  <span class="c1"># Typical max: 15 lab tests</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">norm_ndc</span> <span class="o">=</span> <span class="n">avg_ndc</span> <span class="o">/</span> <span class="mf">10.0</span>      <span class="c1"># Typical max: 10 medications</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="c1"># Create composite score</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="n">complexity_scores</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        <span class="s1">&#39;diagnostic&#39;</span><span class="p">:</span> <span class="n">norm_icd</span><span class="p">,</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        <span class="s1">&#39;procedural&#39;</span><span class="p">:</span> <span class="n">norm_cpt</span><span class="p">,</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        <span class="s1">&#39;monitoring&#39;</span><span class="p">:</span> <span class="n">norm_loinc</span><span class="p">,</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        <span class="s1">&#39;therapeutic&#39;</span><span class="p">:</span> <span class="n">norm_ndc</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="p">}</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="c1"># Weighted combination</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    <span class="n">burden_score</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>        <span class="mf">0.50</span> <span class="o">*</span> <span class="n">complexity_scores</span><span class="p">[</span><span class="s1">&#39;diagnostic&#39;</span><span class="p">]</span> <span class="o">+</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>        <span class="mf">0.25</span> <span class="o">*</span> <span class="n">complexity_scores</span><span class="p">[</span><span class="s1">&#39;procedural&#39;</span><span class="p">]</span> <span class="o">+</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>        <span class="mf">0.15</span> <span class="o">*</span> <span class="n">complexity_scores</span><span class="p">[</span><span class="s1">&#39;monitoring&#39;</span><span class="p">]</span> <span class="o">+</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>        <span class="mf">0.10</span> <span class="o">*</span> <span class="n">complexity_scores</span><span class="p">[</span><span class="s1">&#39;therapeutic&#39;</span><span class="p">]</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>    <span class="p">)</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>    <span class="k">return</span> <span class="n">burden_score</span><span class="p">,</span> <span class="n">complexity_scores</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="c1"># Returns both composite and component scores</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="n">total_burden</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">compute_stratified_burden</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="advantages_1">Advantages<a class="headerlink" href="#advantages_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Multidimensional view:</strong> Captures different aspects of complexity</li>
+<li><strong>Interpretable components:</strong> Can analyze which dimension drives risk</li>
+<li><strong>Flexible weighting:</strong> Easy to adjust based on outcome of interest</li>
+</ul>
+<h4 id="use-case">Use Case<a class="headerlink" href="#use-case" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Example: Different weights for different outcomes</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Mortality risk: emphasize diagnoses and procedures</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">mortality_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;diagnostic&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;procedural&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> 
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                     <span class="s1">&#39;monitoring&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;therapeutic&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Readmission risk: emphasize therapeutic complexity</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">readmission_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;diagnostic&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;procedural&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                       <span class="s1">&#39;monitoring&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;therapeutic&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+</span></code></pre></div>
+<hr />
+<h3 id="approach-4-clinical-condition-counting-gold-standard">Approach 4: Clinical Condition Counting (Gold Standard)<a class="headerlink" href="#approach-4-clinical-condition-counting-gold-standard" title="Permanent link">&para;</a></h3>
+<p><strong>Principle:</strong> Map ICD codes to distinct clinical conditions using hierarchical groupers.</p>
+<h4 id="implementation_3">Implementation<a class="headerlink" href="#implementation_3" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_condition_count</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">,</span> <span class="n">grouper</span><span class="o">=</span><span class="s1">&#39;CCS&#39;</span><span class="p">):</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="sd">    Count distinct clinical conditions using hierarchical grouper.</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="sd">    Groupers:</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="sd">        - CCS (Clinical Classifications Software): ~300 categories</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="sd">        - AHRQ Elixhauser: 31 comorbidity categories</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="sd">        - Charlson: 17 weighted comorbidity categories</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">all_icd_codes</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">patient_sequence</span><span class="o">.</span><span class="n">visits</span><span class="p">:</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        <span class="n">all_icd_codes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">visit</span><span class="o">.</span><span class="n">get_codes_by_type</span><span class="p">(</span><span class="s1">&#39;ICD&#39;</span><span class="p">))</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="c1"># Map to condition categories</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">conditions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="k">for</span> <span class="n">icd_code</span> <span class="ow">in</span> <span class="n">all_icd_codes</span><span class="p">:</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        <span class="n">category</span> <span class="o">=</span> <span class="n">grouper</span><span class="o">.</span><span class="n">map_to_category</span><span class="p">(</span><span class="n">icd_code</span><span class="p">)</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="n">conditions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="c1"># Count distinct conditions</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="n">num_conditions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">conditions</span><span class="p">)</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    <span class="k">return</span> <span class="n">num_conditions</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># Example using Elixhauser comorbidities</span>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="n">elixhauser_conditions</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>    <span class="s1">&#39;CHF&#39;</span><span class="p">,</span> <span class="s1">&#39;Arrhythmia&#39;</span><span class="p">,</span> <span class="s1">&#39;Valvular&#39;</span><span class="p">,</span> <span class="s1">&#39;PVD&#39;</span><span class="p">,</span> <span class="s1">&#39;HTN&#39;</span><span class="p">,</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>    <span class="s1">&#39;Paralysis&#39;</span><span class="p">,</span> <span class="s1">&#39;Neuro&#39;</span><span class="p">,</span> <span class="s1">&#39;Pulmonary&#39;</span><span class="p">,</span> <span class="s1">&#39;DM&#39;</span><span class="p">,</span> <span class="s1">&#39;Hypothyroid&#39;</span><span class="p">,</span>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>    <span class="s1">&#39;Renal&#39;</span><span class="p">,</span> <span class="s1">&#39;Liver&#39;</span><span class="p">,</span> <span class="s1">&#39;PUD&#39;</span><span class="p">,</span> <span class="s1">&#39;HIV&#39;</span><span class="p">,</span> <span class="s1">&#39;Lymphoma&#39;</span><span class="p">,</span>
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>    <span class="s1">&#39;Mets&#39;</span><span class="p">,</span> <span class="s1">&#39;Tumor&#39;</span><span class="p">,</span> <span class="s1">&#39;Rheumatoid&#39;</span><span class="p">,</span> <span class="s1">&#39;Coagulopathy&#39;</span><span class="p">,</span> <span class="s1">&#39;Obesity&#39;</span><span class="p">,</span>
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>    <span class="s1">&#39;WeightLoss&#39;</span><span class="p">,</span> <span class="s1">&#39;Fluid&#39;</span><span class="p">,</span> <span class="s1">&#39;Anemia&#39;</span><span class="p">,</span> <span class="s1">&#39;BloodLoss&#39;</span><span class="p">,</span> <span class="s1">&#39;Alcohol&#39;</span><span class="p">,</span>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>    <span class="s1">&#39;Drug&#39;</span><span class="p">,</span> <span class="s1">&#39;Psychoses&#39;</span><span class="p">,</span> <span class="s1">&#39;Depression&#39;</span>
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="p">]</span>
+</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>
+</span><span id="__span-6-35"><a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="c1"># Patient has ICD codes mapping to:</span>
+</span><span id="__span-6-36"><a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="n">icd_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;I50.9&#39;</span><span class="p">,</span> <span class="s1">&#39;I48.91&#39;</span><span class="p">,</span> <span class="s1">&#39;E11.9&#39;</span><span class="p">,</span> <span class="s1">&#39;N18.3&#39;</span><span class="p">]</span>
+</span><span id="__span-6-37"><a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="c1"># Maps to:</span>
+</span><span id="__span-6-38"><a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="n">conditions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CHF&#39;</span><span class="p">,</span> <span class="s1">&#39;Arrhythmia&#39;</span><span class="p">,</span> <span class="s1">&#39;DM&#39;</span><span class="p">,</span> <span class="s1">&#39;Renal&#39;</span><span class="p">]</span>
+</span><span id="__span-6-39"><a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="c1"># Condition count = 4 (not 4 ICD codes, but 4 distinct conditions)</span>
+</span></code></pre></div>
+<h4 id="advantages_2">Advantages<a class="headerlink" href="#advantages_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Clinically meaningful:</strong> Aligns with medical understanding</li>
+<li><strong>Reduces redundancy:</strong> Multiple ICD codes for same condition = 1</li>
+<li><strong>Standard metrics:</strong> Can use validated comorbidity indices</li>
+<li><strong>Best reflects actual burden:</strong> Gold standard in epidemiology</li>
+</ul>
+<h4 id="disadvantages_1">Disadvantages<a class="headerlink" href="#disadvantages_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Requires mapping:</strong> Need grouper software/lookup tables</li>
+<li><strong>Implementation complexity:</strong> More code infrastructure</li>
+<li><strong>Less granular:</strong> Loses within-condition severity variation</li>
+</ul>
+<h4 id="recommended-groupers">Recommended Groupers<a class="headerlink" href="#recommended-groupers" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>CCS (Clinical Classifications Software)</strong> - ICD-9/10-CM</li>
+<li>~300 categories (e.g., "Heart failure", "Diabetes")</li>
+<li>Good for general comorbidity counting</li>
+<li>
+<p>Free from AHRQ</p>
+</li>
+<li>
+<p><strong>Elixhauser Comorbidity Index</strong></p>
+</li>
+<li>31 comorbidity categories</li>
+<li>Validated for mortality/readmission prediction</li>
+<li>
+<p>Widely used in health services research</p>
+</li>
+<li>
+<p><strong>Charlson Comorbidity Index</strong></p>
+</li>
+<li>17 weighted comorbidity categories</li>
+<li>Weights reflect mortality impact</li>
+<li>Original index: sum weights (not just count)</li>
+</ol>
+<hr />
+<h2 id="implementation-strategies">Implementation Strategies<a class="headerlink" href="#implementation-strategies" title="Permanent link">&para;</a></h2>
+<h3 id="strategy-1-phased-refinement-recommended">Strategy 1: Phased Refinement (Recommended)<a class="headerlink" href="#strategy-1-phased-refinement-recommended" title="Permanent link">&para;</a></h3>
+<p><strong>Phase 1: Baseline (Current)</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Start with aggregate count</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">comorbidity</span> <span class="o">=</span> <span class="n">avg_codes_per_visit</span>
+</span></code></pre></div></p>
+<p><strong>Phase 2: Type Weighting</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add code-type weights</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">comorbidity</span> <span class="o">=</span> <span class="n">weighted_avg_codes_per_visit</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">code_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ICD&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;CPT&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;LOINC&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s1">&#39;NDC&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+</span></code></pre></div></p>
+<p><strong>Phase 3: Diagnosis Focus</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Refine to diagnosis-heavy</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">comorbidity</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">avg_icd</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">weighted_other</span>
+</span></code></pre></div></p>
+<p><strong>Phase 4: Condition Grouping</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Ultimate: distinct conditions</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">comorbidity</span> <span class="o">=</span> <span class="n">num_distinct_conditions</span> <span class="o">/</span> <span class="mf">10.0</span>  <span class="c1"># Normalize</span>
+</span></code></pre></div></p>
+<h3 id="strategy-2-sensitivity-analysis">Strategy 2: Sensitivity Analysis<a class="headerlink" href="#strategy-2-sensitivity-analysis" title="Permanent link">&para;</a></h3>
+<p><strong>Compare approaches on same data:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Compute multiple comorbidity metrics</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="s1">&#39;raw_count&#39;</span><span class="p">:</span> <span class="n">compute_comorbidity</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="s1">&#39;weighted&#39;</span><span class="p">:</span> <span class="n">compute_weighted_comorbidity</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">weights</span><span class="p">),</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="s1">&#39;icd_only&#39;</span><span class="p">:</span> <span class="n">compute_diagnosis_burden</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="s1">&#39;condition_count&#39;</span><span class="p">:</span> <span class="n">compute_condition_count</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="p">}</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Train models with each metric</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">comorbidity_values</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">outcomes</span> <span class="o">=</span> <span class="n">generate_outcomes</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">comorbidity</span><span class="o">=</span><span class="n">comorbidity_values</span><span class="p">)</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="n">model</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">outcomes</span><span class="p">)</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">performance</span><span class="p">[</span><span class="n">metric_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Compare: which metric gives best risk stratification?</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AUC by metric:</span><span class="se">\n</span><span class="si">{</span><span class="n">performance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="strategy-3-ensemble-risk-score">Strategy 3: Ensemble Risk Score<a class="headerlink" href="#strategy-3-ensemble-risk-score" title="Permanent link">&para;</a></h3>
+<p><strong>Combine multiple metrics:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_ensemble_comorbidity</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">):</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="sd">    Combine multiple comorbidity proxies.</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="c1"># Compute variants</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">raw</span> <span class="o">=</span> <span class="n">avg_codes_per_visit</span> <span class="o">/</span> <span class="mf">20.0</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">weighted</span> <span class="o">=</span> <span class="n">weighted_avg</span> <span class="o">/</span> <span class="mf">15.0</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">icd_only</span> <span class="o">=</span> <span class="n">avg_icd</span> <span class="o">/</span> <span class="mf">10.0</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="c1"># Ensemble with weights</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="n">ensemble</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        <span class="mf">0.2</span> <span class="o">*</span> <span class="n">raw</span> <span class="o">+</span>       <span class="c1"># Keep some raw signal</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>        <span class="mf">0.3</span> <span class="o">*</span> <span class="n">weighted</span> <span class="o">+</span>  <span class="c1"># Moderate weight</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>        <span class="mf">0.5</span> <span class="o">*</span> <span class="n">icd_only</span>    <span class="c1"># Emphasize diagnoses</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="p">)</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    <span class="k">return</span> <span class="n">ensemble</span>
+</span></code></pre></div>
+<hr />
+<h2 id="clinical-validity-considerations">Clinical Validity Considerations<a class="headerlink" href="#clinical-validity-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="1-face-validity">1. Face Validity<a class="headerlink" href="#1-face-validity" title="Permanent link">&para;</a></h3>
+<p><strong>Question:</strong> Does the metric align with clinical intuition?</p>
+<p><strong>Test cases:</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Patient A: 10 serious diagnoses (CHF, COPD, CKD, etc.)</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Patient B: 1 diagnosis + 20 vitamins/supplements</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Which has higher comorbidity?</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Answer: Patient A</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Check your metric:</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="k">assert</span> <span class="n">comorbidity_A</span> <span class="o">&gt;</span> <span class="n">comorbidity_B</span><span class="p">,</span> <span class="s2">&quot;Metric fails face validity&quot;</span>
+</span></code></pre></div></p>
+<h3 id="2-predictive-validity">2. Predictive Validity<a class="headerlink" href="#2-predictive-validity" title="Permanent link">&para;</a></h3>
+<p><strong>Question:</strong> Does the metric predict actual outcomes?</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># On real labeled data (if available)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">correlation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">comorbidity_scores</span><span class="p">,</span> <span class="n">actual_mortality</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Strong correlation (|r| &gt; 0.3) = good predictive validity</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Weak correlation (|r| &lt; 0.15) = reconsider metric</span>
+</span></code></pre></div>
+<h3 id="3-construct-validity">3. Construct Validity<a class="headerlink" href="#3-construct-validity" title="Permanent link">&para;</a></h3>
+<p><strong>Question:</strong> Does the metric correlate with established indices?</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Compare to Charlson or Elixhauser score</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">charlson_scores</span> <span class="o">=</span> <span class="n">compute_charlson_index</span><span class="p">(</span><span class="n">patients</span><span class="p">)</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">your_scores</span> <span class="o">=</span> <span class="n">compute_comorbidity</span><span class="p">(</span><span class="n">patients</span><span class="p">)</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">correlation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">charlson_scores</span><span class="p">,</span> <span class="n">your_scores</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># High correlation (r &gt; 0.6) = good construct validity</span>
+</span></code></pre></div>
+<h3 id="4-discriminative-ability">4. Discriminative Ability<a class="headerlink" href="#4-discriminative-ability" title="Permanent link">&para;</a></h3>
+<p><strong>Question:</strong> Does the metric separate high-risk from low-risk patients?</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Compare score distributions</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">high_risk_patients</span> <span class="o">=</span> <span class="n">patients</span><span class="p">[</span><span class="n">actual_events</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">low_risk_patients</span> <span class="o">=</span> <span class="n">patients</span><span class="p">[</span><span class="n">actual_events</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="n">mean_high</span> <span class="o">=</span> <span class="n">comorbidity</span><span class="p">[</span><span class="n">high_risk_patients</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">mean_low</span> <span class="o">=</span> <span class="n">comorbidity</span><span class="p">[</span><span class="n">low_risk_patients</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Effect size (Cohen&#39;s d)</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="n">effect_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_high</span> <span class="o">-</span> <span class="n">mean_low</span><span class="p">)</span> <span class="o">/</span> <span class="n">pooled_std</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># d &gt; 0.5 = medium effect (adequate)</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># d &gt; 0.8 = large effect (excellent)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="recommended-approach">Recommended Approach<a class="headerlink" href="#recommended-approach" title="Permanent link">&para;</a></h2>
+<h3 id="for-synthetic-data-generation">For Synthetic Data Generation<a class="headerlink" href="#for-synthetic-data-generation" title="Permanent link">&para;</a></h3>
+<p><strong>Recommendation:</strong> Use <strong>Approach 1 (Code-Type Weighted Counts)</strong> as starting point.</p>
+<p><strong>Rationale:</strong>
+1. <strong>Easy to implement:</strong> Minor modification to existing code
+2. <strong>Clinically sound:</strong> Prioritizes informative code types
+3. <strong>Preserves correlation:</strong> Still captures high-risk patients
+4. <strong>Good compromise:</strong> Between simplicity and accuracy</p>
+<h3 id="updated-risk-factor-computation">Updated Risk Factor Computation<a class="headerlink" href="#updated-risk-factor-computation" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_risk_factors_refined</span><span class="p">(</span><span class="n">patient_sequence</span><span class="p">):</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="sd">    Compute risk factors with code-type-aware comorbidity.</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="c1"># Code type weights</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="n">code_weights</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>        <span class="s1">&#39;ICD&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>    <span class="c1"># Diagnoses</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>        <span class="s1">&#39;CPT&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>    <span class="c1"># Procedures</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="s1">&#39;LOINC&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="c1"># Lab tests</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>        <span class="s1">&#39;NDC&#39;</span><span class="p">:</span> <span class="mf">0.3</span>     <span class="c1"># Medications</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    <span class="p">}</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    <span class="c1"># 1. Weighted comorbidity burden</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    <span class="n">weighted_codes</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>    <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">patient_sequence</span><span class="o">.</span><span class="n">visits</span><span class="p">:</span>
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>        <span class="n">visit_weighted</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>            <span class="n">code_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span>
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>            <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">visit</span><span class="o">.</span><span class="n">codes</span>
+</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>        <span class="p">)</span>
+</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>        <span class="n">weighted_codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">visit_weighted</span><span class="p">)</span>
+</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>
+</span><span id="__span-17-22"><a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    <span class="n">avg_weighted_codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">weighted_codes</span><span class="p">)</span>
+</span><span id="__span-17-23"><a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>    <span class="n">norm_comorbidity</span> <span class="o">=</span> <span class="n">avg_weighted_codes</span> <span class="o">/</span> <span class="mf">15.0</span>  <span class="c1"># Normalized</span>
+</span><span id="__span-17-24"><a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>
+</span><span id="__span-17-25"><a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>    <span class="c1"># 2. Visit frequency (unchanged)</span>
+</span><span id="__span-17-26"><a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>    <span class="n">num_visits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">patient_sequence</span><span class="o">.</span><span class="n">visits</span><span class="p">)</span>
+</span><span id="__span-17-27"><a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>    <span class="n">time_span_years</span> <span class="o">=</span> <span class="p">(</span><span class="n">visits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">-</span> <span class="n">visits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mf">365.0</span>
+</span><span id="__span-17-28"><a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>    <span class="n">frequency</span> <span class="o">=</span> <span class="n">num_visits</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_span_years</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+</span><span id="__span-17-29"><a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>    <span class="n">norm_frequency</span> <span class="o">=</span> <span class="n">frequency</span> <span class="o">/</span> <span class="mf">5.0</span>
+</span><span id="__span-17-30"><a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>
+</span><span id="__span-17-31"><a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>    <span class="c1"># 3. Diagnosis diversity (refined)</span>
+</span><span id="__span-17-32"><a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>    <span class="c1"># Use only ICD codes for diversity metric</span>
+</span><span id="__span-17-33"><a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>    <span class="n">all_icd_codes</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-17-34"><a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>    <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">patient_sequence</span><span class="o">.</span><span class="n">visits</span><span class="p">:</span>
+</span><span id="__span-17-35"><a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>        <span class="n">all_icd_codes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">visit</span><span class="o">.</span><span class="n">codes</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;ICD&#39;</span><span class="p">])</span>
+</span><span id="__span-17-36"><a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>
+</span><span id="__span-17-37"><a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_icd_codes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-17-38"><a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>        <span class="n">unique_icd</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_icd_codes</span><span class="p">))</span>
+</span><span id="__span-17-39"><a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>        <span class="n">total_icd</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_icd_codes</span><span class="p">)</span>
+</span><span id="__span-17-40"><a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>        <span class="n">icd_diversity</span> <span class="o">=</span> <span class="n">unique_icd</span> <span class="o">/</span> <span class="n">total_icd</span>
+</span><span id="__span-17-41"><a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-17-42"><a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>        <span class="n">icd_diversity</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Neutral if no diagnoses</span>
+</span><span id="__span-17-43"><a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>
+</span><span id="__span-17-44"><a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>    <span class="c1"># Low diversity = repeated diagnoses = chronic = high risk</span>
+</span><span id="__span-17-45"><a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>    <span class="n">risk_from_diversity</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">icd_diversity</span>
+</span><span id="__span-17-46"><a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>
+</span><span id="__span-17-47"><a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a>    <span class="c1"># 4. Combine into risk score</span>
+</span><span id="__span-17-48"><a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a>    <span class="n">risk_score</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-17-49"><a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a>        <span class="mf">0.4</span> <span class="o">*</span> <span class="n">norm_comorbidity</span> <span class="o">+</span>      <span class="c1"># Weighted code burden</span>
+</span><span id="__span-17-50"><a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>        <span class="mf">0.4</span> <span class="o">*</span> <span class="n">norm_frequency</span> <span class="o">+</span>         <span class="c1"># Visit frequency</span>
+</span><span id="__span-17-51"><a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a>        <span class="mf">0.2</span> <span class="o">*</span> <span class="n">risk_from_diversity</span>      <span class="c1"># Diagnosis diversity</span>
+</span><span id="__span-17-52"><a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a>    <span class="p">)</span>
+</span><span id="__span-17-53"><a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a>
+</span><span id="__span-17-54"><a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a>    <span class="n">risk_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">risk_score</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+</span><span id="__span-17-55"><a id="__codelineno-17-55" name="__codelineno-17-55" href="#__codelineno-17-55"></a>
+</span><span id="__span-17-56"><a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>    <span class="k">return</span> <span class="n">risk_score</span>
+</span></code></pre></div>
+<h3 id="comparison-old-vs-new">Comparison: Old vs. New<a class="headerlink" href="#comparison-old-vs-new" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Example patient: </span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># - 5 ICD codes</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># - 3 LOINC codes</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># - 7 NDC codes</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Total = 15 codes</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># OLD METHOD (unweighted)</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="n">comorbidity_old</span> <span class="o">=</span> <span class="mi">15</span> <span class="o">/</span> <span class="mf">20.0</span> <span class="o">=</span> <span class="mf">0.75</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># NEW METHOD (weighted)</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="n">weighted</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.3</span><span class="o">*</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mf">1.2</span> <span class="o">+</span> <span class="mf">2.1</span> <span class="o">=</span> <span class="mf">8.3</span>
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="n">comorbidity_new</span> <span class="o">=</span> <span class="mf">8.3</span> <span class="o">/</span> <span class="mf">15.0</span> <span class="o">=</span> <span class="mf">0.55</span>
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>
+</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="c1"># NEW is lower → more accurate reflection of moderate (not high) burden</span>
+</span></code></pre></div>
+<hr />
+<h2 id="future-directions">Future Directions<a class="headerlink" href="#future-directions" title="Permanent link">&para;</a></h2>
+<h3 id="1-severity-weighted-icd-codes">1. Severity-Weighted ICD Codes<a class="headerlink" href="#1-severity-weighted-icd-codes" title="Permanent link">&para;</a></h3>
+<p><strong>Idea:</strong> Not all diagnoses equal; weight by severity.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Example using ICD hierarchy</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">severity_weights</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="s1">&#39;I50.9&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>   <span class="c1"># Heart failure (severe)</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="s1">&#39;I10&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>     <span class="c1"># Essential HTN (moderate)</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="s1">&#39;Z23&#39;</span><span class="p">:</span> <span class="mf">0.1</span>      <span class="c1"># Vaccination encounter (minimal)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="p">}</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="n">weighted_icd_burden</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">severity_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">icd_codes</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="2-temporal-comorbidity-evolution">2. Temporal Comorbidity Evolution<a class="headerlink" href="#2-temporal-comorbidity-evolution" title="Permanent link">&para;</a></h3>
+<p><strong>Idea:</strong> Increasing comorbidity over time = higher risk.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Compare early vs. late visit comorbidity</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">early_burden</span> <span class="o">=</span> <span class="n">avg_comorbidity</span><span class="p">(</span><span class="n">visits</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">late_burden</span> <span class="o">=</span> <span class="n">avg_comorbidity</span><span class="p">(</span><span class="n">visits</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="n">comorbidity_trend</span> <span class="o">=</span> <span class="n">late_burden</span> <span class="o">-</span> <span class="n">early_burden</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Positive trend = worsening = higher risk</span>
+</span></code></pre></div>
+<h3 id="3-medication-class-analysis">3. Medication Class Analysis<a class="headerlink" href="#3-medication-class-analysis" title="Permanent link">&para;</a></h3>
+<p><strong>Idea:</strong> Weight medications by therapeutic class.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">high_risk_meds</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="s1">&#39;anticoagulants&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>   <span class="c1"># High risk</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="s1">&#39;immunosuppressants&#39;</span><span class="p">:</span> <span class="mf">1.3</span><span class="p">,</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="s1">&#39;chemotherapy&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>    <span class="s1">&#39;insulin&#39;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    <span class="s1">&#39;opioids&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="s1">&#39;vitamins&#39;</span><span class="p">:</span> <span class="mf">0.1</span>          <span class="c1"># Low risk</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="4-procedure-invasiveness-scoring">4. Procedure Invasiveness Scoring<a class="headerlink" href="#4-procedure-invasiveness-scoring" title="Permanent link">&para;</a></h3>
+<p><strong>Idea:</strong> Major procedures indicate higher burden.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># CPT-based invasiveness</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">invasiveness</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>    <span class="s1">&#39;major_surgery&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>    <span class="c1"># CABG, transplant</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="s1">&#39;minor_surgery&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>    <span class="c1"># Excision, repair</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>    <span class="s1">&#39;diagnostic&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>       <span class="c1"># Endoscopy, imaging</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="s1">&#39;minimal&#39;</span><span class="p">:</span> <span class="mf">0.2</span>           <span class="c1"># Wound care, injections</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<h3 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Aggregate code counts are imperfect proxies</strong> for comorbidity burden</li>
+<li><strong>Different code types have different informative value:</strong></li>
+<li>ICD (diagnoses) &gt; CPT (procedures) &gt; LOINC (labs) &gt; NDC (meds)</li>
+<li><strong>Code-type weighting is a practical refinement</strong> (easy to implement)</li>
+<li><strong>Condition counting is the gold standard</strong> (requires grouper software)</li>
+<li><strong>Clinical validation is essential</strong> (test against known cases)</li>
+</ol>
+<h3 id="practical-recommendations">Practical Recommendations<a class="headerlink" href="#practical-recommendations" title="Permanent link">&para;</a></h3>
+<p><strong>For synthetic data generation:</strong>
+- Start with code-type weighted counts (Approach 1)
+- Validate correlation with event times (should remain r &lt; -0.5)
+- Conduct sensitivity analysis (compare metrics)</p>
+<p><strong>For real-world risk modeling:</strong>
+- Use established comorbidity indices (Charlson/Elixhauser)
+- Map ICD codes to clinical conditions
+- Weight by severity and prognostic impact</p>
+<h3 id="revised-risk-factor-equation">Revised Risk Factor Equation<a class="headerlink" href="#revised-risk-factor-equation" title="Permanent link">&para;</a></h3>
+<p><strong>Original (TUTORIAL_02):</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">comorbidity</span> <span class="o">=</span> <span class="n">avg_codes_per_visit</span> <span class="o">/</span> <span class="mf">20.0</span>
+</span></code></pre></div></p>
+<p><strong>Refined (TUTORIAL_02a):</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Code-type weights</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="n">weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ICD&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;CPT&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;LOINC&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s1">&#39;NDC&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Weighted average</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="n">weighted_codes</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">code</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">visit</span><span class="o">.</span><span class="n">codes</span><span class="p">)</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="n">comorbidity</span> <span class="o">=</span> <span class="n">avg_weighted_codes</span> <span class="o">/</span> <span class="mf">15.0</span>
+</span></code></pre></div></p>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Elixhauser Comorbidity Index</strong><br />
+   Elixhauser et al. (1998). <em>Medical Care</em>, 36(1), 8-27.</p>
+</li>
+<li>
+<p><strong>Charlson Comorbidity Index</strong><br />
+   Charlson et al. (1987). <em>Journal of Chronic Diseases</em>, 40(5), 373-383.</p>
+</li>
+<li>
+<p><strong>Clinical Classifications Software (CCS)</strong><br />
+   AHRQ Healthcare Cost and Utilization Project (HCUP).<br />
+   https://www.hcup-us.ahrq.gov/toolssoftware/ccs/ccs.jsp</p>
+</li>
+<li>
+<p><strong>ICD Code Hierarchies</strong><br />
+   WHO ICD-10-CM Official Guidelines for Coding and Reporting.</p>
+</li>
+</ol>
+<hr />
+<p><strong>Related Documents:</strong>
+- <a href="../TUTORIAL_02_synthetic_data_design/">Main Tutorial: Synthetic Data Design</a>
+- <a href="../TUTORIAL_01_prediction_problem/">Tutorial 1: Prediction Problem Definition</a>
+- <a href="../TUTORIAL_03_loss_function/">Tutorial 3: Loss Function Formulation</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 EHR Sequencing Research Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pleiadian53/ehr-sequencing" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

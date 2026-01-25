@@ -1,0 +1,3430 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Research framework for longitudinal EHR sequence modeling, exploring temporal representations, learning objectives, and model architectures for disease progression, survival analysis, and temporal phenotyping">
+      
+      
+        <meta name="author" content="EHR Sequencing Research Team">
+      
+      
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/causal-survival-analysis-2/">
+      
+      
+        <link rel="prev" href="../causal-survival-analysis-1/">
+      
+      
+        <link rel="next" href="../modern-code-embeddings/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Part 2 - EHR Sequencing</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#causal-survival-analysis-for-ehr-sequences-part-2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EHR Sequencing
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Part 2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../INSTALL/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../notebooks/02_survival_analysis/" class="md-tabs__link">
+          
+  
+  
+  Survival Analysis
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Methods
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../data_generation/" class="md-tabs__link">
+          
+  
+  
+  Data Generation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pretrained_embeddings_guide/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EHR Sequencing
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../INSTALL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 1: Prediction Problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 2: Synthetic Data Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 3: Loss Function
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/02_survival_analysis/01_discrete_time_survival_lstm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notebook: Discrete-Time Survival LSTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Causal Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Causal Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../causal-survival-analysis-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#discrete-time-survival-modeling-from-intuition-to-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discrete-Time Survival Modeling: From Intuition to Implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-discrete-time-survival-modeling-really-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What Discrete-Time Survival Modeling Really Is
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. What Discrete-Time Survival Modeling Really Is">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-natural-discretization-visits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Natural Discretization: Visits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-makes-sense-for-ehr-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Makes Sense for EHR Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-hazard-in-discrete-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Hazard in Discrete Time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Hazard in Discrete Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lstm-output-and-prediction-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LSTM Output and Prediction Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-censoring-is-and-why-its-unavoidable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What Censoring Is (And Why It's Unavoidable)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. What Censoring Is (And Why It&#39;s Unavoidable)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formal-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-censoring-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Censoring Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-timeline-picture-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Timeline Picture (Mental Model)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Timeline Picture (Mental Model)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patient-1-event-observed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patient 1: Event Observed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patient-2-censored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patient 2: Censored
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-survival-probability-and-hazard-are-linked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Survival Probability and Hazard Are Linked
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Survival Probability and Hazard Are Linked">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationship
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-deriving-the-likelihood-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Deriving the Likelihood Formula
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Deriving the Likelihood Formula">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-a-event-occurs-at-time-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case A: Event Occurs at Time \(T^*\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-b-patient-is-censored-at-time-t_c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case B: Patient Is Censored at Time \(T_c\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-c-unified-likelihood-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case C: Unified Likelihood Formula
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-why-this-formulation-is-powerful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Why This Formulation Is Powerful
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Why This Formulation Is Powerful">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-censoring-is-handled-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Censoring Is Handled Correctly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-multiple-training-signals-per-patient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Multiple Training Signals Per Patient
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-natural-temporal-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Natural Temporal Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-turning-this-into-a-loss-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Turning This Into a Loss Function
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Turning This Into a Loss Function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-an-event-patient-event-at-time-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For an Event Patient (Event at Time \(T^*\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-a-censored-patient-censored-at-time-t_c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For a Censored Patient (Censored at Time \(T_c\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unified-log-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unified Log-Likelihood
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative-log-likelihood-what-you-minimize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative Log-Likelihood (What You Minimize)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pseudocode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pseudocode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-pytorch-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. PyTorch Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. PyTorch Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-how-the-lstm-fits-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. How the LSTM Fits In
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. How the LSTM Fits In">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-why-this-is-causal-by-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Why This Is Causal by Construction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Why This Is Causal by Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clarifying-prediction-vs-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clarifying Prediction vs. Estimation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verifying-causality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Causality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-common-misunderstandings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Common Misunderstandings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Common Misunderstandings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isnt-this-just-many-binary-classifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Isn't this just many binary classifiers?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-censoring-mean-negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Does censoring mean negative?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-use-cox-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Why not just use Cox regression?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-a-final-intuition-anchor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. A Final Intuition Anchor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. A Final Intuition Anchor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reconciling-with-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconciling with "Prediction"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-practical-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Practical Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Practical Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#handling-irregular-visit-spacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Irregular Visit Spacing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competing-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competing Risks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recurrent-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recurrent Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Next Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modern-code-embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modern Code Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Generation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data_generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data_generation/data_generation_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthea CSV Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pretrained_embeddings_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretrained Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runpods_training_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RunPods Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#discrete-time-survival-modeling-from-intuition-to-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discrete-Time Survival Modeling: From Intuition to Implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-discrete-time-survival-modeling-really-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What Discrete-Time Survival Modeling Really Is
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. What Discrete-Time Survival Modeling Really Is">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-natural-discretization-visits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Natural Discretization: Visits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-makes-sense-for-ehr-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Makes Sense for EHR Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-hazard-in-discrete-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Hazard in Discrete Time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Hazard in Discrete Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lstm-output-and-prediction-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LSTM Output and Prediction Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-censoring-is-and-why-its-unavoidable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What Censoring Is (And Why It's Unavoidable)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. What Censoring Is (And Why It&#39;s Unavoidable)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formal-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-censoring-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Censoring Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-timeline-picture-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Timeline Picture (Mental Model)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Timeline Picture (Mental Model)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patient-1-event-observed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patient 1: Event Observed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patient-2-censored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patient 2: Censored
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-survival-probability-and-hazard-are-linked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Survival Probability and Hazard Are Linked
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Survival Probability and Hazard Are Linked">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationship
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-deriving-the-likelihood-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Deriving the Likelihood Formula
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Deriving the Likelihood Formula">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-a-event-occurs-at-time-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case A: Event Occurs at Time \(T^*\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-b-patient-is-censored-at-time-t_c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case B: Patient Is Censored at Time \(T_c\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-c-unified-likelihood-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case C: Unified Likelihood Formula
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-why-this-formulation-is-powerful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Why This Formulation Is Powerful
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Why This Formulation Is Powerful">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-censoring-is-handled-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Censoring Is Handled Correctly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-multiple-training-signals-per-patient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Multiple Training Signals Per Patient
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-natural-temporal-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Natural Temporal Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-turning-this-into-a-loss-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Turning This Into a Loss Function
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Turning This Into a Loss Function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-an-event-patient-event-at-time-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For an Event Patient (Event at Time \(T^*\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-a-censored-patient-censored-at-time-t_c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For a Censored Patient (Censored at Time \(T_c\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unified-log-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unified Log-Likelihood
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative-log-likelihood-what-you-minimize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative Log-Likelihood (What You Minimize)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pseudocode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pseudocode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-pytorch-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. PyTorch Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. PyTorch Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-how-the-lstm-fits-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. How the LSTM Fits In
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. How the LSTM Fits In">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-why-this-is-causal-by-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Why This Is Causal by Construction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Why This Is Causal by Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clarifying-prediction-vs-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clarifying Prediction vs. Estimation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verifying-causality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Causality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-common-misunderstandings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Common Misunderstandings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Common Misunderstandings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isnt-this-just-many-binary-classifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Isn't this just many binary classifiers?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-censoring-mean-negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Does censoring mean negative?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-use-cox-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Why not just use Cox regression?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-a-final-intuition-anchor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. A Final Intuition Anchor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. A Final Intuition Anchor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reconciling-with-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconciling with "Prediction"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-practical-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Practical Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Practical Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#handling-irregular-visit-spacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Irregular Visit Spacing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competing-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competing Risks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recurrent-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recurrent Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Next Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/causal-survival-analysis-2.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="causal-survival-analysis-for-ehr-sequences-part-2">Causal Survival Analysis for EHR Sequences (Part 2)<a class="headerlink" href="#causal-survival-analysis-for-ehr-sequences-part-2" title="Permanent link">&para;</a></h1>
+<h2 id="discrete-time-survival-modeling-from-intuition-to-implementation">Discrete-Time Survival Modeling: From Intuition to Implementation<a class="headerlink" href="#discrete-time-survival-modeling-from-intuition-to-implementation" title="Permanent link">&para;</a></h2>
+<p><strong>Previous:</strong> <a href="../causal-survival-analysis-1/">Part 1: Causal Progression Labels</a></p>
+<p>In Part 1, we identified the leakage problem and introduced three approaches to causal progression modeling. This tutorial focuses on <strong>discrete-time survival modeling</strong>—the most natural fit for visit-based EHR sequences.</p>
+<p>We'll cover:</p>
+<ol>
+<li>What "discrete-time survival" actually means</li>
+<li>What censoring is, conceptually and operationally</li>
+<li>Deriving the likelihood formula step by step</li>
+<li>Implementing the loss function in PyTorch</li>
+</ol>
+<p>No symbols without intuition. Every equation will be built from first principles.</p>
+<hr />
+<h2 id="1-what-discrete-time-survival-modeling-really-is">1. What Discrete-Time Survival Modeling Really Is<a class="headerlink" href="#1-what-discrete-time-survival-modeling-really-is" title="Permanent link">&para;</a></h2>
+<h3 id="the-natural-discretization-visits">The Natural Discretization: Visits<a class="headerlink" href="#the-natural-discretization-visits" title="Permanent link">&para;</a></h3>
+<p>You already have a natural discretization of time: <strong>visits</strong>.</p>
+<p>Instead of modeling time as continuous (like Cox models with hazards per day), we say:</p>
+<blockquote>
+<p>Time advances in discrete steps: visit 1 → visit 2 → visit 3 → …</p>
+</blockquote>
+<p>At each visit <span class="arithmatex">\(t\)</span>, the patient is in one of two states:</p>
+<ul>
+<li><strong>Event-free</strong> (alive / not yet progressed)</li>
+<li><strong>Event occurred</strong> (e.g., disease progressed, died, readmitted)</li>
+</ul>
+<p>We model <strong>the probability that the event happens at the next step, given it has not happened before</strong>.</p>
+<p>That conditional probability is the <strong>hazard</strong>.</p>
+<h3 id="why-this-makes-sense-for-ehr-data">Why This Makes Sense for EHR Data<a class="headerlink" href="#why-this-makes-sense-for-ehr-data" title="Permanent link">&para;</a></h3>
+<p>EHR data is naturally discrete:</p>
+<ul>
+<li>Patients are observed at <strong>specific visits</strong>, not continuously</li>
+<li>Between visits, we have no information</li>
+<li>The "next visit" is the natural prediction horizon</li>
+</ul>
+<p>This is fundamentally different from continuous-time survival analysis (Cox models), which assumes you can observe events at any moment in time.</p>
+<hr />
+<h2 id="2-the-hazard-in-discrete-time">2. The Hazard in Discrete Time<a class="headerlink" href="#2-the-hazard-in-discrete-time" title="Permanent link">&para;</a></h2>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p>At visit <span class="arithmatex">\(t\)</span>, the hazard is:</p>
+<div class="arithmatex">\[
+h_t = P(T = t \mid T \geq t) = P(\text{event at time } t \mid \text{survived to } t)
+\]</div>
+<p>Equivalently, in terms of visit intervals:</p>
+<div class="arithmatex">\[
+h_t = P(\text{event in interval } (t-1, t] \mid \text{no event through } t-1)
+\]</div>
+<p>Read this as:</p>
+<blockquote>
+<p>"Given the patient has <em>not</em> progressed through visit <span class="arithmatex">\(t-1\)</span>, what is the probability they progress by visit <span class="arithmatex">\(t\)</span>?"</p>
+</blockquote>
+<p><strong>Important:</strong> The hazard <span class="arithmatex">\(h_t\)</span> represents the risk for the <strong>current</strong> time point <span class="arithmatex">\(t\)</span> (or equivalently, the interval since the last observation), not for some future time.</p>
+<h3 id="key-properties">Key Properties<a class="headerlink" href="#key-properties" title="Permanent link">&para;</a></h3>
+<p><strong>This is NOT:</strong></p>
+<ul>
+<li>Probability of ever progressing</li>
+<li>Cumulative risk over all time</li>
+<li>A patient-level summary statistic</li>
+</ul>
+<p><strong>This IS:</strong></p>
+<ul>
+<li><strong>Local in time</strong>: specific to this moment</li>
+<li><strong>Conditional</strong>: depends on survival up to now</li>
+<li><strong>Causal</strong>: uses only history up to <span class="arithmatex">\(t\)</span></li>
+</ul>
+<h3 id="lstm-output-and-prediction-timing">LSTM Output and Prediction Timing<a class="headerlink" href="#lstm-output-and-prediction-timing" title="Permanent link">&para;</a></h3>
+<p>Your LSTM outputs <span class="arithmatex">\(h_t \in (0, 1)\)</span> at each visit:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># LSTM forward pass</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">hidden_states</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lstm</span><span class="p">(</span><span class="n">visit_sequences</span><span class="p">)</span>  <span class="c1"># [batch, num_visits, hidden_dim]</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Map to hazard (one value per visit)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">hazards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">hazard_head</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">))</span>  <span class="c1"># [batch, num_visits]</span>
+</span></code></pre></div>
+<p>The sigmoid ensures <span class="arithmatex">\(0 &lt; h_t &lt; 1\)</span> (valid probability).</p>
+<p><strong>Interpretation for prediction:</strong>
+- At visit <span class="arithmatex">\(t\)</span>, the LSTM has seen data through visit <span class="arithmatex">\(t\)</span>
+- The hazard <span class="arithmatex">\(h_t\)</span> represents: "What is the risk that the event occurred by this visit?"
+- For <strong>forward prediction</strong>, use <span class="arithmatex">\(h_{t+1}\)</span> (the hazard at the next visit) to predict future risk
+- This maintains causality: predictions at time <span class="arithmatex">\(t\)</span> use only data through time <span class="arithmatex">\(t\)</span></p>
+<hr />
+<h2 id="3-what-censoring-is-and-why-its-unavoidable">3. What Censoring Is (And Why It's Unavoidable)<a class="headerlink" href="#3-what-censoring-is-and-why-its-unavoidable" title="Permanent link">&para;</a></h2>
+<h3 id="the-core-problem">The Core Problem<a class="headerlink" href="#the-core-problem" title="Permanent link">&para;</a></h3>
+<p>In real data, you often don't know what eventually happened.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Patient moved to another hospital</li>
+<li>Study ended before event occurred</li>
+<li>Patient still stable at last observation</li>
+<li>Lost to follow-up</li>
+</ul>
+<p>You only know:</p>
+<blockquote>
+<p>"Up to this point, no event has occurred."</p>
+</blockquote>
+<p>That is <strong>censoring</strong>.</p>
+<h3 id="formal-definition">Formal Definition<a class="headerlink" href="#formal-definition" title="Permanent link">&para;</a></h3>
+<p>A patient is <strong>right-censored</strong> if:</p>
+<ul>
+<li>They have no observed event</li>
+<li>But follow-up ends at time <span class="arithmatex">\(T_c\)</span></li>
+</ul>
+<p><strong>Crucially:</strong></p>
+<ul>
+<li>Censoring is <em>not</em> a negative outcome</li>
+<li>It means "unknown beyond this point"</li>
+<li>We cannot say the event <em>didn't</em> happen—we just don't know</li>
+</ul>
+<h3 id="why-censoring-matters">Why Censoring Matters<a class="headerlink" href="#why-censoring-matters" title="Permanent link">&para;</a></h3>
+<p>If you treat censored patients as "no event," you're making a false assumption. This biases your model to underestimate risk.</p>
+<p><strong>Correct approach:</strong> Use censoring information in the likelihood, but don't force a label.</p>
+<hr />
+<h2 id="4-timeline-picture-mental-model">4. Timeline Picture (Mental Model)<a class="headerlink" href="#4-timeline-picture-mental-model" title="Permanent link">&para;</a></h2>
+<h3 id="patient-1-event-observed">Patient 1: Event Observed<a class="headerlink" href="#patient-1-event-observed" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Visit:    1 ---- 2 ---- 3 ---- 4 ---- 5
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Event:                     ↑
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                           progression
+</span></code></pre></div>
+<ul>
+<li>Visits 1-3: No event (contributes survival information)</li>
+<li>Visit 4: Event occurs (contributes hazard information)</li>
+</ul>
+<h3 id="patient-2-censored">Patient 2: Censored<a class="headerlink" href="#patient-2-censored" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Visit:    1 ---- 2 ---- 3
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Event:          (study ends here)
+</span></code></pre></div>
+<ul>
+<li>Visits 1-3: No event (contributes survival information)</li>
+<li>After visit 3: Unknown (no contribution)</li>
+</ul>
+<p><strong>Both patients contribute information, but differently.</strong></p>
+<hr />
+<h2 id="5-survival-probability-and-hazard-are-linked">5. Survival Probability and Hazard Are Linked<a class="headerlink" href="#5-survival-probability-and-hazard-are-linked" title="Permanent link">&para;</a></h2>
+<h3 id="definitions">Definitions<a class="headerlink" href="#definitions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><span class="arithmatex">\(h_t\)</span>: hazard at visit <span class="arithmatex">\(t\)</span></li>
+<li><span class="arithmatex">\(S_t\)</span>: probability of surviving (no event) <strong>through</strong> visit <span class="arithmatex">\(t\)</span></li>
+</ul>
+<h3 id="relationship">Relationship<a class="headerlink" href="#relationship" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[
+S_t = \prod_{k=1}^{t} (1 - h_k)
+\]</div>
+<h3 id="interpretation">Interpretation<a class="headerlink" href="#interpretation" title="Permanent link">&para;</a></h3>
+<p>To survive <strong>through</strong> time <span class="arithmatex">\(t\)</span> (i.e., no event at times <span class="arithmatex">\(1, 2, \ldots, t\)</span>), you must not have the event at any step:</p>
+<ul>
+<li>No event at time 1: probability <span class="arithmatex">\((1 - h_1)\)</span></li>
+<li>No event at time 2: probability <span class="arithmatex">\((1 - h_2)\)</span></li>
+<li>...</li>
+<li>No event at time <span class="arithmatex">\(t\)</span>: probability <span class="arithmatex">\((1 - h_t)\)</span></li>
+</ul>
+<p>The overall survival probability <span class="arithmatex">\(S_t = P(T &gt; t)\)</span> is the product of all these "didn't happen" factors.</p>
+<p><strong>Note:</strong> <span class="arithmatex">\(S_t\)</span> means "survived through time <span class="arithmatex">\(t\)</span>" (equivalently, "event-free through visit <span class="arithmatex">\(t\)</span>"), so <span class="arithmatex">\(S_t = P(T &gt; t)\)</span>.</p>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>If hazards are constant at <span class="arithmatex">\(h_t = 0.1\)</span> for all <span class="arithmatex">\(t\)</span>:</p>
+<ul>
+<li><span class="arithmatex">\(S_1 = 0.9\)</span></li>
+<li><span class="arithmatex">\(S_2 = 0.9 \times 0.9 = 0.81\)</span></li>
+<li><span class="arithmatex">\(S_3 = 0.9 \times 0.9 \times 0.9 = 0.729\)</span></li>
+<li>...</li>
+</ul>
+<p>Survival probability decreases over time, even with constant hazard.</p>
+<hr />
+<h2 id="6-deriving-the-likelihood-formula">6. Deriving the Likelihood Formula<a class="headerlink" href="#6-deriving-the-likelihood-formula" title="Permanent link">&para;</a></h2>
+<p>Let's derive the likelihood for <strong>one patient</strong> from first principles.</p>
+<h3 id="case-a-event-occurs-at-time-t">Case A: Event Occurs at Time <span class="arithmatex">\(T^*\)</span><a class="headerlink" href="#case-a-event-occurs-at-time-t" title="Permanent link">&para;</a></h3>
+<p><strong>What must be true?</strong></p>
+<ol>
+<li>No event at times <span class="arithmatex">\(1, 2, \ldots, T^*-1\)</span></li>
+<li>Event occurs at time <span class="arithmatex">\(T^*\)</span></li>
+</ol>
+<p><strong>Probability:</strong></p>
+<div class="arithmatex">\[
+P = \underbrace{(1 - h_1)(1 - h_2)\cdots(1 - h_{T^*-1})}_{\text{survived through time } T^*-1} \times \underbrace{h_{T^*}}_{\text{event at time } T^*}
+\]</div>
+<p><strong>Compactly:</strong></p>
+<div class="arithmatex">\[
+\mathcal{L} = \left[\prod_{t=1}^{T^*-1} (1 - h_t)\right] \cdot h_{T^*}
+\]</div>
+<p><strong>Intuition:</strong> The patient "rolled the dice" at each time point and didn't have the event, until time <span class="arithmatex">\(T^*\)</span> when the event occurred.</p>
+<p><strong>Note:</strong> We write <span class="arithmatex">\(\prod_{t=1}^{T^*-1}\)</span> to make explicit that we're taking the product over times <span class="arithmatex">\(1\)</span> through <span class="arithmatex">\(T^*-1\)</span>, not including <span class="arithmatex">\(T^*\)</span>.</p>
+<hr />
+<h3 id="case-b-patient-is-censored-at-time-t_c">Case B: Patient Is Censored at Time <span class="arithmatex">\(T_c\)</span><a class="headerlink" href="#case-b-patient-is-censored-at-time-t_c" title="Permanent link">&para;</a></h3>
+<p><strong>What do we know?</strong></p>
+<ul>
+<li>No event at times <span class="arithmatex">\(1, 2, \ldots, T_c\)</span></li>
+<li>After that: <strong>unknown</strong></li>
+</ul>
+<p><strong>Probability of observed data:</strong></p>
+<div class="arithmatex">\[
+\mathcal{L} = \prod_{t=1}^{T_c} (1 - h_t)
+\]</div>
+<p><strong>Notice:</strong></p>
+<ul>
+<li>We only count survival through <span class="arithmatex">\(T_c\)</span></li>
+<li><strong>No event hazard term</strong> (we don't know if/when the event happened after)</li>
+<li>We never claim the event <em>didn't</em> happen beyond <span class="arithmatex">\(T_c\)</span></li>
+<li>We just stop accumulating likelihood contributions</li>
+</ul>
+<p><strong>Intuition:</strong> The patient survived through all observed time points. We don't know what happened after.</p>
+<p><strong>Subtlety:</strong> Some formulations write this as <span class="arithmatex">\(\prod_{t=1}^{T_c-1} (1-h_t)\)</span> if censoring occurs "just before" time <span class="arithmatex">\(T_c\)</span>. Here we use the convention that censoring at <span class="arithmatex">\(T_c\)</span> means the patient was observed event-free through time <span class="arithmatex">\(T_c\)</span>.</p>
+<hr />
+<h3 id="case-c-unified-likelihood-formula">Case C: Unified Likelihood Formula<a class="headerlink" href="#case-c-unified-likelihood-formula" title="Permanent link">&para;</a></h3>
+<p>For patient <span class="arithmatex">\(i\)</span>, the likelihood is:</p>
+<div class="arithmatex">\[
+\mathcal{L}_i = \left[\prod_{t=1}^{T_i - 1} (1 - h_{it})\right] \times \left[h_{iT_i}\right]^{\delta_i}
+\]</div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(T_i\)</span> is the observed time for patient <span class="arithmatex">\(i\)</span> (event or censoring)</li>
+<li><span class="arithmatex">\(h_{it}\)</span> is the hazard at time <span class="arithmatex">\(t\)</span> for patient <span class="arithmatex">\(i\)</span></li>
+<li><span class="arithmatex">\(\delta_i\)</span> is the event indicator: <span class="arithmatex">\(\delta_i = 1\)</span> if event observed, <span class="arithmatex">\(\delta_i = 0\)</span> if censored</li>
+</ul>
+<p><strong>Explanation:</strong>
+- The first term <span class="arithmatex">\(\prod_{t=1}^{T_i-1} (1 - h_{it})\)</span> is the probability of surviving through time <span class="arithmatex">\(T_i - 1\)</span>
+- The second term <span class="arithmatex">\(h_{iT_i}^{\delta_i}\)</span> equals:
+  - <span class="arithmatex">\(h_{iT_i}\)</span> if <span class="arithmatex">\(\delta_i = 1\)</span> (event observed)
+  - <span class="arithmatex">\(1\)</span> if <span class="arithmatex">\(\delta_i = 0\)</span> (censored, no contribution from event hazard)</p>
+<p><strong>That's the full likelihood. No magic. Just logic.</strong></p>
+<hr />
+<h2 id="7-why-this-formulation-is-powerful">7. Why This Formulation Is Powerful<a class="headerlink" href="#7-why-this-formulation-is-powerful" title="Permanent link">&para;</a></h2>
+<h3 id="1-censoring-is-handled-correctly">1. Censoring Is Handled Correctly<a class="headerlink" href="#1-censoring-is-handled-correctly" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Censored patients still contribute survival information</li>
+<li>They are not mislabeled as "no event"</li>
+<li>No data is thrown away</li>
+</ul>
+<h3 id="2-multiple-training-signals-per-patient">2. Multiple Training Signals Per Patient<a class="headerlink" href="#2-multiple-training-signals-per-patient" title="Permanent link">&para;</a></h3>
+<p>Each visit contributes:</p>
+<ul>
+<li>Either a "did not progress yet" factor: <span class="arithmatex">\((1 - h_t)\)</span></li>
+<li>Or an "event happened now" factor: <span class="arithmatex">\(h_t\)</span></li>
+</ul>
+<p><strong>This is far more data-efficient than patient-level labels.</strong></p>
+<p>With 1000 patients averaging 10 visits each:</p>
+<ul>
+<li>Patient-level: 1,000 training examples</li>
+<li>Visit-level (survival): ~10,000 training signals</li>
+</ul>
+<h3 id="3-natural-temporal-structure">3. Natural Temporal Structure<a class="headerlink" href="#3-natural-temporal-structure" title="Permanent link">&para;</a></h3>
+<p>The likelihood respects the sequential nature of the data:</p>
+<ul>
+<li>Earlier visits affect later probabilities through the survival product</li>
+<li>The model learns disease dynamics, not just static risk</li>
+</ul>
+<hr />
+<h2 id="8-turning-this-into-a-loss-function">8. Turning This Into a Loss Function<a class="headerlink" href="#8-turning-this-into-a-loss-function" title="Permanent link">&para;</a></h2>
+<p>Take logs (because products are numerically unstable):</p>
+<h3 id="for-an-event-patient-event-at-time-t">For an Event Patient (Event at Time <span class="arithmatex">\(T^*\)</span>)<a class="headerlink" href="#for-an-event-patient-event-at-time-t" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[
+\log \mathcal{L} = \sum_{t=1}^{T^*-1} \log(1 - h_t) + \log(h_{T^*})
+\]</div>
+<h3 id="for-a-censored-patient-censored-at-time-t_c">For a Censored Patient (Censored at Time <span class="arithmatex">\(T_c\)</span>)<a class="headerlink" href="#for-a-censored-patient-censored-at-time-t_c" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[
+\log \mathcal{L} = \sum_{t=1}^{T_c} \log(1 - h_t)
+\]</div>
+<h3 id="unified-log-likelihood">Unified Log-Likelihood<a class="headerlink" href="#unified-log-likelihood" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[
+\log \mathcal{L}_i = \sum_{t=1}^{T_i - 1} \log(1 - h_{it}) + \delta_i \log(h_{iT_i})
+\]</div>
+<h3 id="negative-log-likelihood-what-you-minimize">Negative Log-Likelihood (What You Minimize)<a class="headerlink" href="#negative-log-likelihood-what-you-minimize" title="Permanent link">&para;</a></h3>
+<p>For a batch of patients:</p>
+<div class="arithmatex">\[
+\text{Loss} = -\sum_{i=1}^{N} \log \mathcal{L}_i
+\]</div>
+<h3 id="pseudocode">Pseudocode<a class="headerlink" href="#pseudocode" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">loss</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">for</span> <span class="n">patient</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">num_visits</span><span class="p">):</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="k">if</span> <span class="n">event_at_visit</span><span class="p">[</span><span class="n">t</span><span class="p">]:</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="n">loss</span> <span class="o">-=</span> <span class="n">log</span><span class="p">(</span><span class="n">hazard</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            <span class="k">break</span>  <span class="c1"># Stop after event</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>            <span class="n">loss</span> <span class="o">-=</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">hazard</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+</span></code></pre></div>
+<p>Mask appropriately across batch for variable-length sequences.</p>
+<hr />
+<h2 id="9-pytorch-implementation">9. PyTorch Implementation<a class="headerlink" href="#9-pytorch-implementation" title="Permanent link">&para;</a></h2>
+<p>Here's a complete implementation:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">discrete_time_survival_loss</span><span class="p">(</span><span class="n">hazards</span><span class="p">,</span> <span class="n">event_times</span><span class="p">,</span> <span class="n">event_indicators</span><span class="p">,</span> <span class="n">sequence_mask</span><span class="p">):</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">    Discrete-time survival analysis loss function.</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="sd">    Args:</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="sd">        hazards: [batch_size, max_visits] - predicted hazards at each visit</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="sd">        event_times: [batch_size] - index of event or censoring (0-indexed)</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="sd">        event_indicators: [batch_size] - 1 if event observed, 0 if censored</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="sd">        sequence_mask: [batch_size, max_visits] - 1 for real visits, 0 for padding</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="sd">    Returns:</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="sd">        Negative log-likelihood (scalar)</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="n">batch_size</span><span class="p">,</span> <span class="n">max_visits</span> <span class="o">=</span> <span class="n">hazards</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="c1"># Clamp hazards to avoid log(0)</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">hazards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">hazards</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-7</span><span class="p">)</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="c1"># Initialize log-likelihood</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="n">log_likelihood</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hazards</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>        <span class="n">T</span> <span class="o">=</span> <span class="n">event_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>  <span class="c1"># Event or censoring time</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>        <span class="c1"># Contribution from survival up to time T</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>        <span class="c1"># Sum log(1 - h_t) for all t &lt; T</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>        <span class="k">if</span> <span class="n">T</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>            <span class="n">survival_log_prob</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>                <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">hazards</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">T</span><span class="p">])</span> <span class="o">*</span> <span class="n">sequence_mask</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">T</span><span class="p">]</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>            <span class="p">)</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>            <span class="n">log_likelihood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">survival_log_prob</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>        <span class="c1"># Contribution from event at time T (if observed)</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>        <span class="k">if</span> <span class="n">event_indicators</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">T</span> <span class="o">&lt;</span> <span class="n">max_visits</span><span class="p">:</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>            <span class="n">event_log_prob</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hazards</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>            <span class="n">log_likelihood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">event_log_prob</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>    <span class="c1"># Return negative log-likelihood (to minimize)</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">log_likelihood</span><span class="p">)</span>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="c1"># Alternative: Vectorized implementation (more efficient)</span>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="k">def</span><span class="w"> </span><span class="nf">discrete_time_survival_loss_vectorized</span><span class="p">(</span><span class="n">hazards</span><span class="p">,</span> <span class="n">event_times</span><span class="p">,</span> <span class="n">event_indicators</span><span class="p">,</span> <span class="n">sequence_mask</span><span class="p">):</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="sd">    Vectorized version for better performance.</span>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>    <span class="n">batch_size</span><span class="p">,</span> <span class="n">max_visits</span> <span class="o">=</span> <span class="n">hazards</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
+</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>    <span class="c1"># Clamp hazards</span>
+</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>    <span class="n">hazards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">hazards</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-7</span><span class="p">)</span>
+</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>
+</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>    <span class="c1"># Create time index tensor</span>
+</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>    <span class="n">time_idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">max_visits</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hazards</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># [1, max_visits]</span>
+</span><span id="__span-4-57"><a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a>    <span class="n">event_times_expanded</span> <span class="o">=</span> <span class="n">event_times</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size, 1]</span>
+</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a>
+</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a>    <span class="c1"># Mask for visits before event/censoring</span>
+</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a>    <span class="n">before_event_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">time_idx</span> <span class="o">&lt;</span> <span class="n">event_times_expanded</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">*</span> <span class="n">sequence_mask</span>
+</span><span id="__span-4-61"><a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a>
+</span><span id="__span-4-62"><a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a>    <span class="c1"># Mask for event visit</span>
+</span><span id="__span-4-63"><a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a>    <span class="n">at_event_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">time_idx</span> <span class="o">==</span> <span class="n">event_times_expanded</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">*</span> <span class="n">sequence_mask</span>
+</span><span id="__span-4-64"><a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a>
+</span><span id="__span-4-65"><a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a>    <span class="c1"># Log-likelihood from survival (all visits before event)</span>
+</span><span id="__span-4-66"><a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a>    <span class="n">survival_ll</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+</span><span id="__span-4-67"><a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a>        <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">hazards</span><span class="p">)</span> <span class="o">*</span> <span class="n">before_event_mask</span><span class="p">,</span>
+</span><span id="__span-4-68"><a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a>        <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="__span-4-69"><a id="__codelineno-4-69" name="__codelineno-4-69" href="#__codelineno-4-69"></a>    <span class="p">)</span>
+</span><span id="__span-4-70"><a id="__codelineno-4-70" name="__codelineno-4-70" href="#__codelineno-4-70"></a>
+</span><span id="__span-4-71"><a id="__codelineno-4-71" name="__codelineno-4-71" href="#__codelineno-4-71"></a>    <span class="c1"># Log-likelihood from event (only if event observed)</span>
+</span><span id="__span-4-72"><a id="__codelineno-4-72" name="__codelineno-4-72" href="#__codelineno-4-72"></a>    <span class="n">event_ll</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+</span><span id="__span-4-73"><a id="__codelineno-4-73" name="__codelineno-4-73" href="#__codelineno-4-73"></a>        <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hazards</span><span class="p">)</span> <span class="o">*</span> <span class="n">at_event_mask</span><span class="p">,</span>
+</span><span id="__span-4-74"><a id="__codelineno-4-74" name="__codelineno-4-74" href="#__codelineno-4-74"></a>        <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="__span-4-75"><a id="__codelineno-4-75" name="__codelineno-4-75" href="#__codelineno-4-75"></a>    <span class="p">)</span> <span class="o">*</span> <span class="n">event_indicators</span>
+</span><span id="__span-4-76"><a id="__codelineno-4-76" name="__codelineno-4-76" href="#__codelineno-4-76"></a>
+</span><span id="__span-4-77"><a id="__codelineno-4-77" name="__codelineno-4-77" href="#__codelineno-4-77"></a>    <span class="c1"># Total log-likelihood</span>
+</span><span id="__span-4-78"><a id="__codelineno-4-78" name="__codelineno-4-78" href="#__codelineno-4-78"></a>    <span class="n">log_likelihood</span> <span class="o">=</span> <span class="n">survival_ll</span> <span class="o">+</span> <span class="n">event_ll</span>
+</span><span id="__span-4-79"><a id="__codelineno-4-79" name="__codelineno-4-79" href="#__codelineno-4-79"></a>
+</span><span id="__span-4-80"><a id="__codelineno-4-80" name="__codelineno-4-80" href="#__codelineno-4-80"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">log_likelihood</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Model output</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">hazards</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">visit_sequences</span><span class="p">)</span>  <span class="c1"># [batch_size, num_visits]</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Ground truth</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">event_times</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>  <span class="c1"># Visit index of event/censoring</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">event_indicators</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># 1=event, 0=censored</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">sequence_mask</span> <span class="o">=</span> <span class="n">create_sequence_mask</span><span class="p">(</span><span class="n">visit_sequences</span><span class="p">)</span>  <span class="c1"># [batch, num_visits]</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Compute loss</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">loss</span> <span class="o">=</span> <span class="n">discrete_time_survival_loss_vectorized</span><span class="p">(</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">hazards</span><span class="p">,</span> <span class="n">event_times</span><span class="p">,</span> <span class="n">event_indicators</span><span class="p">,</span> <span class="n">sequence_mask</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">)</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Backprop</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span></code></pre></div>
+<hr />
+<h2 id="10-how-the-lstm-fits-in">10. How the LSTM Fits In<a class="headerlink" href="#10-how-the-lstm-fits-in" title="Permanent link">&para;</a></h2>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">DiscreteTimeSurvivalLSTM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">):</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">hazard_head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visit_codes</span><span class="p">,</span> <span class="n">visit_mask</span><span class="p">,</span> <span class="n">sequence_mask</span><span class="p">):</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="sd">        Args:</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="sd">            visit_codes: [batch, num_visits, max_codes_per_visit]</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="sd">            visit_mask: [batch, num_visits, max_codes_per_visit]</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="sd">            sequence_mask: [batch, num_visits]</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="sd">        Returns:</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="sd">            hazards: [batch, num_visits] - hazard at each visit</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="c1"># Embed codes</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>        <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">visit_codes</span><span class="p">)</span>  <span class="c1"># [B, V, C, E]</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>        <span class="c1"># Aggregate codes within each visit (mean pooling)</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>        <span class="n">visit_mask_expanded</span> <span class="o">=</span> <span class="n">visit_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [B, V, C, 1]</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>        <span class="n">visit_vectors</span> <span class="o">=</span> <span class="p">(</span><span class="n">embeddings</span> <span class="o">*</span> <span class="n">visit_mask_expanded</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> \
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>                       <span class="n">visit_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [B, V, E]</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>        <span class="c1"># LSTM over visits</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>        <span class="n">lstm_out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span><span class="p">(</span><span class="n">visit_vectors</span><span class="p">)</span>  <span class="c1"># [B, V, H]</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>        <span class="c1"># Map to hazard (sigmoid for valid probability)</span>
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>        <span class="n">hazards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hazard_head</span><span class="p">(</span><span class="n">lstm_out</span><span class="p">))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [B, V]</span>
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>        <span class="k">return</span> <span class="n">hazards</span>
+</span></code></pre></div>
+<h3 id="training-loop">Training Loop<a class="headerlink" href="#training-loop" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteTimeSurvivalLSTM</span><span class="p">(</span><span class="n">vocab_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="c1"># Forward pass</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="n">hazards</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>            <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;visit_codes&#39;</span><span class="p">],</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>            <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;visit_mask&#39;</span><span class="p">],</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>            <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;sequence_mask&#39;</span><span class="p">]</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="p">)</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="c1"># Compute loss</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        <span class="n">loss</span> <span class="o">=</span> <span class="n">discrete_time_survival_loss_vectorized</span><span class="p">(</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>            <span class="n">hazards</span><span class="p">,</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>            <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;event_times&#39;</span><span class="p">],</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>            <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;event_indicators&#39;</span><span class="p">],</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>            <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;sequence_mask&#39;</span><span class="p">]</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>        <span class="p">)</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>        <span class="c1"># Backward pass</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span></code></pre></div>
+<hr />
+<h2 id="11-why-this-is-causal-by-construction">11. Why This Is Causal by Construction<a class="headerlink" href="#11-why-this-is-causal-by-construction" title="Permanent link">&para;</a></h2>
+<p>At time <span class="arithmatex">\(t\)</span>:</p>
+<ul>
+<li><strong>Input</strong> to the LSTM uses only history through time <span class="arithmatex">\(t\)</span> (due to LSTM causality)</li>
+<li><strong>Hazard</strong> <span class="arithmatex">\(h_t\)</span> represents the risk <strong>at time</strong> <span class="arithmatex">\(t\)</span> (given history through <span class="arithmatex">\(t-1\)</span>)</li>
+<li>For <strong>prediction</strong> at time <span class="arithmatex">\(t\)</span>: use <span class="arithmatex">\(h_{t+1}, h_{t+2}, \ldots\)</span> to forecast future risk</li>
+<li><strong>No future leakage</strong> is possible (assuming correct masking)</li>
+</ul>
+<p>This is the cleanest way to do progression modeling with sequences.</p>
+<h3 id="clarifying-prediction-vs-estimation">Clarifying Prediction vs. Estimation<a class="headerlink" href="#clarifying-prediction-vs-estimation" title="Permanent link">&para;</a></h3>
+<p><strong>During training:</strong>
+- At each time <span class="arithmatex">\(t\)</span>, we estimate <span class="arithmatex">\(h_t\)</span> using data through time <span class="arithmatex">\(t\)</span>
+- This is appropriate for likelihood computation (we're modeling the data generation process)</p>
+<p><strong>During inference/prediction:</strong>
+- If we want to predict future risk from visit <span class="arithmatex">\(t\)</span>, we look at <span class="arithmatex">\(h_{t+1}, h_{t+2}, \ldots\)</span>
+- These represent "what will happen next" from the perspective of time <span class="arithmatex">\(t\)</span>
+- Each <span class="arithmatex">\(h_{t+k}\)</span> uses only information through time <span class="arithmatex">\(t+k\)</span>, maintaining causality</p>
+<h3 id="verifying-causality">Verifying Causality<a class="headerlink" href="#verifying-causality" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test: Shuffle future visits (shouldn&#39;t affect prediction at time t)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_causality</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="c1"># Prediction at time t</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">pred_original</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">sequence</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="c1"># Shuffle visits after t</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">shuffled</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">shuffled</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">shuffled</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="c1"># Prediction should be identical</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">pred_shuffled</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">shuffled</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">pred_original</span><span class="p">,</span> <span class="n">pred_shuffled</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="12-common-misunderstandings">12. Common Misunderstandings<a class="headerlink" href="#12-common-misunderstandings" title="Permanent link">&para;</a></h2>
+<h3 id="isnt-this-just-many-binary-classifiers">"Isn't this just many binary classifiers?"<a class="headerlink" href="#isnt-this-just-many-binary-classifiers" title="Permanent link">&para;</a></h3>
+<p><strong>No.</strong></p>
+<ul>
+<li>The hazards are <strong>coupled through survival</strong>: <span class="arithmatex">\(S_t = \prod_{k=1}^t (1 - h_k)\)</span></li>
+<li>Earlier predictions affect later likelihood</li>
+<li>The model learns temporal dependencies, not independent classifications</li>
+</ul>
+<h3 id="does-censoring-mean-negative">"Does censoring mean negative?"<a class="headerlink" href="#does-censoring-mean-negative" title="Permanent link">&para;</a></h3>
+<p><strong>No.</strong></p>
+<ul>
+<li><strong>Negative</strong> = observed no event in a specific window</li>
+<li><strong>Censored</strong> = unknown beyond this point</li>
+<li>They are fundamentally different concepts</li>
+</ul>
+<h3 id="why-not-just-use-cox-regression">"Why not just use Cox regression?"<a class="headerlink" href="#why-not-just-use-cox-regression" title="Permanent link">&para;</a></h3>
+<p>You can—but:</p>
+<ul>
+<li>Cox assumes <strong>proportional hazards</strong> (hazard ratios constant over time)</li>
+<li>Discrete-time lets the network learn <strong>time-varying risk</strong> flexibly</li>
+<li>Easier to integrate with visit-based LSTMs</li>
+<li>No need to estimate baseline hazard</li>
+</ul>
+<hr />
+<h2 id="13-a-final-intuition-anchor">13. A Final Intuition Anchor<a class="headerlink" href="#13-a-final-intuition-anchor" title="Permanent link">&para;</a></h2>
+<p>Think of each time point as asking:</p>
+<blockquote>
+<p>"Did the event occur <strong>at this time</strong> (in the interval since the last observation)?"</p>
+</blockquote>
+<ul>
+<li>Most of the time, the answer is "not yet" → contributes <span class="arithmatex">\((1 - h_t)\)</span></li>
+<li>Once (for event patients), the answer is "yes" → contributes <span class="arithmatex">\(h_t\)</span></li>
+<li>Sometimes, you stop asking → censored (no more likelihood contributions)</li>
+</ul>
+<p><strong>That's discrete-time survival.</strong></p>
+<h3 id="reconciling-with-prediction">Reconciling with "Prediction"<a class="headerlink" href="#reconciling-with-prediction" title="Permanent link">&para;</a></h3>
+<p>If you think in terms of "predicting the future":
+- At time <span class="arithmatex">\(t\)</span> (having seen data through <span class="arithmatex">\(t\)</span>), you've computed <span class="arithmatex">\(h_t\)</span>
+- To predict "what happens next," you'd look at <span class="arithmatex">\(h_{t+1}\)</span> (which uses data through <span class="arithmatex">\(t+1\)</span>)
+- But during training, we're not predicting—we're estimating the hazard function that generated the observed data</p>
+<hr />
+<h2 id="14-practical-considerations">14. Practical Considerations<a class="headerlink" href="#14-practical-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="handling-irregular-visit-spacing">Handling Irregular Visit Spacing<a class="headerlink" href="#handling-irregular-visit-spacing" title="Permanent link">&para;</a></h3>
+<p>If visits are irregularly spaced, you can:</p>
+<ol>
+<li>
+<p><strong>Include time delta as a feature</strong>:
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">time_since_last_visit</span> <span class="o">=</span> <span class="n">compute_time_deltas</span><span class="p">(</span><span class="n">visit_timestamps</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">lstm_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">visit_vectors</span><span class="p">,</span> <span class="n">time_deltas</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Use time-dependent hazard</strong>:
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">hazard</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">W_h</span> <span class="o">@</span> <span class="n">hidden</span> <span class="o">+</span> <span class="n">W_t</span> <span class="o">@</span> <span class="n">time_delta</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+</ol>
+<h3 id="competing-risks">Competing Risks<a class="headerlink" href="#competing-risks" title="Permanent link">&para;</a></h3>
+<p>If multiple event types can occur (e.g., progression vs. death):</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Multi-output hazard head</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">hazards</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">hazard_head</span><span class="p">(</span><span class="n">lstm_out</span><span class="p">))</span>  <span class="c1"># [B, V, num_event_types]</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Cause-specific likelihood</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">for</span> <span class="n">event_type</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_event_types</span><span class="p">):</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="k">if</span> <span class="n">observed_event</span> <span class="o">==</span> <span class="n">event_type</span><span class="p">:</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        <span class="n">ll</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">hazards</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">event_type</span><span class="p">])</span>
+</span></code></pre></div>
+<h3 id="recurrent-events">Recurrent Events<a class="headerlink" href="#recurrent-events" title="Permanent link">&para;</a></h3>
+<p>For events that can happen multiple times:</p>
+<ul>
+<li>Reset after each event</li>
+<li>Model inter-event times</li>
+<li>Use counting process formulation</li>
+</ul>
+<hr />
+<h2 id="15-next-steps">15. Next Steps<a class="headerlink" href="#15-next-steps" title="Permanent link">&para;</a></h2>
+<h3 id="implementation-checklist">Implementation Checklist<a class="headerlink" href="#implementation-checklist" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement discrete-time survival loss</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Create data loader with event times and indicators</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Train LSTM with survival objective</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Evaluate with concordance index (C-index)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Compare with fixed-horizon baseline</li>
+</ul>
+<h3 id="evaluation-metrics">Evaluation Metrics<a class="headerlink" href="#evaluation-metrics" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Concordance Index (C-index)</strong>: Measures ranking of predicted risks</li>
+<li><strong>Calibration plots</strong>: Are predicted hazards well-calibrated?</li>
+<li><strong>Survival curves</strong>: Plot <span class="arithmatex">\(S_t\)</span> for different risk groups</li>
+</ul>
+<h3 id="extensions">Extensions<a class="headerlink" href="#extensions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Attention mechanisms</strong>: Learn which visits are most important</li>
+<li><strong>Multi-task learning</strong>: Joint prediction of multiple outcomes</li>
+<li><strong>Counterfactual analysis</strong>: "What if treatment was different?"</li>
+</ul>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p><strong>What We Learned:</strong></p>
+<ol>
+<li>Discrete-time survival is natural for visit-based EHR data</li>
+<li>Hazard is a conditional probability at each visit</li>
+<li>Censoring is handled correctly in the likelihood</li>
+<li>The loss function is derived from first principles</li>
+<li>Implementation in PyTorch is straightforward</li>
+</ol>
+<p><strong>Why This Matters:</strong></p>
+<ul>
+<li>Respects causality (no temporal leakage)</li>
+<li>Efficient use of data (multiple signals per patient)</li>
+<li>Flexible modeling of time-varying risk</li>
+<li>Clinically interpretable (hazard = "risk right now")</li>
+</ul>
+<p><strong>Next:</strong></p>
+<ul>
+<li>Implement this in a notebook</li>
+<li>Apply to real EHR data (CKD progression, readmission, etc.)</li>
+<li>Compare with simpler baselines</li>
+</ul>
+<hr />
+<p><strong>Previous:</strong> <a href="../causal-survival-analysis-1/">Part 1: Causal Progression Labels</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 EHR Sequencing Research Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pleiadian53/ehr-sequencing" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
