@@ -40,7 +40,7 @@ This is where sequence modeling becomes essential—and where most papers introd
 
 ### The Setup: A Seemingly Reasonable Approach
 
-Imagine you want to predict disease progression. You define a patient-level outcome:
+Consider a common approach to predicting disease progression. First, define a patient-level outcome:
 
 > **Clinical Question:** "Did this patient progress to CKD stage 4 within 1 year?"
 
@@ -127,7 +127,7 @@ shuffled_visits = [random.shuffle(patient_visits) for patient_visits in data]
 performance_shuffled = evaluate_model(shuffled_visits)
 ```
 
-**Interpretation:** If performance stays high, your model is **not using temporal disease dynamics**. It's relying on visit-level features or sequence statistics, not temporal patterns.
+**Interpretation:** If performance stays high, the model is **not using temporal disease dynamics**. It's relying on visit-level features or sequence statistics, not temporal patterns.
 
 #### Test 2: Truncate Sequences at Random Times
 
@@ -138,7 +138,7 @@ for patient in data:
     patient.visits = patient.visits[:truncate_at]
 ```
 
-**Interpretation:** If performance drops sharply, your model was **using future context** (sequence length, padding, etc.).
+**Interpretation:** If performance drops sharply, the model was **using future context** (sequence length, padding, etc.).
 
 #### Test 3: Predict Using Only Sequence Length
 
@@ -147,7 +147,7 @@ for patient in data:
 y_hat = logistic_regression(num_visits)
 ```
 
-**Interpretation:** If this baseline is strong (AUC > 0.75), your task is **contaminated by follow-up artifacts**. The outcome is predictable from metadata, not clinical content.
+**Interpretation:** If this baseline is strong (AUC > 0.75), the task is **contaminated by follow-up artifacts**. The outcome is predictable from metadata, not clinical content.
 
 ---
 
@@ -168,7 +168,7 @@ Examples of well-defined questions:
 - Time to next disease stage
 - Hazard of progression at this moment
 
-If you cannot answer "from when," the label is ill-defined.
+If this question cannot be answered with "from when," the label is ill-defined.
 
 ---
 
@@ -247,7 +247,7 @@ Read this as:
 
 > "Given the patient has not progressed up to visit $t$, what is the probability they progress before the next visit?"
 
-Your LSTM outputs $h_t \in (0, 1)$ for each visit.
+The LSTM model outputs $h_t \in (0, 1)$ for each visit.
 
 ### Likelihood Function
 
@@ -312,7 +312,7 @@ We'll implement this fully in Part 2.
 
 This is the "epidemiologist-approved" approach.
 
-Your LSTM outputs a **risk score** $r_t$, not a probability. The hazard function is:
+The LSTM model outputs a **risk score** $r_t$, not a probability. The hazard function is:
 
 $$
 \lambda(t \mid x_t) = \lambda_0(t) \exp(r_t)
@@ -392,7 +392,7 @@ If the answer to any of these is "no," you have a problem.
 
 ## Where This Naturally Leads Next
 
-If you want to continue (and this is the real frontier):
+Advanced topics for further exploration include:
 
 - **Joint modeling** of visit frequency + disease progression
 - **Separating** surveillance intensity from biological risk
@@ -414,13 +414,13 @@ That's where EHR sequencing becomes *scientific*, not just predictive.
 
 - Visit-level labels that respect causality
 - Three options: fixed-horizon, discrete-time survival, continuous-time survival
-- Choose based on your data and clinical question
+- Choose based on the data characteristics and clinical question
 
 **Next Steps:**
 
-- Part 2 will dive deep into discrete-time survival modeling
-- We'll derive the likelihood, implement the loss, and show examples
-- You'll see why this is the cleanest approach for visit-based EHR sequences
+- Part 2 dives deep into discrete-time survival modeling
+- Derives the likelihood, implements the loss, and shows examples
+- Demonstrates why this is the cleanest approach for visit-based EHR sequences
 
 ---
 

@@ -48,7 +48,7 @@ We pad shorter sequences with zeros to match the longest sequence:
 
 **This creates a fundamental problem:**
 
-> Padding is not data, but your model doesn't automatically know that.
+> Padding is not data, but models don't automatically know that.
 
 ---
 
@@ -407,7 +407,7 @@ An LSTM with packed sequences models:
 
 **Key insight:** Padding is not "missing data" - it's **non-existent time**.
 
-If you treat padding as time, the model will exploit it. This is not a bug in your code; it's a fundamental modeling error.
+If padding is treated as time, the model will exploit it. This is not a bug in the code; it's a fundamental modeling error.
 
 ### The Clinical Interpretation
 
@@ -428,7 +428,7 @@ Variable-length sequences are ubiquitous in EHR data. Handling them correctly re
 2. **Extract hidden states correctly** using `h_n` not `output[:, -1]`
 3. **Mask losses** when making per-visit predictions
 4. **Define labels causally** to prevent future information leakage
-5. **Think carefully** about what "time" means in your model
+5. **Consider carefully** what "time" means in the model
 
 **The bottom line:** If you see suspiciously good results on EHR sequence modeling, check your padding and temporal leakage first.
 

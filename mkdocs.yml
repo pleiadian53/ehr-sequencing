@@ -1,0 +1,155 @@
+site_name: EHR Sequencing
+site_description: Research framework for longitudinal EHR sequence modeling, exploring temporal representations, learning objectives, and model architectures for disease progression, survival analysis, and temporal phenotyping
+site_author: EHR Sequencing Research Team
+site_url: https://pleiadian53.github.io/ehr-sequencing/
+# For local development with matching paths, use: mkdocs serve
+use_directory_urls: true
+
+repo_name: pleiadian53/ehr-sequencing
+repo_url: https://github.com/pleiadian53/ehr-sequencing
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2026 EHR Sequencing Research Team
+
+# Theme configuration
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant        # Instant loading
+    - navigation.tracking       # Anchor tracking
+    - navigation.tabs           # Top-level navigation tabs
+    - navigation.tabs.sticky    # Sticky tabs
+    - navigation.sections       # Section navigation
+    - navigation.expand         # Expand sections by default
+    - navigation.top            # Back to top button
+    - search.suggest            # Search suggestions
+    - search.highlight          # Highlight search results
+    - content.code.copy         # Copy button for code blocks
+    - content.action.edit       # Edit button (links to GitHub)
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+
+# Extensions
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  
+  # Python Markdown Extensions (pymdownx)
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Extra JavaScript for MathJax
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# Extra CSS
+extra_css:
+  - stylesheets/extra.css
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-\.]+'
+  - tags
+  - mkdocs-jupyter:
+      include_source: True           # Include source code in rendered output
+      execute: False                 # Don't re-run notebooks (use saved outputs)
+      allow_errors: False            # Stop build if notebook has errors
+      ignore_h1_titles: True         # Use filename as title, not first H1
+      theme: light                   # Code theme (light for better readability)
+      include_requirejs: True        # Enable RequireJS for interactive outputs
+      show_input: True               # Show code cells
+      no_input: False                # Don't hide input cells
+
+# Navigation structure
+nav:
+  - Home: index.md
+  - 'Getting Started':
+      - 'Installation': INSTALL.md
+  - 'Survival Analysis':
+      - 'Overview': notebooks/02_survival_analysis/README.md
+      - 'Tutorial 1: Prediction Problem': notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem.md
+      - 'Tutorial 2: Synthetic Data Design': notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design.md
+      - 'Tutorial 3: Loss Function': notebooks/02_survival_analysis/TUTORIAL_03_loss_function.md
+      - 'Notebook: Discrete-Time Survival LSTM': notebooks/02_survival_analysis/01_discrete_time_survival_lstm.ipynb
+  - 'Methods':
+      - 'Overview': methods/README.md
+      - 'Causal Survival Analysis':
+          - 'Part 1': methods/causal-survival-analysis-1.md
+          - 'Part 2': methods/causal-survival-analysis-2.md
+      - 'Modern Code Embeddings': methods/modern-code-embeddings.md
+  - 'Data Generation':
+      - 'Overview': data_generation/README.md
+      - 'Data Generation Guide': data_generation/data_generation_guide.md
+      - 'Synthea CSV Export': data_generation/synthea_csv_export_troubleshooting.md
+  - 'Guides':
+      - 'Pretrained Embeddings': pretrained_embeddings_guide.md
+      - 'RunPods Training': runpods_training_guide.md
+
+# Extra configuration
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/pleiadian53/ehr-sequencing
+  version:
+    provider: mike

@@ -106,7 +106,7 @@ Technical details on handling variable-length sequences in LSTMs:
 1. Work through the tutorials in order
 2. Implement the loss function from scratch (good exercise!)
 3. Compare discrete-time vs. fixed-horizon on the same data
-4. Run the diagnostic tests on your model
+4. Run the diagnostic tests on the model
 
 ---
 
