@@ -58,6 +58,12 @@ dmypy.json
 
 # Project-specific directories
 dev/                    # Private development notes (not shared)
+# RunPods configuration (user-specific, NOT for public)
+# Contains local paths, SSH configs, and personal workflow
+runpods/
+runpods/**/*
+!runpods.example/
+!runpods.example/**/*
 data/                   # Data files
 data-exp/              # Experimental data
 data-in/               # Input data
@@ -79,6 +85,11 @@ runs/                  # MLflow/TensorBoard runs
 *.pkl
 *.pickle
 *.dat
+*.sas7bdat
+
+# Image files (plots, figures)
+*.tif
+*.tiff
 
 # Model files
 *.pt
@@ -91,6 +102,7 @@ runs/                  # MLflow/TensorBoard runs
 *.zip
 *.tar
 *.tar.gz
+*.tgz
 *.rar
 *.7z
 
