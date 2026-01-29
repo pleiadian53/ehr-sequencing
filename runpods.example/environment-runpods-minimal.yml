@@ -1,0 +1,67 @@
+name: ehrsequencing
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Python
+  - python=3.10
+  
+  # ============================================================================
+  # Core Data Science
+  # ============================================================================
+  - numpy>=1.24
+  - pandas>=2.0
+  - scipy
+  - scikit-learn>=1.3
+  
+  # ============================================================================
+  # Deep Learning (PyTorch installed via pip with CUDA - see setup guide)
+  # ============================================================================
+  # NOTE: PyTorch is installed separately via pip for CUDA support:
+  #   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+  
+  # ============================================================================
+  # Visualization
+  # ============================================================================
+  - matplotlib>=3.7
+  - seaborn>=0.12
+  - plotly>=5.17
+  
+  # ============================================================================
+  # EHR-Specific Tools
+  # ============================================================================
+  - lifelines>=0.27.0        # Survival analysis
+  - umap-learn>=0.5.0        # Dimensionality reduction
+  - gensim>=4.3.0            # Word2Vec embeddings
+  - biopython>=1.81          # Biological data structures
+  
+  # ============================================================================
+  # Progress & Utilities
+  # ============================================================================
+  - tqdm>=4.66.0
+  - pip
+  
+  # ============================================================================
+  # Pip Packages
+  # ============================================================================
+  - pip:
+      # --- Transformers & NLP ---
+      - transformers>=4.30.0      # HuggingFace transformers
+      - einops>=0.7               # Tensor operations
+      - safetensors>=0.4          # Safe model serialization
+      
+      # --- Experiment Tracking ---
+      - tensorboard>=2.15         # TensorBoard logging
+      - wandb>=0.16               # Weights & Biases (optional)
+      
+      # --- Utilities ---
+      - python-dotenv>=1.0.0      # Environment variables
+      - rich>=13.0                # Rich terminal output
+      - psutil>=5.9.0             # System utilities
+      
+      # ============================================================================
+      # OPTIONAL: Add if needed on pod
+      # - jupyter>=1.0               # Notebook support for quick analysis
+      # - ipykernel>=6.0             # Jupyter kernel
+      # - notebook>=7.0              # Notebook interface
+      # ============================================================================
