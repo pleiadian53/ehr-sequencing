@@ -10,6 +10,25 @@ Demonstrates:
 
 This script is designed for quick testing and demonstration.
 For production training, use train_behrt.py
+
+Usage:
+
+# Test locally (M1 16GB) with LoRA
+python examples/encoders/train_behrt_demo.py \
+    --model_size small \
+    --use_lora \
+    --lora_rank 8 \
+    --num_patients 100 \
+    --epochs 10
+
+# Train on A40 pod
+python examples/encoders/train_behrt_demo.py \
+    --model_size large \
+    --use_lora \
+    --lora_rank 16 \
+    --num_patients 5000 \
+    --epochs 100 \
+    --batch_size 128
 """
 
 import torch
