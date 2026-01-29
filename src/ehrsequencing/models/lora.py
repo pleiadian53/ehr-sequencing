@@ -77,6 +77,8 @@ class LinearWithLoRA(nn.Module):
     Linear layer with optional LoRA adapter.
     
     Wraps nn.Linear and adds LoRA adaptation when enabled.
+    Exposes weight and bias properties for compatibility with PyTorch modules
+    that expect these attributes (e.g., MultiheadAttention).
     
     Args:
         linear: Original linear layer (will be frozen)
@@ -102,10 +104,24 @@ class LinearWithLoRA(nn.Module):
             dropout=dropout
         )
         
+        # Store dimensions for compatibility
+        self.in_features = linear.in_features
+        self.out_features = linear.out_features
+        
         # Freeze original weights
         self.linear.weight.requires_grad = False
         if self.linear.bias is not None:
             self.linear.bias.requires_grad = False
+    
+    @property
+    def weight(self):
+        """Expose weight from underlying linear layer."""
+        return self.linear.weight
+    
+    @property
+    def bias(self):
+        """Expose bias from underlying linear layer."""
+        return self.linear.bias
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass: original + LoRA adaptation."""
