@@ -21,9 +21,9 @@ No symbols without intuition. Every equation will be built from first principles
 
 ### The Natural Discretization: Visits
 
-You already have a natural discretization of time: **visits**.
+EHR data provides a natural discretization of time: **visits**.
 
-Instead of modeling time as continuous (like Cox models with hazards per day), we say:
+Instead of modeling time as continuous (like Cox models with hazards per day), discrete-time survival models treat time as:
 
 > Time advances in discrete steps: visit 1 → visit 2 → visit 3 → …
 
@@ -44,7 +44,7 @@ EHR data is naturally discrete:
 - Between visits, we have no information
 - The "next visit" is the natural prediction horizon
 
-This is fundamentally different from continuous-time survival analysis (Cox models), which assumes you can observe events at any moment in time.
+This is fundamentally different from continuous-time survival analysis (Cox models), which assumes events can be observed at any moment in time.
 
 ---
 
@@ -86,7 +86,7 @@ Read this as:
 
 ### LSTM Output and Prediction Timing
 
-Your LSTM outputs $h_t \in (0, 1)$ at each visit:
+The LSTM model outputs $h_t \in (0, 1)$ at each visit:
 
 ```python
 # LSTM forward pass
@@ -140,7 +140,7 @@ A patient is **right-censored** if:
 
 ### Why Censoring Matters
 
-If you treat censored patients as "no event," you're making a false assumption. This biases your model to underestimate risk.
+Treating censored patients as "no event" is a false assumption that biases the model to underestimate risk.
 
 **Correct approach:** Use censoring information in the likelihood, but don't force a label.
 
@@ -611,7 +611,7 @@ def test_causality(model, sequence, t):
 
 ### "Why not just use Cox regression?"
 
-You can—but:
+Cox regression is an alternative approach, but it has limitations:
 
 - Cox assumes **proportional hazards** (hazard ratios constant over time)
 - Discrete-time lets the network learn **time-varying risk** flexibly
@@ -645,7 +645,7 @@ If you think in terms of "predicting the future":
 
 ### Handling Irregular Visit Spacing
 
-If visits are irregularly spaced, you can:
+If visits are irregularly spaced, there are several approaches:
 
 1. **Include time delta as a feature**:
    ```python

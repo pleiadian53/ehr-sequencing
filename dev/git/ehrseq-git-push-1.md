@@ -162,3 +162,52 @@ Not HTTPS (which would look like `https://github.com/...`).
 The `gh` CLI automatically used SSH because your authentication is configured for SSH (as we saw earlier with `gh auth status` showing "Git operations protocol: ssh").
 
 You're all set! Future pushes will use SSH. 🔐
+
+
+
+
+
+---
+
+Let me pull first to get the updates from the pod, then push our changes:
+
+There's a conflict with `runpods.example/` files. Let me move them temporarily and then pull:
+
+Good! Pull successful. Now let me stage and commit our survival analysis reorganization:
+
+
+
+
+
+
+
+Perfect! Successfully pushed to GitHub. Here's what was done:
+
+## Git Operations Summary
+
+1. **Pulled updates from pod** - Retrieved RunPods documentation that was created on the pod
+2. **Staged survival analysis reorganization**:
+   - New directory: `examples/survival_analysis/`
+   - Renamed: [train_survival_lstm.py](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/examples/train_survival_lstm.py:0:0-0:0) → `train_lstm_basic.py`
+   - Added: `train_lstm_runpods.py` (optimized for cloud GPU)
+   - Added: [README.md](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/README.md:0:0-0:0) (comprehensive guide)
+   - Moved: Documentation to `docs/runpods_training_guide.md`
+3. **Committed** with descriptive message
+4. **Pushed** to GitHub
+
+## What's Now on GitHub
+
+```
+examples/survival_analysis/
+├── README.md                      # Public, no dev/ references
+├── train_lstm_basic.py            # For local testing
+├── train_lstm_runpods.py          # For cloud GPU training
+├── docs/
+│   └── runpods_training_guide.md  # Comprehensive guide
+└── logs/
+    └── ehrseq-large-model-on-pod-dev1.md  # Training log from pod
+```
+
+All private [dev/](cci:9://file:///Users/pleiadian53/work/ehr-sequencing/dev:0:0-0:0) content remains local and excluded from the repository. The structure now mirrors `notebooks/02_survival_analysis/` for consistency.
+
+Done! All survival analysis materials are now organized in a topic-specific directory structure and pushed to GitHub. You can now use the optimized RunPods training script on your A40 GPU with the larger dataset to achieve much better performance (C-index 0.65-0.75 vs. the current 0.49).

@@ -7,27 +7,33 @@ This directory contains training scripts and documentation for discrete-time sur
 ```
 survival_analysis/
 ├── README.md                      # This file
-├── train_lstm_basic.py            # Basic training script (local/small datasets)
-├── train_lstm_runpods.py          # Optimized script for cloud GPU training
+├── train_lstm_demo.py             # Educational demo (small datasets, notebooks)
+├── train_lstm.py                  # Production training script (full-scale)
 └── docs/
-    └── runpods_training_guide.md  # Comprehensive RunPods training guide
+    └── runpods_training_guide.md  # Guide for cloud GPU training
 ```
 
 ## Scripts
 
-### `train_lstm_basic.py`
+### `train_lstm_demo.py`
 
-**Purpose**: Basic training script for local development and testing
+**Purpose**: Educational demonstration script for learning and quick testing
 
 **Use cases**:
-- Local testing on CPU/MPS
-- Small datasets (100-200 patients)
-- Quick prototyping and debugging
 - Understanding the training pipeline
+- Notebook demonstrations
+- Quick prototyping and debugging
+- Local testing on CPU/MPS
+
+**Characteristics**:
+- Small dataset (100-200 patients)
+- Fixed epochs (no early stopping needed)
+- Minimal configuration
+- Fast iteration (< 10 minutes)
 
 **Example usage**:
 ```bash
-python examples/survival_analysis/train_lstm_basic.py \
+python examples/survival_analysis/train_lstm_demo.py \
     --data_dir ~/work/loinc-predictor/data/synthea/all_cohorts/ \
     --outcome synthetic \
     --epochs 50 \
@@ -38,27 +44,36 @@ python examples/survival_analysis/train_lstm_basic.py \
 
 ---
 
-### `train_lstm_runpods.py`
+### `train_lstm.py`
 
-**Purpose**: Optimized training script for cloud GPU training (RunPods, Vast.ai, etc.)
+**Purpose**: Production-ready training script with proper safeguards
 
 **Use cases**:
-- Large datasets (1000+ patients)
-- Production model training
-- Achieving best performance
-- GPU-accelerated training (A40, RTX 4090, etc.)
+- Full-scale training (1000+ patients)
+- Production model development
+- Hyperparameter optimization
+- Both local (large datasets) and cloud GPU training
 
 **Key features**:
 - Early stopping to prevent overfitting
 - Learning rate scheduling
 - Gradient clipping for stability
-- Larger batch sizes (64+)
-- Training history logging
+- Configurable batch sizes and hyperparameters
+- Comprehensive logging and checkpointing
+- Training history export
 
 **Example usage**:
 ```bash
-# On RunPods VM
-python examples/survival_analysis/train_lstm_runpods.py \
+# Local with medium dataset
+python examples/survival_analysis/train_lstm.py \
+    --data_dir ~/work/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --outcome synthetic \
+    --epochs 100 \
+    --batch_size 32 \
+    --early_stopping_patience 10
+
+# Cloud GPU (RunPods, Vast.ai, etc.) with large dataset
+python examples/survival_analysis/train_lstm.py \
     --data_dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
