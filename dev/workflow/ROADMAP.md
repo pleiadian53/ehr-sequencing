@@ -14,18 +14,16 @@ Build a biological language model for Electronic Health Records that treats medi
 
 ---
 
-## Current Status: Phase 1.5 - Survival Analysis
+## Current Status: Phase 3 - Sequence Encoders (BEHRT/Transformers)
 
-**Progress:** Phase 1 Complete (100%) | Phase 1.5 In Progress (80%)
+**Progress:** Phase 1 Complete (100%) | Phase 1.5 Complete (100%) | Phase 3 Starting
 
-**Recent Updates (January 24, 2026):**
-- ✅ Implemented discrete-time survival LSTM model
-- ✅ Created synthetic survival outcome generator with validated correlation
-- ✅ Developed fast validation script for synthetic data quality
-- ✅ Implemented save/load functionality for pre-generated outcomes
-- ✅ Resolved C-index calculation issues (achieved 0.65-0.70)
-- ✅ Created comprehensive survival analysis notebook
-- 🔄 Next: Documentation and tutorial materials
+**Recent Updates (January 29, 2026):**
+- ✅ Phase 1.5 Complete: Survival LSTM trained on 1151 patients (C-index 0.53)
+- ✅ Validated training pipeline on RunPods A40 GPU
+- ✅ Created MODEL_TRAINING_PLAN.md for local vs cloud GPU strategy
+- 🎯 **Pivoting to Phase 3**: Modern transformer-based encoders (2026 approach)
+- 🔄 Next: BEHRT and Transformer encoder implementation with 3 model size tiers
 
 ---
 
@@ -124,19 +122,22 @@ Build a biological language model for Electronic Health Records that treats medi
 - ✅ Synthetic outcome generator with validation
 - ✅ Fast validation script with save/load
 - ✅ Complete survival analysis notebook
-- 🔄 Tutorial documentation (in progress)
+- ✅ Production training script with early stopping
+- ✅ Validated on 1151 patients (C-index 0.53)
+- ✅ RunPods training guide and model training plan
 
-**Phase 1.5 Status: 🔄 IN PROGRESS (80%)**
+**Phase 1.5 Status: ✅ COMPLETE (100%)**
 
 ---
 
-## Phase 2: Code Embeddings (Weeks 3-4)
+## Phase 2: Code Embeddings (Optional - Baseline Comparison)
+
+**Status:** Optional/Deferred - Prioritizing Phase 3 (modern transformers) for 2026 relevance
 
 ### Objectives
-- Implement Med2Vec (skip-gram) embeddings
-- Train embeddings on Synthea data
-- Evaluate and visualize embeddings
-- Create embedding utilities
+- Implement Med2Vec (skip-gram) embeddings as baseline
+- Quick implementation for comparison purposes
+- May revisit after Phase 3 for completeness
 
 ### Tasks
 
@@ -173,12 +174,15 @@ Build a biological language model for Electronic Health Records that treats medi
 
 ---
 
-## Phase 3: Sequence Encoders (Weeks 5-6)
+## Phase 3: Sequence Encoders (Current Priority - Weeks 5-6)
+
+**Status:** 🎯 ACTIVE - Modern transformer-based approach for 2026
 
 ### Objectives
-- Implement LSTM and Transformer patient encoders
-- Add temporal encoding (age, time deltas)
-- Pre-train with self-supervised objectives
+- Implement BEHRT (BERT for EHR with temporal embeddings)
+- Implement Transformer patient encoders
+- Support 3 model size tiers: Small (local M1 16GB), Medium, Large (A40 GPU)
+- Pre-train with self-supervised objectives (MLM, next visit prediction)
 - Evaluate patient representations
 
 ### Tasks
