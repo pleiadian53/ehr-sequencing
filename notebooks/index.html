@@ -1381,6 +1381,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#quick-start-data-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Quick Start: Data Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#synthea-data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1392,10 +1403,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#shared-data" class="md-nav__link">
+  <a href="#shared-data-current-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Shared Data
+        Shared Data (Current Setup)
       
     </span>
   </a>
@@ -1813,17 +1824,26 @@
 </tbody>
 </table>
 <h2 id="data-requirements">Data Requirements<a class="headerlink" href="#data-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="quick-start-data-setup">📖 Quick Start: Data Setup<a class="headerlink" href="#quick-start-data-setup" title="Permanent link">&para;</a></h3>
+<p><strong>→ See <a href="DATA_SETUP/">DATA_SETUP.md</a> for complete data preparation guide</strong></p>
+<p>This comprehensive guide covers:
+- Where notebook data comes from (<code>~/work/loinc-predictor/data/synthea/all_cohorts</code>)
+- How to copy data to this project (for pod deployment)
+- How to upload data to RunPods using <code>rsync</code>
+- How to generate new Synthea data
+- Troubleshooting common data issues</p>
 <h3 id="synthea-data">Synthea Data<a class="headerlink" href="#synthea-data" title="Permanent link">&para;</a></h3>
 <p>Most notebooks use Synthea synthetic EHR data. See <code>docs/datasets/SYNTHEA_SETUP.md</code> for:
 - Installation instructions
 - Data generation guide
 - Configuration options
 - Troubleshooting</p>
-<h3 id="shared-data">Shared Data<a class="headerlink" href="#shared-data" title="Permanent link">&para;</a></h3>
-<p>If you have access to the <code>loinc-predictor</code> project's Synthea data:</p>
+<h3 id="shared-data-current-setup">Shared Data (Current Setup)<a class="headerlink" href="#shared-data-current-setup" title="Permanent link">&para;</a></h3>
+<p>Notebooks currently reference data from the <code>loinc-predictor</code> project:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;work&#39;</span> <span class="o">/</span> <span class="s1">&#39;loinc-predictor&#39;</span> <span class="o">/</span> <span class="s1">&#39;data&#39;</span> <span class="o">/</span> <span class="s1">&#39;synthea&#39;</span> <span class="o">/</span> <span class="s1">&#39;all_cohorts&#39;</span>
 </span></code></pre></div>
 <p>This contains ~100 patients with realistic EHR data.</p>
+<p><strong>For pod deployment</strong>, see <a href="DATA_SETUP/">DATA_SETUP.md</a> for instructions on making this data available.</p>
 <h3 id="test-fixtures">Test Fixtures<a class="headerlink" href="#test-fixtures" title="Permanent link">&para;</a></h3>
 <p>For quick testing without full Synthea setup:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../../tests/fixtures/mock_synthea_data&#39;</span><span class="p">)</span>

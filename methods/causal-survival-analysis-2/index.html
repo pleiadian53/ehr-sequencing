@@ -2762,8 +2762,8 @@
 <hr />
 <h2 id="1-what-discrete-time-survival-modeling-really-is">1. What Discrete-Time Survival Modeling Really Is<a class="headerlink" href="#1-what-discrete-time-survival-modeling-really-is" title="Permanent link">&para;</a></h2>
 <h3 id="the-natural-discretization-visits">The Natural Discretization: Visits<a class="headerlink" href="#the-natural-discretization-visits" title="Permanent link">&para;</a></h3>
-<p>You already have a natural discretization of time: <strong>visits</strong>.</p>
-<p>Instead of modeling time as continuous (like Cox models with hazards per day), we say:</p>
+<p>EHR data provides a natural discretization of time: <strong>visits</strong>.</p>
+<p>Instead of modeling time as continuous (like Cox models with hazards per day), discrete-time survival models treat time as:</p>
 <blockquote>
 <p>Time advances in discrete steps: visit 1 → visit 2 → visit 3 → …</p>
 </blockquote>
@@ -2781,7 +2781,7 @@
 <li>Between visits, we have no information</li>
 <li>The "next visit" is the natural prediction horizon</li>
 </ul>
-<p>This is fundamentally different from continuous-time survival analysis (Cox models), which assumes you can observe events at any moment in time.</p>
+<p>This is fundamentally different from continuous-time survival analysis (Cox models), which assumes events can be observed at any moment in time.</p>
 <hr />
 <h2 id="2-the-hazard-in-discrete-time">2. The Hazard in Discrete Time<a class="headerlink" href="#2-the-hazard-in-discrete-time" title="Permanent link">&para;</a></h2>
 <h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
@@ -2812,7 +2812,7 @@ h_t = P(\text{event in interval } (t-1, t] \mid \text{no event through } t-1)
 <li><strong>Causal</strong>: uses only history up to <span class="arithmatex">\(t\)</span></li>
 </ul>
 <h3 id="lstm-output-and-prediction-timing">LSTM Output and Prediction Timing<a class="headerlink" href="#lstm-output-and-prediction-timing" title="Permanent link">&para;</a></h3>
-<p>Your LSTM outputs <span class="arithmatex">\(h_t \in (0, 1)\)</span> at each visit:</p>
+<p>The LSTM model outputs <span class="arithmatex">\(h_t \in (0, 1)\)</span> at each visit:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># LSTM forward pass</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">hidden_states</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lstm</span><span class="p">(</span><span class="n">visit_sequences</span><span class="p">)</span>  <span class="c1"># [batch, num_visits, hidden_dim]</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -2854,7 +2854,7 @@ h_t = P(\text{event in interval } (t-1, t] \mid \text{no event through } t-1)
 <li>We cannot say the event <em>didn't</em> happen—we just don't know</li>
 </ul>
 <h3 id="why-censoring-matters">Why Censoring Matters<a class="headerlink" href="#why-censoring-matters" title="Permanent link">&para;</a></h3>
-<p>If you treat censored patients as "no event," you're making a false assumption. This biases your model to underestimate risk.</p>
+<p>Treating censored patients as "no event" is a false assumption that biases the model to underestimate risk.</p>
 <p><strong>Correct approach:</strong> Use censoring information in the likelihood, but don't force a label.</p>
 <hr />
 <h2 id="4-timeline-picture-mental-model">4. Timeline Picture (Mental Model)<a class="headerlink" href="#4-timeline-picture-mental-model" title="Permanent link">&para;</a></h2>
@@ -3234,7 +3234,7 @@ P = \underbrace{(1 - h_1)(1 - h_2)\cdots(1 - h_{T^*-1})}_{\text{survived through
 <li>They are fundamentally different concepts</li>
 </ul>
 <h3 id="why-not-just-use-cox-regression">"Why not just use Cox regression?"<a class="headerlink" href="#why-not-just-use-cox-regression" title="Permanent link">&para;</a></h3>
-<p>You can—but:</p>
+<p>Cox regression is an alternative approach, but it has limitations:</p>
 <ul>
 <li>Cox assumes <strong>proportional hazards</strong> (hazard ratios constant over time)</li>
 <li>Discrete-time lets the network learn <strong>time-varying risk</strong> flexibly</li>
@@ -3261,7 +3261,7 @@ P = \underbrace{(1 - h_1)(1 - h_2)\cdots(1 - h_{T^*-1})}_{\text{survived through
 <hr />
 <h2 id="14-practical-considerations">14. Practical Considerations<a class="headerlink" href="#14-practical-considerations" title="Permanent link">&para;</a></h2>
 <h3 id="handling-irregular-visit-spacing">Handling Irregular Visit Spacing<a class="headerlink" href="#handling-irregular-visit-spacing" title="Permanent link">&para;</a></h3>
-<p>If visits are irregularly spaced, you can:</p>
+<p>If visits are irregularly spaced, there are several approaches:</p>
 <ol>
 <li>
 <p><strong>Include time delta as a feature</strong>:
