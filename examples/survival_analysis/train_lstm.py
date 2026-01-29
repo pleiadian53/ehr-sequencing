@@ -28,6 +28,20 @@ Usage (cloud GPU - RunPods, Vast.ai, etc.):
         --batch_size 64 \
         --early_stopping_patience 10
 
+
+Usage (tests): 
+
+python examples/survival_analysis/train_lstm.py \
+    --data_dir ~/work/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --outcome synthetic \
+    --dry-run
+
+python examples/survival_analysis/train_lstm.py \
+    --data_dir ~/work/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --outcome synthetic \
+    --max-patients 100 \
+    --epochs 10
+
 Differences from train_lstm_demo.py:
 - Uses full dataset (no patient limit)
 - Early stopping and LR scheduling
@@ -112,6 +126,12 @@ def parse_args():
     parser.add_argument('--device', type=str, default='auto',
                        choices=['auto', 'cpu', 'cuda', 'mps'],
                        help='Device to use for training')
+    
+    # Fast testing mode
+    parser.add_argument('--dry-run', action='store_true',
+                       help='Fast test mode: load only 50 patients, run 3 epochs')
+    parser.add_argument('--max-patients', type=int, default=None,
+                       help='Maximum number of patients to load (None = all)')
     
     return parser.parse_args()
 
@@ -260,14 +280,60 @@ def train_epoch(model, dataloader, criterion, optimizer, device, grad_clip=None)
     return total_loss / len(dataloader)
 
 
+def concordance_index_from_risk_scores(
+    risk_scores: torch.Tensor,
+    event_times: torch.Tensor,
+    event_indicators: torch.Tensor,
+) -> float:
+    """
+    Compute concordance index from pre-computed risk scores.
+    
+    Args:
+        risk_scores: Risk scores for each patient. Shape: [batch_size]
+        event_times: Event or censoring times. Shape: [batch_size]
+        event_indicators: 1 if event observed, 0 if censored. Shape: [batch_size]
+    
+    Returns:
+        C-index value in [0, 1]. Higher is better. 0.5 = random.
+    """
+    batch_size = risk_scores.shape[0]
+    
+    concordant = 0
+    discordant = 0
+    total = 0
+    
+    for i in range(batch_size):
+        # Only use patients with observed events as index cases
+        if event_indicators[i] == 0:
+            continue
+        
+        for j in range(batch_size):
+            if i == j:
+                continue
+            
+            # Compare pairs where times are different
+            if event_times[j] > event_times[i]:
+                total += 1
+                # Concordant: patient with earlier event has higher risk
+                if risk_scores[i] > risk_scores[j]:
+                    concordant += 1
+                elif risk_scores[i] < risk_scores[j]:
+                    discordant += 1
+                # Ties are ignored
+    
+    if total == 0:
+        return 0.5  # No comparable pairs
+    
+    return concordant / total
+
+
 def evaluate(model, dataloader, criterion, device):
     """Evaluate model."""
     model.eval()
     total_loss = 0
-    all_hazards = []
+    all_risk_scores = []
     all_event_times = []
     all_event_indicators = []
-    all_sequence_masks = []
     
     with torch.no_grad():
         for batch in tqdm(dataloader, desc='Evaluating'):
@@ -281,19 +347,22 @@ def evaluate(model, dataloader, criterion, device):
             loss = criterion(hazards, event_times, event_indicators, sequence_mask)
             total_loss += loss.item()
             
-            all_hazards.append(hazards.cpu())
+            # Compute risk scores per batch (sum of hazards over valid visits)
+            risk_scores = (hazards * sequence_mask.float()).sum(dim=1)
+            
+            all_risk_scores.append(risk_scores.cpu())
             all_event_times.append(event_times.cpu())
             all_event_indicators.append(event_indicators.cpu())
-            all_sequence_masks.append(sequence_mask.cpu())
     
     avg_loss = total_loss / len(dataloader)
     
-    all_hazards = torch.cat(all_hazards, dim=0)
+    # Concatenate scalars (risk scores) instead of variable-length tensors
+    all_risk_scores = torch.cat(all_risk_scores, dim=0)
     all_event_times = torch.cat(all_event_times, dim=0)
     all_event_indicators = torch.cat(all_event_indicators, dim=0)
-    all_sequence_masks = torch.cat(all_sequence_masks, dim=0)
     
-    c_index = concordance_index(all_hazards, all_event_times, all_event_indicators, all_sequence_masks)
+    # Compute C-index using risk scores
+    c_index = concordance_index_from_risk_scores(all_risk_scores, all_event_times, all_event_indicators)
     
     return avg_loss, c_index
 
@@ -342,8 +411,27 @@ def main():
     # Load data
     print("Loading data...")
     adapter = SyntheaAdapter(args.data_dir)
-    events = adapter.load_events()
-    print(f"Loaded {len(events)} events from {events['patient_id'].nunique()} patients")
+    
+    # Determine patient limit
+    if args.dry_run:
+        max_patients = 50
+        print("🚀 DRY-RUN MODE: Loading only 50 patients for fast testing")
+    elif args.max_patients:
+        max_patients = args.max_patients
+        print(f"Loading up to {max_patients} patients")
+    else:
+        max_patients = None
+    
+    # Load patients first, then their events
+    if max_patients:
+        patients = adapter.load_patients(limit=max_patients)
+        patient_ids = [p.patient_id for p in patients]
+        events = adapter.load_events(patient_ids=patient_ids)
+    else:
+        events = adapter.load_events()
+    
+    unique_patients = len(set(e.patient_id for e in events))
+    print(f"Loaded {len(events)} events from {unique_patients} patients")
     
     # Group into visits
     print("Grouping events into visits...")
@@ -444,8 +532,7 @@ def main():
             optimizer,
             mode='min',
             factor=args.lr_factor,
-            patience=args.lr_patience,
-            verbose=True
+            patience=args.lr_patience
         )
     elif args.lr_scheduler == 'cosine':
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
@@ -474,8 +561,13 @@ def main():
         'lr': []
     }
     
-    for epoch in range(1, args.epochs + 1):
-        print(f"\nEpoch {epoch}/{args.epochs}")
+    # Override epochs in dry-run mode
+    max_epochs = 3 if args.dry_run else args.epochs
+    if args.dry_run:
+        print("🚀 DRY-RUN MODE: Running only 3 epochs")
+    
+    for epoch in range(1, max_epochs + 1):
+        print(f"\nEpoch {epoch}/{max_epochs}")
         
         # Train
         train_loss = train_epoch(model, train_loader, criterion, optimizer, device, args.grad_clip)
