@@ -211,3 +211,17 @@ examples/survival_analysis/
 All private [dev/](cci:9://file:///Users/pleiadian53/work/ehr-sequencing/dev:0:0-0:0) content remains local and excluded from the repository. The structure now mirrors `notebooks/02_survival_analysis/` for consistency.
 
 Done! All survival analysis materials are now organized in a topic-specific directory structure and pushed to GitHub. You can now use the optimized RunPods training script on your A40 GPU with the larger dataset to achieve much better performance (C-index 0.65-0.75 vs. the current 0.49).
+
+
+
+---
+
+git commit -m "Rename survival training scripts to reflect purpose not deployment
+
+- train_lstm_basic.py -> train_lstm_demo.py (educational/demo)
+- train_lstm_runpods.py -> train_lstm.py (production-ready)
+- Update README and docstrings to clarify train_lstm.py works on any hardware
+- Add MODEL_TRAINING_PLAN.md for local dev vs cloud GPU strategy"
+
+---
+
