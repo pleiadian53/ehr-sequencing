@@ -93,7 +93,7 @@ print_dataset_statistics(codes, ages, visit_ids)
 
 ```bash
 # Use realistic data (RECOMMENDED for showcasing)
-python examples/encoders/train_behrt_demo.py \
+python examples/pretrain_finetune/train_behrt_demo.py \
     --model_size large \
     --use_lora \
     --lora_rank 16 \
@@ -103,7 +103,7 @@ python examples/encoders/train_behrt_demo.py \
     --realistic_data  # ← Add this flag!
 
 # Use random data (for testing only)
-python examples/encoders/train_behrt_demo.py \
+python examples/pretrain_finetune/train_behrt_demo.py \
     --model_size small \
     --num_patients 100 \
     --epochs 10
