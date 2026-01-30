@@ -197,7 +197,8 @@ def apply_lora_to_behrt(
     alpha: float = 16.0,
     dropout: float = 0.0,
     lora_attention: bool = True,
-    lora_feedforward: bool = False
+    lora_feedforward: bool = False,
+    freeze_base: bool = True
 ) -> nn.Module:
     """
     Apply LoRA to BEHRT model with sensible defaults.
@@ -209,6 +210,7 @@ def apply_lora_to_behrt(
         dropout: LoRA dropout (default: 0.0)
         lora_attention: Apply LoRA to attention layers (default: True)
         lora_feedforward: Apply LoRA to feedforward layers (default: False)
+        freeze_base: Freeze all non-LoRA parameters (default: True)
     
     Returns:
         Model with LoRA adapters
@@ -226,6 +228,11 @@ def apply_lora_to_behrt(
         >>> trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
         >>> print(f"Total: {total:,}, Trainable: {trainable:,} ({100*trainable/total:.1f}%)")
     """
+    # First, freeze ALL parameters if requested
+    if freeze_base:
+        for param in model.parameters():
+            param.requires_grad = False
+    
     target_modules = []
     
     if lora_attention:
@@ -255,7 +262,16 @@ def apply_lora_to_behrt(
             '.*linear2',  # Second FFN layer
         ])
     
-    return apply_lora_to_model(model, target_modules=patterns, rank=rank, alpha=alpha, dropout=dropout)
+    # Apply LoRA to target modules
+    model = apply_lora_to_model(model, target_modules=patterns, rank=rank, alpha=alpha, dropout=dropout)
+    
+    # Ensure LoRA parameters are trainable
+    for module in model.modules():
+        if isinstance(module, LoRALayer):
+            module.lora_A.requires_grad = True
+            module.lora_B.requires_grad = True
+    
+    return model
 
 
 def get_lora_parameters(model: nn.Module) -> List[nn.Parameter]:
