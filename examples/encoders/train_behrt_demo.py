@@ -153,6 +153,12 @@ def main():
                        help='Batch size')
     parser.add_argument('--lr', type=float, default=1e-4,
                        help='Learning rate')
+    parser.add_argument('--weight_decay', type=float, default=0.01,
+                       help='Weight decay for AdamW optimizer')
+    parser.add_argument('--dropout', type=float, default=0.1,
+                       help='Dropout probability')
+    parser.add_argument('--early_stopping_patience', type=int, default=10,
+                       help='Early stopping patience (epochs without improvement)')
     parser.add_argument('--experiment_name', type=str, default=None,
                        help='Experiment name (default: auto-generated)')
     parser.add_argument('--output_dir', type=str, default='experiments',
@@ -175,12 +181,15 @@ def main():
     
     if args.model_size == 'small':
         config = BEHRTConfig.small(vocab_size=args.vocab_size)
+        config.dropout = args.dropout
         print("📱 Small model (for M1 MacBook Pro 16GB)")
     elif args.model_size == 'medium':
         config = BEHRTConfig.medium(vocab_size=args.vocab_size)
+        config.dropout = args.dropout
         print("💻 Medium model (for local/small GPU)")
     else:
         config = BEHRTConfig.large(vocab_size=args.vocab_size)
+        config.dropout = args.dropout
         print("☁️  Large model (for A40 cloud GPU)")
     
     tracker.log_hyperparameters({
@@ -190,12 +199,15 @@ def main():
         'hidden_dim': config.hidden_dim,
         'num_layers': config.num_layers,
         'num_heads': config.num_heads,
+        'dropout': args.dropout,
         'use_lora': args.use_lora,
         'lora_rank': args.lora_rank if args.use_lora else None,
         'num_patients': args.num_patients,
         'epochs': args.epochs,
         'batch_size': args.batch_size,
         'learning_rate': args.lr,
+        'weight_decay': args.weight_decay,
+        'early_stopping_patience': args.early_stopping_patience,
         'device': str(device)
     })
     
@@ -239,13 +251,15 @@ def main():
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size)
     
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     
     print(f"\n🚀 Starting training...")
     print(f"   Train batches: {len(train_loader)}")
     print(f"   Val batches: {len(val_loader)}")
+    print(f"   Early stopping patience: {args.early_stopping_patience} epochs")
     
     best_val_loss = float('inf')
+    patience_counter = 0
     
     for epoch in range(args.epochs):
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, device)
@@ -261,6 +275,9 @@ def main():
         is_best = val_loss < best_val_loss
         if is_best:
             best_val_loss = val_loss
+            patience_counter = 0
+        else:
+            patience_counter += 1
         
         if args.use_lora:
             tracker.save_lora_checkpoint(model, epoch, 
@@ -274,7 +291,13 @@ def main():
         print(f"Epoch {epoch+1}/{args.epochs} | "
               f"Train Loss: {train_loss:.4f} Acc: {train_acc:.4f} | "
               f"Val Loss: {val_loss:.4f} Acc: {val_acc:.4f}"
-              f"{' 🏆' if is_best else ''}")
+              f"{' 🏆' if is_best else ''}"
+              f" | Patience: {patience_counter}/{args.early_stopping_patience}")
+        
+        if patience_counter >= args.early_stopping_patience:
+            print(f"\n⚠️  Early stopping triggered after {epoch+1} epochs")
+            print(f"   Best val loss: {best_val_loss:.4f} at epoch {epoch+1-patience_counter}")
+            break
     
     print(f"\n📈 Generating plots...")
     tracker.plot_training_curves()
