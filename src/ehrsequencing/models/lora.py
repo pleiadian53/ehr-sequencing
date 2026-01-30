@@ -198,19 +198,25 @@ def apply_lora_to_behrt(
     dropout: float = 0.0,
     lora_attention: bool = True,
     lora_feedforward: bool = False,
-    freeze_base: bool = True
+    freeze_base: bool = True,
+    train_embeddings: bool = True,
+    train_head: bool = True
 ) -> nn.Module:
     """
     Apply LoRA to BEHRT model with sensible defaults.
     
     Args:
-        model: BEHRT model
+        model: BEHRT model (can be BEHRT, BEHRTForMLM, etc.)
         rank: LoRA rank (default: 8)
         alpha: LoRA scaling (default: 16)
         dropout: LoRA dropout (default: 0.0)
         lora_attention: Apply LoRA to attention layers (default: True)
         lora_feedforward: Apply LoRA to feedforward layers (default: False)
         freeze_base: Freeze all non-LoRA parameters (default: True)
+        train_embeddings: Keep embedding layers trainable (default: True)
+            IMPORTANT: Set to True when training from scratch, False when
+            fine-tuning a pre-trained model.
+        train_head: Keep task head (MLM, classification) trainable (default: True)
     
     Returns:
         Model with LoRA adapters
@@ -271,6 +277,28 @@ def apply_lora_to_behrt(
             module.lora_A.requires_grad = True
             module.lora_B.requires_grad = True
     
+    # Unfreeze embeddings if requested (critical for training from scratch)
+    if train_embeddings:
+        for name, module in model.named_modules():
+            if 'embedding' in name.lower():
+                for param in module.parameters():
+                    param.requires_grad = True
+        # Also handle layer norms in embedding layer
+        for name, param in model.named_parameters():
+            if 'embeddings' in name or 'embedding' in name:
+                param.requires_grad = True
+    
+    # Unfreeze task head if requested (MLM head, classifier, etc.)
+    if train_head:
+        for name, module in model.named_modules():
+            if any(h in name.lower() for h in ['mlm_head', 'nvp_head', 'classifier', 'head']):
+                for param in module.parameters():
+                    param.requires_grad = True
+        # Also handle by parameter name
+        for name, param in model.named_parameters():
+            if any(h in name.lower() for h in ['mlm_head', 'nvp_head', 'classifier', 'head']):
+                param.requires_grad = True
+    
     return model
 
 
@@ -308,13 +336,35 @@ def count_parameters(model: nn.Module) -> dict:
     # Count LoRA parameters specifically
     lora_params = sum(p.numel() for p in get_lora_parameters(model))
     
+    # Count embedding parameters
+    embedding_params = 0
+    embedding_trainable = 0
+    for name, param in model.named_parameters():
+        if 'embedding' in name.lower():
+            embedding_params += param.numel()
+            if param.requires_grad:
+                embedding_trainable += param.numel()
+    
+    # Count head parameters (MLM, classifier, etc.)
+    head_params = 0
+    head_trainable = 0
+    for name, param in model.named_parameters():
+        if any(h in name.lower() for h in ['mlm_head', 'nvp_head', 'classifier', 'head']):
+            head_params += param.numel()
+            if param.requires_grad:
+                head_trainable += param.numel()
+    
     return {
         'total': total,
         'trainable': trainable,
         'frozen': frozen,
         'lora': lora_params,
         'trainable_percent': 100 * trainable / total if total > 0 else 0,
-        'lora_percent': 100 * lora_params / total if total > 0 else 0
+        'lora_percent': 100 * lora_params / total if total > 0 else 0,
+        'embedding_total': embedding_params,
+        'embedding_trainable': embedding_trainable,
+        'head_total': head_params,
+        'head_trainable': head_trainable
     }
 
 
