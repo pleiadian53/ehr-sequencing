@@ -1,6 +1,6 @@
 {
   "experiment_name": "behrt_large_mlm_lora16",
-  "start_time": "2026-01-30T04:15:03.628381",
+  "start_time": "2026-01-30T04:21:41.779105",
   "status": "running",
   "total_parameters": 20366312,
   "trainable_parameters": 1450984,
