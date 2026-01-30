@@ -16,6 +16,61 @@ This directory contains BEHRT (BERT for EHR) implementation with modern efficien
 - **Benchmarking framework** - compare multiple models systematically
 - **Shareable results** - all outputs saved for analysis after pod terminates
 
+## Training Modes
+
+This directory provides **two training workflows** with different use cases:
+
+### 1. Pre-training from Scratch (`train_behrt_demo.py`)
+
+**Use when:** No pre-trained embeddings available
+
+**Characteristics:**
+- Learns medical code embeddings from scratch
+- Requires large dataset (100K+ patients for good embeddings)
+- Longer training time
+- All embeddings + LoRA adapters trainable
+
+**Example:**
+```bash
+python train_behrt_demo.py \
+    --model_size large \
+    --use_lora \
+    --lora_rank 16 \
+    --num_patients 100000 \
+    --realistic_data  # Use realistic synthetic data
+```
+
+### 2. Fine-tuning with Pre-trained Embeddings (`train_behrt_finetune.py`)
+
+**Use when:** Pre-trained embeddings available (e.g., from Med2Vec, Word2Vec)
+
+**Characteristics:**
+- Loads pre-trained embeddings and freezes them
+- Requires smaller dataset (1K-10K patients sufficient)
+- Faster convergence
+- Only LoRA adapters + task head trainable
+
+**Example:**
+```bash
+python train_behrt_finetune.py \
+    --model_size large \
+    --embedding_path pretrained/med2vec_embeddings.pt \
+    --use_lora \
+    --lora_rank 16 \
+    --num_patients 5000 \
+    --realistic_data
+```
+
+**Comparison:**
+
+| Aspect | Pre-training | Fine-tuning |
+|--------|--------------|-------------|
+| **Embeddings** | Learn from scratch | Load pre-trained |
+| **Dataset size** | 100K+ patients | 1K-10K patients |
+| **Training time** | Longer | Faster |
+| **Trainable params** | Embeddings + LoRA + head | LoRA + head only |
+| **Use case** | No pre-trained available | Pre-trained available |
+
 ## Quick Start
 
 ### Test BEHRT Locally (Small Model)
