@@ -1,0 +1,33 @@
+{
+  "experiment_name": "behrt_small_mlm_lora8",
+  "start_time": "2026-01-30T04:13:00.156357",
+  "end_time": "2026-01-30T04:13:32.607830",
+  "duration_seconds": 32.451473,
+  "duration_formatted": "0.01 hours",
+  "status": "completed",
+  "hyperparameters": {
+    "model_size": "small",
+    "vocab_size": 1000,
+    "embedding_dim": 64,
+    "hidden_dim": 128,
+    "num_layers": 2,
+    "num_heads": 4,
+    "dropout": 0.1,
+    "use_lora": true,
+    "lora_rank": 8,
+    "num_patients": 500,
+    "epochs": 20,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "early_stopping_patience": 10,
+    "device": "cuda"
+  },
+  "best_metrics": {
+    "best_train_loss": 4.993467771089994,
+    "best_train_accuracy": 0.09711021505376344,
+    "best_val_loss": 7.002722859382629,
+    "best_val_accuracy": 0.0025380710659898475
+  },
+  "total_epochs": 10
+}

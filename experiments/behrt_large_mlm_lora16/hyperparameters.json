@@ -1,0 +1,18 @@
+{
+  "model_size": "large",
+  "vocab_size": 1000,
+  "embedding_dim": 256,
+  "hidden_dim": 512,
+  "num_layers": 6,
+  "num_heads": 8,
+  "dropout": 0.1,
+  "use_lora": true,
+  "lora_rank": 16,
+  "num_patients": 1000,
+  "epochs": 10,
+  "batch_size": 128,
+  "learning_rate": 0.001,
+  "weight_decay": 0.01,
+  "early_stopping_patience": 10,
+  "device": "cuda"
+}

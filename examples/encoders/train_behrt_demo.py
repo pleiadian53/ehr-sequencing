@@ -215,7 +215,14 @@ def main():
     
     if args.use_lora:
         print(f"\n🔧 Applying LoRA (rank={args.lora_rank})...")
-        model.behrt = apply_lora_to_behrt(model.behrt, rank=args.lora_rank, lora_attention=True)
+        # Apply LoRA to the full model (not just behrt) so embeddings and MLM head are handled
+        model = apply_lora_to_behrt(
+            model, 
+            rank=args.lora_rank, 
+            lora_attention=True,
+            train_embeddings=True,  # Critical: embeddings must be trainable when training from scratch
+            train_head=True         # Critical: MLM head must be trainable
+        )
     
     param_counts = count_parameters(model)
     print(f"\n📊 Model Parameters:")
@@ -224,6 +231,8 @@ def main():
     print(f"   Frozen: {param_counts['frozen']:,}")
     if args.use_lora:
         print(f"   LoRA: {param_counts['lora']:,} ({param_counts['lora_percent']:.1f}%)")
+    print(f"   Embeddings: {param_counts['embedding_trainable']:,}/{param_counts['embedding_total']:,} trainable")
+    print(f"   Head: {param_counts['head_trainable']:,}/{param_counts['head_total']:,} trainable")
     
     tracker.log_metadata({
         'total_parameters': param_counts['total'],

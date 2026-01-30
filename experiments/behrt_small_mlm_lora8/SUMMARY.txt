@@ -1,0 +1,29 @@
+Experiment Summary: behrt_small_mlm_lora8
+================================================================================
+
+Duration: 0.01 hours
+Total epochs: 10
+
+Best Metrics:
+  best_train_loss: 4.9935
+  best_train_accuracy: 0.0971
+  best_val_loss: 7.0027
+  best_val_accuracy: 0.0025
+
+Hyperparameters:
+  model_size: small
+  vocab_size: 1000
+  embedding_dim: 64
+  hidden_dim: 128
+  num_layers: 2
+  num_heads: 4
+  dropout: 0.1
+  use_lora: True
+  lora_rank: 8
+  num_patients: 500
+  epochs: 20
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.01
+  early_stopping_patience: 10
+  device: cuda

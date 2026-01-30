@@ -1,0 +1,8 @@
+{
+  "experiment_name": "behrt_small_mlm_lora8",
+  "start_time": "2026-01-30T04:13:00.156357",
+  "status": "running",
+  "total_parameters": 656488,
+  "trainable_parameters": 259688,
+  "trainable_percent": 39.55715869901658
+}
