@@ -41,6 +41,7 @@ import argparse
 from ehrsequencing.models.behrt import BEHRT, BEHRTConfig, BEHRTForMLM
 from ehrsequencing.models.lora import apply_lora_to_behrt, count_parameters
 from ehrsequencing.utils.experiment_tracker import ExperimentTracker
+from ehrsequencing.data.realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
 
 
 def generate_synthetic_data(
@@ -159,6 +160,8 @@ def main():
                        help='Dropout probability')
     parser.add_argument('--early_stopping_patience', type=int, default=10,
                        help='Early stopping patience (epochs without improvement)')
+    parser.add_argument('--realistic_data', action='store_true',
+                       help='Use realistic synthetic data with disease patterns (recommended for showcasing)')
     parser.add_argument('--experiment_name', type=str, default=None,
                        help='Experiment name (default: auto-generated)')
     parser.add_argument('--output_dir', type=str, default='experiments',
@@ -241,11 +244,22 @@ def main():
     })
     
     print(f"\n🔬 Generating synthetic data...")
-    codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_synthetic_data(
-        num_patients=args.num_patients,
-        vocab_size=args.vocab_size,
-        max_seq_length=config.max_position
-    )
+    if args.realistic_data:
+        print("Using realistic synthetic data with disease patterns...")
+        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_realistic_dataset(
+            num_patients=args.num_patients,
+            vocab_size=args.vocab_size,
+            max_seq_length=config.max_position,
+            seed=42
+        )
+        print_dataset_statistics(codes, ages, visit_ids)
+    else:
+        print("Using random synthetic data (for testing only)...")
+        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_synthetic_data(
+            num_patients=args.num_patients,
+            vocab_size=args.vocab_size,
+            max_seq_length=config.max_position
+        )
     
     train_size = int(0.8 * args.num_patients)
     train_dataset = TensorDataset(
