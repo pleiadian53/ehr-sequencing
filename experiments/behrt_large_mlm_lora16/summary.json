@@ -1,9 +1,9 @@
 {
   "experiment_name": "behrt_large_mlm_lora16",
-  "start_time": "2026-01-30T04:15:03.628381",
-  "end_time": "2026-01-30T04:15:34.906562",
-  "duration_seconds": 31.278181,
-  "duration_formatted": "0.01 hours",
+  "start_time": "2026-01-30T04:21:41.779105",
+  "end_time": "2026-01-30T04:24:29.634076",
+  "duration_seconds": 167.854971,
+  "duration_formatted": "0.05 hours",
   "status": "completed",
   "hyperparameters": {
     "model_size": "large",
@@ -12,22 +12,22 @@
     "hidden_dim": 512,
     "num_layers": 6,
     "num_heads": 8,
-    "dropout": 0.1,
+    "dropout": 0.2,
     "use_lora": true,
     "lora_rank": 16,
-    "num_patients": 1000,
-    "epochs": 10,
+    "num_patients": 5000,
+    "epochs": 100,
     "batch_size": 128,
-    "learning_rate": 0.001,
+    "learning_rate": 0.0001,
     "weight_decay": 0.01,
     "early_stopping_patience": 10,
     "device": "cuda"
   },
   "best_metrics": {
-    "best_train_loss": 5.6051724297659735,
-    "best_train_accuracy": 0.049785190801111955,
-    "best_val_loss": 6.965107202529907,
-    "best_val_accuracy": 0.0018333333333333333
+    "best_train_loss": 6.8194422870874405,
+    "best_train_accuracy": 0.00362366911008657,
+    "best_val_loss": 6.92003208398819,
+    "best_val_accuracy": 0.0011348085844931745
   },
-  "total_epochs": 9
+  "total_epochs": 15
 }
