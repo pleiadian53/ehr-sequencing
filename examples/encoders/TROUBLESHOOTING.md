@@ -85,7 +85,51 @@ The model is memorizing the training data instead of learning generalizable patt
 - Model complexity not penalized
 - Training continued long after optimal point
 
-#### 3. **Synthetic Data Overfitting**
+#### 3. **Embeddings and MLM Head Were Frozen (Critical Bug!)**
+
+**What Happened (Second Iteration):**
+After fixing the 92% trainable issue, the model STILL wasn't learning:
+```
+Epoch 1  | Train Loss: 7.0 | Val Loss: 6.9
+Epoch 10 | Train Loss: 6.8 | Val Loss: 7.0  ❌ Barely moved!
+```
+
+**Root Cause:**
+- `freeze_base=True` froze ALL parameters including embeddings and MLM head
+- Embeddings were **randomly initialized** and frozen at random values
+- MLM head was frozen at random weights
+- Only LoRA adapters (98K params) were trainable
+- Model couldn't learn because:
+  - Random frozen embeddings → no meaningful representations
+  - Frozen MLM head → can't map to vocabulary
+  - Loss ≈ ln(1000) = 6.9 (random guessing)
+
+**The Fix:**
+Added `train_embeddings=True` and `train_head=True` parameters to `apply_lora_to_behrt()`:
+```python
+model = apply_lora_to_behrt(
+    model,
+    rank=16,
+    freeze_base=True,        # Freeze transformer encoder
+    train_embeddings=True,   # ✅ Unfreeze embeddings (must learn from scratch)
+    train_head=True          # ✅ Unfreeze MLM head (must learn to predict)
+)
+```
+
+**Results After Fix:**
+
+| Metric | Before Fix | After Fix |
+|--------|------------|-----------|
+| Trainable params | 874,984 (4.3%) | 1,450,984 (7.1%) |
+| Embeddings trainable | 0 ❌ | 109,824 ✅ |
+| MLM head trainable | 0 ❌ | 145,768 ✅ |
+| Training loss (10 epochs) | 7.0 → 6.8 | 7.0 → 5.6 |
+| Training accuracy | ~0.1% | ~5% |
+
+**Key Lesson:**
+When training from scratch, embeddings and task heads MUST be trainable. Only freeze them when fine-tuning a pre-trained model.
+
+#### 4. **Synthetic Data Overfitting (Expected Behavior)**
 
 **Problem:**
 - Synthetic data has random patterns
@@ -95,6 +139,11 @@ The model is memorizing the training data instead of learning generalizable patt
 **Evidence:**
 - Training accuracy improving (memorization working)
 - Validation accuracy not improving (memorization doesn't generalize)
+
+**Why This Is Expected:**
+- Random codes have no learnable structure
+- Model can memorize training data but can't generalize
+- With real EHR data (e.g., diabetes codes co-occurring with insulin), the model would generalize
 
 ---
 
