@@ -1,19 +1,29 @@
 """
 Benchmark: Pre-training vs Fine-tuning with Pre-trained Embeddings
 
-This script compares two BEHRT training workflows on the A40 pod:
+This script compares BEHRT training workflows on the A40 pod:
+
+2-WAY COMPARISON (default):
 1. Pre-training from scratch (learning embeddings)
-2. Fine-tuning with pre-trained embeddings (frozen embeddings)
+2. Fine-tuning with learned embeddings (frozen embeddings from Run 1)
+
+3-WAY COMPARISON (with --external_embedding_path):
+1. Pre-training from scratch (learning embeddings)
+2. Fine-tuning with learned embeddings (frozen embeddings from Run 1)
+3. Fine-tuning with external embeddings (e.g., Med2Vec, frozen)
 
 HOW IT WORKS:
+- Generates realistic synthetic data ONCE (all runs use same dataset)
 - Run 1: Trains BEHRT from scratch, learning embeddings from the data
 - Saves the learned embeddings after training
-- Run 2: Loads the embeddings from Run 1, freezes them, and trains only LoRA + head
-- Compares performance: Does pre-trained embeddings help convergence/accuracy?
+- Run 2: Loads embeddings from Run 1, freezes them, trains only LoRA + head
+- Run 3 (optional): Loads external embeddings (Med2Vec), freezes them, trains only LoRA + head
+- Compares performance: Which embedding strategy works best?
 
-This simulates the real-world scenario where you'd:
-1. Pre-train embeddings on large dataset (e.g., Med2Vec on 100K patients)
-2. Fine-tune on smaller task-specific dataset (e.g., 5K patients)
+This answers key questions:
+- Does using pre-trained embeddings help convergence/accuracy?
+- Is there a difference between self-learned vs external (Med2Vec) embeddings?
+- Can we skip expensive pre-training if we have good external embeddings?
 
 Outputs comprehensive performance comparison:
 - Training curves (loss, accuracy)
@@ -25,12 +35,20 @@ Uses realistic synthetic data by default for meaningful evaluation.
 
 Usage:
 
-# Full benchmark (recommended for A40 pod)
+# 2-way comparison (default)
 python benchmark_pretrained_embeddings.py \
     --model_size large \
     --num_patients 10000 \
     --epochs 100 \
     --batch_size 128
+
+# 3-way comparison (with external Med2Vec embeddings)
+python benchmark_pretrained_embeddings.py \
+    --model_size large \
+    --num_patients 10000 \
+    --epochs 100 \
+    --batch_size 128 \
+    --external_embedding_path pretrained/med2vec_embeddings.pt
 
 # Quick test
 python benchmark_pretrained_embeddings.py \
@@ -546,6 +564,8 @@ def main():
                        help='Dropout')
     parser.add_argument('--lora_rank', type=int, default=16,
                        help='LoRA rank')
+    parser.add_argument('--external_embedding_path', type=str, default=None,
+                       help='Path to external pre-trained embeddings (e.g., Med2Vec). If provided, adds 3rd comparison run.')
     parser.add_argument('--output_dir', type=str, default='experiments/benchmark_embeddings',
                        help='Output directory')
     
@@ -695,6 +715,63 @@ def main():
     )
     
     # ============================================================================
+    # RUN 3 (Optional): Fine-tuning with External Pre-trained Embeddings (e.g., Med2Vec)
+    # ============================================================================
+    if args.external_embedding_path:
+        print(f"\n{'='*80}")
+        print("RUN 3: Fine-tuning with External Pre-trained Embeddings (e.g., Med2Vec)")
+        print(f"{'='*80}")
+        
+        model3 = BEHRTForMLM(config).to(device)
+        
+        # Load external pre-trained embeddings
+        print(f"\n📂 Loading external pre-trained embeddings from: {args.external_embedding_path}")
+        external_emb, metadata = load_embeddings(args.external_embedding_path)
+        print(f"   Loaded embeddings: {external_emb.shape}")
+        print(f"   Metadata: {metadata}")
+        
+        # Initialize with external embeddings
+        initialize_embedding_layer(
+            model3.behrt.embeddings.code_embedding,
+            external_emb,
+            freeze=True
+        )
+        
+        model3 = apply_lora_to_behrt(
+            model3,
+            rank=args.lora_rank,
+            lora_attention=True,
+            train_embeddings=False,  # Freeze embeddings
+            train_head=True
+        )
+        
+        params3 = count_parameters(model3)
+        print(f"\n📊 Model Parameters (Fine-tuning with External):")
+        print(f"   Total: {params3['total']:,}")
+        print(f"   Trainable: {params3['trainable']:,} ({params3['trainable_percent']:.1f}%)")
+        print(f"   Embeddings: {params3['embedding_trainable']:,}/{params3['embedding_total']:,} trainable (frozen)")
+        
+        tracker.add_run('Fine-tuning (external embeddings)', {
+            'trainable_params': f"{params3['trainable']:,} ({params3['trainable_percent']:.1f}%)",
+            'embeddings_trainable': False,
+            'lora_rank': args.lora_rank,
+            'embedding_source': args.external_embedding_path
+        })
+        
+        optimizer3 = torch.optim.AdamW(
+            filter(lambda p: p.requires_grad, model3.parameters()),
+            lr=args.lr,
+            weight_decay=args.weight_decay
+        )
+        
+        probs3, labels3 = train_model(
+            'Fine-tuning (external embeddings)', model3, train_loader, val_loader,
+            optimizer3, device, args.epochs, tracker, args.vocab_size
+        )
+    else:
+        probs3, labels3 = None, None
+    
+    # ============================================================================
     # Generate Comparison Plots and Summary
     # ============================================================================
     print(f"\n{'='*80}")
@@ -707,10 +784,14 @@ def main():
     # ROC curves
     print("\n📈 Computing ROC curves...")
     roc_data = {}
-    for name, probs, lbls in [
+    runs_to_plot = [
         ('Pre-training (from scratch)', probs1, labels1),
         ('Fine-tuning (pre-trained embeddings)', probs2, labels2)
-    ]:
+    ]
+    if probs3 is not None:
+        runs_to_plot.append(('Fine-tuning (external embeddings)', probs3, labels3))
+    
+    for name, probs, lbls in runs_to_plot:
         fpr, tpr, auc_score = compute_roc_curve(probs, lbls, args.vocab_size)
         roc_data[name] = {'fpr': fpr, 'tpr': tpr, 'auc': auc_score}
     
@@ -719,10 +800,7 @@ def main():
     # PR curves
     print("📈 Computing PR curves...")
     pr_data = {}
-    for name, probs, lbls in [
-        ('Pre-training (from scratch)', probs1, labels1),
-        ('Fine-tuning (pre-trained embeddings)', probs2, labels2)
-    ]:
+    for name, probs, lbls in runs_to_plot:
         precision, recall, auc_score = compute_pr_curve(probs, lbls, args.vocab_size)
         pr_data[name] = {'precision': precision, 'recall': recall, 'auc': auc_score}
     
