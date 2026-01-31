@@ -144,3 +144,23 @@ Expected insights:
 
 ---
 
+git commit -m "Rename examples/encoders to examples/pretrain_finetune for clarity
+
+Better directory naming that clearly indicates the purpose: comparing
+pre-training from scratch vs fine-tuning with pre-trained embeddings.
+
+Changes:
+- Renamed examples/encoders -> examples/pretrain_finetune
+- Updated all references in Python scripts and documentation
+- Clarified benchmark workflow in benchmark_pretrained_embeddings.py
+- Updated README title to reflect new focus
+
+The benchmark script workflow:
+1. Run 1: Trains BEHRT from scratch, learns embeddings
+2. Saves learned embeddings
+3. Run 2: Loads embeddings from Run 1, freezes them, trains only LoRA+head
+4. Compares performance metrics (ROC-AUC, PR-AUC, AP)
+
+This simulates real-world scenario:
+- Pre-train embeddings on large dataset (100K patients)
+- Fine-tune on smaller task-specific dataset (5K patients)"
