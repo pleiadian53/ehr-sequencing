@@ -164,3 +164,30 @@ The benchmark script workflow:
 This simulates real-world scenario:
 - Pre-train embeddings on large dataset (100K patients)
 - Fine-tune on smaller task-specific dataset (5K patients)"
+
+
+
+---
+
+```
+git add -A && git commit -m "Add 3-way comparison support to benchmark script
+
+Enhancements:
+- Added --external_embedding_path parameter for Med2Vec/external embeddings
+- Supports 2-way comparison (default) or 3-way comparison (with external embeddings)
+- Run 3 loads external embeddings, freezes them, trains only LoRA + head
+- All runs use same dataset for fair comparison
+- Updated docstring with clear usage examples
+
+This answers:
+- Does using pre-trained embeddings help?
+- Self-learned vs external (Med2Vec) embeddings - which is better?
+- Can we skip expensive pre-training with good external embeddings?
+
+Usage:
+# 2-way: python benchmark_pretrained_embeddings.py --num_patients 10000
+# 3-way: python benchmark_pretrained_embeddings.py --num_patients 10000 --external_embedding_path pretrained/med2vec.pt"
+```
+
+---
+

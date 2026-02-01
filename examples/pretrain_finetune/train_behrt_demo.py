@@ -7,28 +7,50 @@ Demonstrates:
 3. Comprehensive experiment tracking for ephemeral pods
 4. MLM pre-training objective
 5. Checkpointing and visualization
+6. Comprehensive metrics (Accuracy, Top-5, F1, Precision, Recall, Perplexity)
 
-This script is designed for quick testing and demonstration.
-For production training, use train_behrt.py
+Data Options:
+- Random data (default): For quick syntax testing only (~0.1% accuracy)
+- Realistic data (--realistic_data): Realistic patterns (~30-60% accuracy)
+- Demo data (--demo_data): Very strong patterns for compelling demos (~70-85% accuracy)
+
+Metrics:
+- Accuracy: Standard accuracy (can be misleading for imbalanced data)
+- Top-5 Accuracy: Is correct code in top 5 predictions? (more forgiving)
+- Macro F1: F1 averaged across all codes (treats rare codes equally)
+- Weighted F1: F1 weighted by code frequency
+- Perplexity: Exp(cross-entropy loss)
 
 Usage:
 
-# Test locally (M1 16GB) with LoRA
-python examples/pretrain_finetune/train_behrt_demo.py \
-    --model_size small \
-    --use_lora \
-    --lora_rank 8 \
-    --num_patients 100 \
-    --epochs 10
-
-# Train on A40 pod
+# Demo with high-signal data (RECOMMENDED for showcasing)
 python examples/pretrain_finetune/train_behrt_demo.py \
     --model_size large \
     --use_lora \
     --lora_rank 16 \
     --num_patients 5000 \
     --epochs 100 \
-    --batch_size 128
+    --batch_size 128 \
+    --demo_data
+
+# Realistic data (for more realistic evaluation)
+python examples/pretrain_finetune/train_behrt_demo.py \
+    --model_size large \
+    --use_lora \
+    --lora_rank 16 \
+    --num_patients 5000 \
+    --epochs 100 \
+    --batch_size 128 \
+    --realistic_data
+
+# Test locally (M1 16GB)
+python examples/pretrain_finetune/train_behrt_demo.py \
+    --model_size small \
+    --use_lora \
+    --lora_rank 8 \
+    --num_patients 100 \
+    --epochs 10 \
+    --demo_data
 """
 
 import torch
@@ -42,6 +64,8 @@ from ehrsequencing.models.behrt import BEHRT, BEHRTConfig, BEHRTForMLM
 from ehrsequencing.models.lora import apply_lora_to_behrt, count_parameters
 from ehrsequencing.utils.experiment_tracker import ExperimentTracker
 from ehrsequencing.data.realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
+from ehrsequencing.data.demo_synthetic import generate_demo_dataset, print_demo_dataset_statistics
+from ehrsequencing.utils.metrics import compute_mlm_metrics, print_metrics_summary, get_metrics_for_logging
 
 
 def generate_synthetic_data(
@@ -109,12 +133,12 @@ def train_epoch(model, dataloader, optimizer, device):
     return avg_loss, accuracy
 
 
-def validate(model, dataloader, device):
-    """Validate model."""
+def validate(model, dataloader, device, vocab_size):
+    """Validate model with comprehensive metrics."""
     model.eval()
     total_loss = 0
-    total_correct = 0
-    total_masked = 0
+    all_logits = []
+    all_labels = []
     
     with torch.no_grad():
         for batch in dataloader:
@@ -123,17 +147,20 @@ def validate(model, dataloader, device):
             logits, loss = model(masked_codes, ages, visit_ids, attention_mask, labels)
             
             total_loss += loss.item()
-            
-            mask = labels != -100
-            if mask.any():
-                predictions = logits.argmax(dim=-1)
-                total_correct += (predictions[mask] == labels[mask]).sum().item()
-                total_masked += mask.sum().item()
+            all_logits.append(logits.cpu())
+            all_labels.append(labels.cpu())
     
     avg_loss = total_loss / len(dataloader)
-    accuracy = total_correct / total_masked if total_masked > 0 else 0
     
-    return avg_loss, accuracy
+    # Concatenate all batches
+    all_logits = torch.cat(all_logits, dim=0)
+    all_labels = torch.cat(all_labels, dim=0)
+    
+    # Compute comprehensive metrics
+    metrics = compute_mlm_metrics(all_logits, all_labels, vocab_size, top_k=5)
+    metrics['loss'] = avg_loss
+    
+    return metrics
 
 
 def main():
@@ -162,6 +189,8 @@ def main():
                        help='Early stopping patience (epochs without improvement)')
     parser.add_argument('--realistic_data', action='store_true',
                        help='Use realistic synthetic data with disease patterns (recommended for showcasing)')
+    parser.add_argument('--demo_data', action='store_true',
+                       help='Use high-signal demo data with very strong patterns (70%+ accuracy, best for demos)')
     parser.add_argument('--experiment_name', type=str, default=None,
                        help='Experiment name (default: auto-generated)')
     parser.add_argument('--output_dir', type=str, default='experiments',
@@ -244,7 +273,16 @@ def main():
     })
     
     print(f"\n🔬 Generating synthetic data...")
-    if args.realistic_data:
+    if args.demo_data:
+        print("Using HIGH-SIGNAL demo data with very strong patterns (70%+ accuracy expected)...")
+        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_demo_dataset(
+            num_patients=args.num_patients,
+            vocab_size=args.vocab_size,
+            max_seq_length=config.max_position,
+            seed=42
+        )
+        print_demo_dataset_statistics(codes, ages, visit_ids)
+    elif args.realistic_data:
         print("Using realistic synthetic data with disease patterns...")
         codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_realistic_dataset(
             num_patients=args.num_patients,
@@ -286,13 +324,24 @@ def main():
     
     for epoch in range(args.epochs):
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, device)
-        val_loss, val_acc = validate(model, val_loader, device)
+        val_metrics = validate(model, val_loader, device, args.vocab_size)
         
+        # Extract key metrics
+        val_loss = val_metrics['loss']
+        val_acc = val_metrics['accuracy']
+        val_top5 = val_metrics['top_5_accuracy']
+        val_f1 = val_metrics['macro_f1']
+        
+        # Log all metrics
         tracker.log_metrics(epoch, {
             'train_loss': train_loss,
             'train_accuracy': train_acc,
             'val_loss': val_loss,
-            'val_accuracy': val_acc
+            'val_accuracy': val_acc,
+            'val_top_5_accuracy': val_top5,
+            'val_macro_f1': val_f1,
+            'val_weighted_f1': val_metrics['weighted_f1'],
+            'val_perplexity': val_metrics['perplexity']
         })
         
         is_best = val_loss < best_val_loss
@@ -304,16 +353,16 @@ def main():
         
         if args.use_lora:
             tracker.save_lora_checkpoint(model, epoch, 
-                                        {'val_loss': val_loss, 'val_acc': val_acc},
+                                        {'val_loss': val_loss, 'val_acc': val_acc, 'val_f1': val_f1},
                                         is_best=is_best)
         else:
             tracker.save_checkpoint(model, optimizer, epoch,
-                                   {'val_loss': val_loss, 'val_acc': val_acc},
+                                   {'val_loss': val_loss, 'val_acc': val_acc, 'val_f1': val_f1},
                                    is_best=is_best)
         
         print(f"Epoch {epoch+1}/{args.epochs} | "
               f"Train Loss: {train_loss:.4f} Acc: {train_acc:.4f} | "
-              f"Val Loss: {val_loss:.4f} Acc: {val_acc:.4f}"
+              f"Val Loss: {val_loss:.4f} Acc: {val_acc:.4f} Top5: {val_top5:.4f} F1: {val_f1:.4f}"
               f"{' 🏆' if is_best else ''}"
               f" | Patience: {patience_counter}/{args.early_stopping_patience}")
         
