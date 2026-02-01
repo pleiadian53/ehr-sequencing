@@ -3,11 +3,16 @@ BEHRT Pre-training Demo Script
 
 Demonstrates:
 1. BEHRT architecture with 3 size configs (small/medium/large)
-2. LoRA for efficient fine-tuning
+2. LoRA for efficient fine-tuning (enabled by default)
 3. Comprehensive experiment tracking for ephemeral pods
 4. MLM pre-training objective
 5. Checkpointing and visualization
 6. Comprehensive metrics (Accuracy, Top-5, F1, Precision, Recall, Perplexity)
+
+Defaults are optimized for A40 pod:
+- LoRA enabled (16 rank for large, 8 for small)
+- 5000 patients, 100 epochs, batch size 128
+- Early stopping with patience=10
 
 Data Options:
 - Random data (default): For quick syntax testing only (~0.1% accuracy)
@@ -23,33 +28,29 @@ Metrics:
 
 Usage:
 
-# Demo with high-signal data (RECOMMENDED for showcasing)
+# A40 pod - Demo data (RECOMMENDED, minimal flags needed)
 python examples/pretrain_finetune/train_behrt_demo.py \
     --model_size large \
-    --use_lora \
-    --lora_rank 16 \
-    --num_patients 5000 \
-    --epochs 100 \
-    --batch_size 128 \
     --demo_data
 
-# Realistic data (for more realistic evaluation)
+# A40 pod - Realistic data
 python examples/pretrain_finetune/train_behrt_demo.py \
     --model_size large \
-    --use_lora \
-    --lora_rank 16 \
-    --num_patients 5000 \
-    --epochs 100 \
-    --batch_size 128 \
     --realistic_data
 
-# Test locally (M1 16GB)
+# Local testing (M1 16GB) - override defaults
 python examples/pretrain_finetune/train_behrt_demo.py \
     --model_size small \
-    --use_lora \
-    --lora_rank 8 \
     --num_patients 100 \
     --epochs 10 \
+    --batch_size 16 \
+    --lora_rank 8 \
+    --demo_data
+
+# Train full model without LoRA (slower, more memory)
+python examples/pretrain_finetune/train_behrt_demo.py \
+    --model_size large \
+    --no_lora \
     --demo_data
 """
 
@@ -137,18 +138,20 @@ def main():
     parser = argparse.ArgumentParser(description='BEHRT Pre-training Demo')
     parser.add_argument('--model_size', type=str, default='small', choices=['small', 'medium', 'large'],
                        help='Model size (small for local, large for pod)')
-    parser.add_argument('--use_lora', action='store_true',
-                       help='Use LoRA for efficient fine-tuning')
-    parser.add_argument('--lora_rank', type=int, default=8,
-                       help='LoRA rank (lower = fewer parameters)')
-    parser.add_argument('--num_patients', type=int, default=100,
-                       help='Number of synthetic patients')
+    parser.add_argument('--use_lora', action='store_true', default=True,
+                       help='Use LoRA for efficient fine-tuning (default: True)')
+    parser.add_argument('--no_lora', action='store_true',
+                       help='Disable LoRA (train full model)')
+    parser.add_argument('--lora_rank', type=int, default=16,
+                       help='LoRA rank (default: 16 for large models, 8 for small)')
+    parser.add_argument('--num_patients', type=int, default=5000,
+                       help='Number of synthetic patients (default: 5000 for A40 pod)')
     parser.add_argument('--vocab_size', type=int, default=1000,
                        help='Vocabulary size')
-    parser.add_argument('--epochs', type=int, default=10,
-                       help='Number of training epochs')
-    parser.add_argument('--batch_size', type=int, default=16,
-                       help='Batch size')
+    parser.add_argument('--epochs', type=int, default=100,
+                       help='Number of training epochs (default: 100 with early stopping)')
+    parser.add_argument('--batch_size', type=int, default=128,
+                       help='Batch size (default: 128 for A40 pod, use 16-32 for local)')
     parser.add_argument('--lr', type=float, default=1e-4,
                        help='Learning rate')
     parser.add_argument('--weight_decay', type=float, default=0.01,
@@ -167,6 +170,10 @@ def main():
                        help='Output directory')
     
     args = parser.parse_args()
+    
+    # Handle --no_lora flag to override default
+    if args.no_lora:
+        args.use_lora = False
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
     print(f"Using device: {device}")

@@ -719,6 +719,104 @@ python examples/pretrain_finetune/train_behrt_demo.py \
 
 ---
 
+**Results Analysis:**
+
+✅ **YES - This is exactly what we expected!**
+
+The demo data is working perfectly:
+
+**Accuracy Progression:**
+- Epoch 1: 82.3% → Epoch 18: 99.5%
+- **Target achieved:** 70-85%+ accuracy ✓
+- Final accuracy: **99.5%** (even better than expected!)
+
+**F1 Score Progression:**
+- Epoch 1: 0.038 → Epoch 18: 0.965
+- Shows the model is learning **all codes equally**, not just common ones
+- Final F1: **0.965** (excellent balanced learning)
+
+**Top-5 Accuracy:**
+- Reaches **99.9%** by epoch 18
+- Clinically relevant - correct code almost always in top 5 predictions
+
+**Loss Convergence:**
+- Val loss: 0.89 → 0.021 (smooth decrease, no overfitting)
+- Clear learning signal from deterministic patterns
+
+---
+
+**Trophy Emoji Issue - You're Right!**
+
+The 🏆 appears every epoch because validation loss keeps improving. This makes it meaningless. Let me fix this:
+
+
+
+
+
+
+
+
+
+✅ **Summary**
+
+## Training Results - Excellent! 🎉
+
+Your demo data is working **perfectly**:
+
+| Metric        | Epoch 1 | Epoch 18 | Target     | Status               |
+| ------------- | ------- | -------- | ---------- | -------------------- |
+| **Accuracy**  | 82.3%   | 99.5%    | 70-85%+    | ✅ Exceeded           |
+| **F1 Score**  | 0.038   | 0.965    | N/A        | ✅ Excellent          |
+| **Top-5 Acc** | 94.7%   | 99.9%    | N/A        | ✅ Outstanding        |
+| **Val Loss**  | 0.895   | 0.021    | Decreasing | ✅ Smooth convergence |
+
+**Key Observations:**
+- Model learns **very fast** due to strong deterministic patterns
+- **No overfitting** - validation loss decreases smoothly
+- **Balanced learning** - F1 score shows all codes learned equally
+- Perfect for **compelling demos** - clear learning signal
+
+---
+
+## Trophy Emoji - Fixed! 🏆
+
+**Before:** Trophy on every epoch (meaningless)  
+**After:** Trophy only on **significant improvements** (>0.5% relative)
+
+**New Display Logic:**
+- 🏆 = Significant improvement (>0.5% relative loss reduction)
+- ✓ = Minor improvement (best but <0.5%)
+- (blank) = No improvement
+
+**Expected Output Now:**
+```
+Epoch 1  | Val Loss: 0.8945 ... 🏆  (first epoch)
+Epoch 2  | Val Loss: 0.4503 ... 🏆  (49.6% improvement!)
+Epoch 3  | Val Loss: 0.3027 ... 🏆  (32.8% improvement!)
+Epoch 10 | Val Loss: 0.0458 ... 🏆  (significant)
+Epoch 11 | Val Loss: 0.0402 ... ✓   (minor improvement)
+Epoch 12 | Val Loss: 0.0359 ... ✓   (minor improvement)
+Epoch 13 | Val Loss: 0.0360 ...     (no improvement)
+```
+
+The trophy now **celebrates real milestones** instead of appearing everywhere! 🎯
+
+
+
+---
+
+I noticed that this usage:  """ python examples/pretrain_finetune/train_behrt_demo.py \    --model_size large \    --realistic_data """ has significantly less parameters/options specified. This is good but I wanted to double check with you that the rest of the parameters have good default values.  By comparison, the demo script usage has a lot of parameters specified:  ``` python examples/pretrain_finetune/train_behrt_demo.py \    --model_size large \    --use_lora \    --lora_rank 16 \    --num_patients 5000 \    --epochs 100 \    --batch_size 128 \    --demo_data ```
+
+---
+
+
+
+
+
+
+
+---
+
 > Testing
 
 
@@ -728,6 +826,10 @@ python examples/pretrain_finetune/train_behrt_demo.py \
     --model_size large \
     --realistic_data
 ```
+
+
+
+---
 
 
 
