@@ -292,6 +292,7 @@ def main():
     
     best_val_loss = float('inf')
     patience_counter = 0
+    best_epoch = 0
     
     for epoch in range(args.epochs):
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, device)
@@ -315,9 +316,14 @@ def main():
             'val_perplexity': val_metrics['perplexity']
         })
         
+        # Check if this is a significant improvement (>0.5% relative improvement)
         is_best = val_loss < best_val_loss
+        is_significant = False
         if is_best:
+            improvement = (best_val_loss - val_loss) / best_val_loss if best_val_loss != float('inf') else 1.0
+            is_significant = improvement > 0.005  # 0.5% improvement threshold
             best_val_loss = val_loss
+            best_epoch = epoch + 1
             patience_counter = 0
         else:
             patience_counter += 1
@@ -331,15 +337,18 @@ def main():
                                    {'val_loss': val_loss, 'val_acc': val_acc, 'val_f1': val_f1},
                                    is_best=is_best)
         
+        # Show trophy only on significant improvements
+        status_icon = ' 🏆' if is_significant else (' ✓' if is_best else '')
+        
         print(f"Epoch {epoch+1}/{args.epochs} | "
               f"Train Loss: {train_loss:.4f} Acc: {train_acc:.4f} | "
               f"Val Loss: {val_loss:.4f} Acc: {val_acc:.4f} Top5: {val_top5:.4f} F1: {val_f1:.4f}"
-              f"{' 🏆' if is_best else ''}"
+              f"{status_icon}"
               f" | Patience: {patience_counter}/{args.early_stopping_patience}")
         
         if patience_counter >= args.early_stopping_patience:
             print(f"\n⚠️  Early stopping triggered after {epoch+1} epochs")
-            print(f"   Best val loss: {best_val_loss:.4f} at epoch {epoch+1-patience_counter}")
+            print(f"   Best val loss: {best_val_loss:.4f} at epoch {best_epoch}")
             break
     
     print(f"\n📈 Generating plots...")

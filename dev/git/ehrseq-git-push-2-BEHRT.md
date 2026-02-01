@@ -230,3 +230,35 @@ python train_behrt_demo.py --model_size large --demo_data
 python train_behrt_demo.py --model_size large --realistic_data"
 ```
 
+
+
+---
+
+```
+git add -A && git commit -m "Refactor: Consolidate synthetic data generators in data package
+
+Improvements:
+1. Properly organized synthetic data generators in src/ehrsequencing/data/
+   - realistic_synthetic.py: Realistic patterns (30-60% accuracy)
+   - demo_synthetic.py: High-signal patterns (70-85% accuracy)
+   - random_synthetic.py: Random data for quick testing (~0.1% accuracy)
+
+2. Updated data/__init__.py to export all synthetic generators
+   - Clean imports: from ehrsequencing.data import generate_*
+   - Proper package structure following existing conventions
+
+3. Removed redundant generate_synthetic_data() from train_behrt_demo.py
+   - Now uses generate_random_dataset() from data package
+   - Consistent with package organization
+
+4. Maintained separation of concerns:
+   - src/ehrsequencing/synthetic/ → Survival outcomes (events, censoring)
+   - src/ehrsequencing/data/ → Input sequences (codes, visits, trajectories)
+
+This follows the existing package structure where:
+- synthetic/ generates labels/outcomes FROM sequences
+- data/ generates the sequences themselves
+
+All synthetic generators now properly integrated into the data package."
+```
+
