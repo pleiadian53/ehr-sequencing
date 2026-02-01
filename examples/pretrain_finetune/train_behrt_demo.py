@@ -63,44 +63,14 @@ import argparse
 from ehrsequencing.models.behrt import BEHRT, BEHRTConfig, BEHRTForMLM
 from ehrsequencing.models.lora import apply_lora_to_behrt, count_parameters
 from ehrsequencing.utils.experiment_tracker import ExperimentTracker
-from ehrsequencing.data.realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
-from ehrsequencing.data.demo_synthetic import generate_demo_dataset, print_demo_dataset_statistics
+from ehrsequencing.data import (
+    generate_realistic_dataset,
+    print_dataset_statistics,
+    generate_demo_dataset,
+    print_demo_dataset_statistics,
+    generate_random_dataset
+)
 from ehrsequencing.utils.metrics import compute_mlm_metrics, print_metrics_summary, get_metrics_for_logging
-
-
-def generate_synthetic_data(
-    num_patients: int = 100,
-    vocab_size: int = 1000,
-    max_seq_length: int = 50,
-    mask_prob: float = 0.15
-):
-    """
-    Generate synthetic EHR data for testing.
-    
-    Returns:
-        codes: Medical code IDs [num_patients, max_seq_length]
-        ages: Patient ages [num_patients, max_seq_length]
-        visit_ids: Visit IDs [num_patients, max_seq_length]
-        attention_mask: Valid positions [num_patients, max_seq_length]
-        masked_codes: Codes with masking applied
-        labels: Original codes for masked positions
-    """
-    print(f"Generating synthetic data: {num_patients} patients, vocab={vocab_size}")
-    
-    codes = torch.randint(1, vocab_size, (num_patients, max_seq_length))
-    ages = torch.randint(20, 80, (num_patients, max_seq_length))
-    visit_ids = torch.arange(max_seq_length).unsqueeze(0).expand(num_patients, -1)
-    attention_mask = torch.ones(num_patients, max_seq_length, dtype=torch.bool)
-    
-    masked_codes = codes.clone()
-    labels = torch.full_like(codes, -100)
-    
-    mask_token_id = 0
-    mask = torch.rand(num_patients, max_seq_length) < mask_prob
-    labels[mask] = codes[mask]
-    masked_codes[mask] = mask_token_id
-    
-    return codes, ages, visit_ids, attention_mask, masked_codes, labels
 
 
 def train_epoch(model, dataloader, optimizer, device):
@@ -293,10 +263,11 @@ def main():
         print_dataset_statistics(codes, ages, visit_ids)
     else:
         print("Using random synthetic data (for testing only)...")
-        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_synthetic_data(
+        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_random_dataset(
             num_patients=args.num_patients,
             vocab_size=args.vocab_size,
-            max_seq_length=config.max_position
+            max_seq_length=config.max_position,
+            seed=42
         )
     
     train_size = int(0.8 * args.num_patients)

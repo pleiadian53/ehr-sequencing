@@ -5,11 +5,15 @@ This module provides:
 - Data adapters for various EHR sources (Synthea, MIMIC, etc.)
 - Visit grouping with semantic code ordering
 - Patient sequence building for temporal modeling
+- Synthetic data generators for testing and demos
 """
 
 from .adapters import BaseEHRAdapter, MedicalEvent, PatientInfo, SyntheaAdapter
 from .visit_grouper import Visit, VisitGrouper
 from .sequence_builder import PatientSequence, PatientSequenceBuilder, PatientSequenceDataset
+from .realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
+from .demo_synthetic import generate_demo_dataset, print_demo_dataset_statistics
+from .random_synthetic import generate_random_dataset
 
 __all__ = [
     # Adapters
@@ -23,7 +27,13 @@ __all__ = [
     # Sequence building
     'PatientSequence',
     'PatientSequenceBuilder',
-    'PatientSequenceDataset'
+    'PatientSequenceDataset',
+    # Synthetic data generators
+    'generate_realistic_dataset',
+    'print_dataset_statistics',
+    'generate_demo_dataset',
+    'print_demo_dataset_statistics',
+    'generate_random_dataset',
 ]
 
 # Will be populated as modules are developed

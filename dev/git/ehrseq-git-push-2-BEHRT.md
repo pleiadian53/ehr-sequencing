@@ -191,3 +191,42 @@ Usage:
 
 ---
 
+```
+git add -A && git commit -m "Add high-signal demo data and comprehensive metrics
+
+Major enhancements for compelling demos:
+
+1. New demo_synthetic.py:
+   - Very strong, deterministic disease patterns
+   - 70-85% accuracy achievable (vs 30-60% realistic, 0.1% random)
+   - Clear diagnosis → treatment → monitoring sequences
+   - Perfect for showcasing BEHRT learning capabilities
+
+2. New metrics.py:
+   - Comprehensive MLM metrics beyond accuracy
+   - Top-K accuracy (clinical relevance)
+   - Macro/Weighted F1 (handles class imbalance)
+   - Precision/Recall (per-code and aggregate)
+   - Perplexity (language modeling quality)
+   - Per-code metrics for detailed analysis
+
+3. Updated train_behrt_demo.py:
+   - Added --demo_data flag for high-signal demos
+   - Integrated comprehensive metrics in training loop
+   - Display Accuracy, Top-5, F1 during training
+   - Updated docstring with data options and metrics explanation
+
+Why these metrics matter for medical code prediction:
+- Accuracy misleading due to class imbalance (common codes dominate)
+- F1 treats rare but important codes equally
+- Top-K more clinically relevant (top 5 differential diagnoses)
+- Perplexity measures overall prediction quality
+
+Usage:
+# High-signal demo (70%+ accuracy)
+python train_behrt_demo.py --model_size large --demo_data
+
+# Realistic evaluation (30-60% accuracy)
+python train_behrt_demo.py --model_size large --realistic_data"
+```
+
