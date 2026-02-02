@@ -809,6 +809,248 @@ I noticed that this usage:  """ python examples/pretrain_finetune/train_behrt_de
 
 ---
 
+Good catch! Let me compare the defaults vs your demo usage:
+
+## Current Defaults vs Demo Usage
+
+| Parameter                   | Default | Demo Usage | Assessment                             |
+| --------------------------- | ------- | ---------- | -------------------------------------- |
+| `--use_lora`                | `False` | `True`     | ⚠️ **Should enable by default**         |
+| `--lora_rank`               | `8`     | `16`       | ⚠️ **Too conservative for large model** |
+| `--num_patients`            | `100`   | `5000`     | ⚠️ **Way too small**                    |
+| `--epochs`                  | `10`    | `100`      | ⚠️ **Too few for convergence**          |
+| `--batch_size`              | `16`    | `128`      | ⚠️ **Too small for A40**                |
+| `--lr`                      | `1e-4`  | (default)  | ✅ Good                                 |
+| `--weight_decay`            | `0.01`  | (default)  | ✅ Good                                 |
+| `--dropout`                 | `0.1`   | (default)  | ✅ Good                                 |
+| `--early_stopping_patience` | `10`    | (default)  | ✅ Good                                 |
+
+## Problems with Current Defaults
+
+**Your minimal command:**
+```bash
+python train_behrt_demo.py --model_size large --realistic_data
+```
+
+**Will actually run:**
+- ❌ No LoRA (trains full model - slower, more memory)
+- ❌ Only 100 patients (tiny dataset)
+- ❌ Only 10 epochs (won't converge)
+- ❌ Batch size 16 (underutilizes A40 GPU)
+
+**Result:** Poor performance, slow training, won't showcase capabilities
+
+## Recommended Fix
+
+The defaults should be **optimized for the A40 pod** (the primary use case), not local testing:
+
+Now let me also add a flag to easily override for local testing:
+
+
+
+Now let me update the docstring to reflect the new defaults:
+
+
+
+
+
+✅ **Excellent Catch - Defaults Now Optimized!**
+
+## Summary of Changes
+
+Your minimal command now works perfectly with **A40-optimized defaults**:
+
+```bash
+# Before: Required many flags
+python train_behrt_demo.py \
+    --model_size large \
+    --use_lora \
+    --lora_rank 16 \
+    --num_patients 5000 \
+    --epochs 100 \
+    --batch_size 128 \
+    --realistic_data
+
+# After: Just 2 flags needed! ✨
+python train_behrt_demo.py \
+    --model_size large \
+    --realistic_data
+```
+
+## New Defaults (A40-Optimized)
+
+| Parameter        | Old Default | New Default | Rationale                               |
+| ---------------- | ----------- | ----------- | --------------------------------------- |
+| `--use_lora`     | `False`     | **`True`**  | LoRA is best practice for efficiency    |
+| `--lora_rank`    | `8`         | **`16`**    | Better for large models                 |
+| `--num_patients` | `100`       | **`5000`**  | Meaningful dataset size                 |
+| `--epochs`       | `10`        | **`100`**   | Allow convergence (with early stopping) |
+| `--batch_size`   | `16`        | **`128`**   | Utilize A40 GPU fully                   |
+
+**Other defaults remain good:**
+- Learning rate: `1e-4` ✓
+- Weight decay: `0.01` ✓
+- Dropout: `0.1` ✓
+- Early stopping patience: `10` ✓
+
+## Usage Examples
+
+**A40 Pod (Primary Use Case):**
+```bash
+# Demo data - just 2 flags!
+python train_behrt_demo.py --model_size large --demo_data
+
+# Realistic data - just 2 flags!
+python train_behrt_demo.py --model_size large --realistic_data
+```
+
+**Local Testing (Override Defaults):**
+```bash
+python train_behrt_demo.py \
+    --model_size small \
+    --num_patients 100 \
+    --epochs 10 \
+    --batch_size 16 \
+    --lora_rank 8 \
+    --demo_data
+```
+
+**Disable LoRA (if needed):**
+```bash
+python train_behrt_demo.py --model_size large --no_lora --demo_data
+```
+
+The script is now **much more user-friendly** for the primary use case while still allowing easy overrides for local testing! 🎯
+
+---
+
+
+
+
+
+
+
+
+
+---
+
+The suitable default paramters for training scripts under examples/pretrain_finetune/ 
+really depend on the platform (e.g. is it on my local system, which is usually not recommended, or is it on A40 or other machines with varying VRAM capacity). 
+
+Can write a resource manager wrapper on top of a given training script (like train_behrt_demo.py) to automatically select the right default paramters (of course, the user is allowed to overwrite them)? Wouldn't this a good idea? 
+
+---
+
+![image-20260202124812259](/Users/pleiadian53/Library/Application Support/typora-user-images/image-20260202124812259.png)
+
+
+
+
+
+
+
+---
+
+
+
+```
+(ehrsequencing) root@aec3cacfb385:~/work/ehr-sequencing# python examples/pretrain_finetune/train_behrt_demo.py --model_size large --realistic_data
+Using device: cuda
+📊 Experiment tracker initialized: behrt_large_mlm_lora16
+📁 Output directory: experiments/behrt_large_mlm_lora16
+
+================================================================================
+BEHRT Pre-training Demo: behrt_large_mlm_lora16
+================================================================================
+☁️  Large model (for A40 cloud GPU)
+/workspace/miniforge3/envs/ehrsequencing/lib/python3.10/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(
+
+🔧 Applying LoRA (rank=16)...
+Applied LoRA to behrt.encoder.layers.0.self_attn.out_proj (in=512, out=512, rank=16)
+Applied LoRA to behrt.encoder.layers.1.self_attn.out_proj (in=512, out=512, rank=16)
+Applied LoRA to behrt.encoder.layers.2.self_attn.out_proj (in=512, out=512, rank=16)
+Applied LoRA to behrt.encoder.layers.3.self_attn.out_proj (in=512, out=512, rank=16)
+Applied LoRA to behrt.encoder.layers.4.self_attn.out_proj (in=512, out=512, rank=16)
+Applied LoRA to behrt.encoder.layers.5.self_attn.out_proj (in=512, out=512, rank=16)
+
+📊 Model Parameters:
+   Total: 20,366,312
+   Trainable: 1,450,984 (7.1%)
+   Frozen: 18,915,328
+   LoRA: 98,304 (0.5%)
+   Embeddings: 576,000/576,000 trainable
+   Head: 776,680/776,680 trainable
+
+🔬 Generating synthetic data...
+Using realistic synthetic data with disease patterns...
+Generating realistic synthetic data: 5000 patients, vocab=1000
+Disease patterns:
+  - Type 2 Diabetes: 10.0% prevalence
+  - Hypertension: 15.0% prevalence
+  - Asthma: 8.0% prevalence
+  - Depression: 12.0% prevalence
+  - COPD: 6.0% prevalence
+  - Heart Failure: 5.0% prevalence
+  - Chronic Kidney Disease: 7.0% prevalence
+  - Rheumatoid Arthritis: 9.0% prevalence
+
+📊 Dataset Statistics:
+   Number of patients: 5000
+   Sequence length: 200
+   Avg sequence length: 15.2 ± 14.3
+   Unique codes used: 63
+   Age range: 20-91
+   Avg age: 52.7
+   Avg visits per patient: 6.1
+
+   Top 10 most frequent codes:
+      1. Code 500:  9996 (13.15%) - Routine care
+      2. Code 501:  6750 ( 8.88%) - Routine care
+      3. Code 502:  5077 ( 6.68%) - Routine care
+      4. Code 503:  3330 ( 4.38%) - Routine care
+      5. Code 311:  2135 ( 2.81%) - Hypertension (monitoring)
+      6. Code 132:  2085 ( 2.74%) - Depression (treatment)
+      7. Code 131:  2044 ( 2.69%) - Depression (treatment)
+      8. Code 130:  2016 ( 2.65%) - Depression (treatment)
+      9. Code 112:  1932 ( 2.54%) - Hypertension (treatment)
+      10. Code 111:  1927 ( 2.53%) - Hypertension (treatment)
+
+🚀 Starting training...
+   Train batches: 32
+   Val batches: 8
+   Early stopping patience: 10 epochs
+```
+
+
+
+---
+
+Training Results
+| Metric                                                       | Training | Validation |
+| ------------------------------------------------------------ | -------- | ---------- |
+| Loss                                                         | 1.2254   | 2.0413     |
+| Accuracy                                                     | 60.77%   | 32.53%     |
+| Top-5 Accuracy                                               | —        | 78.20%     |
+| Macro F1                                                     | —        | 0.2194     |
+| Weighted F1                                                  | —        | 0.3213     |
+| Perplexity                                                   | —        | 55.85      |
+| Key Details                                                  |          |            |
+| •  Early stopping triggered at epoch 49 (best val loss at epoch 39) |          |            |
+| •  Duration: ~0.29 hours                                     |          |            |
+| •  Output directory: experiments/behrt_large_mlm_lora16/     |          |            |
+| •  Best model checkpoint: experiments/behrt_large_mlm_lora16/checkpoints/best_lora.pt |          |            |
+
+The gap between training accuracy (60.77%) and validation accuracy (32.53%) suggests some overfitting, though the top-5 accuracy of 78.20% indicates the model is learning meaningful patterns.
+
+
+
+
+
+
+
+---
+
 
 
 

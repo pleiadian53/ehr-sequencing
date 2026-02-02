@@ -8,11 +8,23 @@ Demonstrates:
 4. MLM pre-training objective
 5. Checkpointing and visualization
 6. Comprehensive metrics (Accuracy, Top-5, F1, Precision, Recall, Perplexity)
+7. **Auto resource detection** - automatically optimizes parameters for your hardware
 
-Defaults are optimized for A40 pod:
-- LoRA enabled (16 rank for large, 8 for small)
-- 5000 patients, 100 epochs, batch size 128
-- Early stopping with patience=10
+Auto Resource Detection (NEW!):
+- Detects GPU type (A40, A100, V100, T4, local GPU, or CPU)
+- Detects VRAM capacity and system RAM
+- Automatically sets optimal: model_size, batch_size, num_patients, epochs, lora_rank
+- User can override any parameter via command-line
+- Enabled by default, disable with --no_auto_resources
+
+Supported Platforms:
+- Local CPU (small model, 100 patients, batch 4)
+- Local Laptop GPU (small model, 500 patients, batch 16)
+- Local Workstation (medium model, 2000 patients, batch 64)
+- Cloud T4 (medium model, 3000 patients, batch 64)
+- Cloud V100 (large model, 5000 patients, batch 96)
+- Cloud A40 (large model, 5000 patients, batch 128)
+- Cloud A100 (large model, 10000 patients, batch 256)
 
 Data Options:
 - Random data (default): For quick syntax testing only (~0.1% accuracy)
@@ -28,30 +40,33 @@ Metrics:
 
 Usage:
 
-# A40 pod - Demo data (RECOMMENDED, minimal flags needed)
+# Auto-detect resources (RECOMMENDED - works anywhere!)
+python examples/pretrain_finetune/train_behrt_demo.py --demo_data
+
+# Auto-detect with realistic data
+python examples/pretrain_finetune/train_behrt_demo.py --realistic_data
+
+# Override specific parameters (auto-detect fills the rest)
 python examples/pretrain_finetune/train_behrt_demo.py \
+    --demo_data \
+    --batch_size 64 \
+    --epochs 50
+
+# Force specific model size (auto-detect adjusts other params)
+python examples/pretrain_finetune/train_behrt_demo.py \
+    --demo_data \
+    --model_size large
+
+# Disable auto-detection (use fixed defaults)
+python examples/pretrain_finetune/train_behrt_demo.py \
+    --no_auto_resources \
     --model_size large \
     --demo_data
 
-# A40 pod - Realistic data
+# Train full model without LoRA
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --model_size large \
-    --realistic_data
-
-# Local testing (M1 16GB) - override defaults
-python examples/pretrain_finetune/train_behrt_demo.py \
-    --model_size small \
-    --num_patients 100 \
-    --epochs 10 \
-    --batch_size 16 \
-    --lora_rank 8 \
-    --demo_data
-
-# Train full model without LoRA (slower, more memory)
-python examples/pretrain_finetune/train_behrt_demo.py \
-    --model_size large \
-    --no_lora \
-    --demo_data
+    --demo_data \
+    --no_lora
 """
 
 import torch
@@ -72,6 +87,7 @@ from ehrsequencing.data import (
     generate_random_dataset
 )
 from ehrsequencing.utils.metrics import compute_mlm_metrics, print_metrics_summary, get_metrics_for_logging
+from ehrsequencing.utils.resource_manager import get_recommended_config
 
 
 def train_epoch(model, dataloader, optimizer, device):
@@ -136,22 +152,32 @@ def validate(model, dataloader, device, vocab_size):
 
 def main():
     parser = argparse.ArgumentParser(description='BEHRT Pre-training Demo')
-    parser.add_argument('--model_size', type=str, default='small', choices=['small', 'medium', 'large'],
-                       help='Model size (small for local, large for pod)')
-    parser.add_argument('--use_lora', action='store_true', default=True,
-                       help='Use LoRA for efficient fine-tuning (default: True)')
+    
+    # Resource management
+    parser.add_argument('--auto_resources', action='store_true', default=True,
+                       help='Auto-detect resources and set optimal defaults (default: True)')
+    parser.add_argument('--no_auto_resources', action='store_true',
+                       help='Disable auto resource detection, use fixed defaults')
+    
+    # Model configuration
+    parser.add_argument('--model_size', type=str, default=None, choices=['small', 'medium', 'large'],
+                       help='Model size (auto-detected if not specified)')
+    parser.add_argument('--use_lora', action='store_true', default=None,
+                       help='Use LoRA for efficient fine-tuning (auto-detected if not specified)')
     parser.add_argument('--no_lora', action='store_true',
                        help='Disable LoRA (train full model)')
-    parser.add_argument('--lora_rank', type=int, default=16,
-                       help='LoRA rank (default: 16 for large models, 8 for small)')
-    parser.add_argument('--num_patients', type=int, default=5000,
-                       help='Number of synthetic patients (default: 5000 for A40 pod)')
+    parser.add_argument('--lora_rank', type=int, default=None,
+                       help='LoRA rank (auto-detected if not specified)')
+    
+    # Training parameters
+    parser.add_argument('--num_patients', type=int, default=None,
+                       help='Number of synthetic patients (auto-detected if not specified)')
     parser.add_argument('--vocab_size', type=int, default=1000,
                        help='Vocabulary size')
-    parser.add_argument('--epochs', type=int, default=100,
-                       help='Number of training epochs (default: 100 with early stopping)')
-    parser.add_argument('--batch_size', type=int, default=128,
-                       help='Batch size (default: 128 for A40 pod, use 16-32 for local)')
+    parser.add_argument('--epochs', type=int, default=None,
+                       help='Number of training epochs (auto-detected if not specified)')
+    parser.add_argument('--batch_size', type=int, default=None,
+                       help='Batch size (auto-detected if not specified)')
     parser.add_argument('--lr', type=float, default=1e-4,
                        help='Learning rate')
     parser.add_argument('--weight_decay', type=float, default=0.01,
@@ -171,7 +197,56 @@ def main():
     
     args = parser.parse_args()
     
-    # Handle --no_lora flag to override default
+    # Handle --no_auto_resources flag
+    if args.no_auto_resources:
+        args.auto_resources = False
+    
+    # Auto-detect resources and set defaults for unspecified parameters
+    if args.auto_resources:
+        # Determine task type from data flags
+        if args.demo_data:
+            task = 'demo'
+        elif args.realistic_data:
+            task = 'realistic'
+        else:
+            task = 'demo'  # Default to demo
+        
+        # Get recommended config
+        recommended_config, resources = get_recommended_config(
+            task=task,
+            model_size_override=args.model_size,
+            verbose=True
+        )
+        
+        # Fill in None parameters with recommendations
+        if args.model_size is None:
+            args.model_size = recommended_config.model_size
+        if args.batch_size is None:
+            args.batch_size = recommended_config.batch_size
+        if args.num_patients is None:
+            args.num_patients = recommended_config.num_patients
+        if args.epochs is None:
+            args.epochs = recommended_config.epochs
+        if args.use_lora is None:
+            args.use_lora = recommended_config.use_lora
+        if args.lora_rank is None:
+            args.lora_rank = recommended_config.lora_rank
+    else:
+        # Use fixed defaults when auto-detection is disabled
+        if args.model_size is None:
+            args.model_size = 'large'
+        if args.batch_size is None:
+            args.batch_size = 128
+        if args.num_patients is None:
+            args.num_patients = 5000
+        if args.epochs is None:
+            args.epochs = 100
+        if args.use_lora is None:
+            args.use_lora = True
+        if args.lora_rank is None:
+            args.lora_rank = 16
+    
+    # Handle --no_lora flag to override
     if args.no_lora:
         args.use_lora = False
     
