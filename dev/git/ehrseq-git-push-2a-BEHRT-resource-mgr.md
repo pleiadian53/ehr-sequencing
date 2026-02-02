@@ -125,3 +125,58 @@ Benefits:
 This addresses the user's excellent suggestion to leverage the existing runpod_ssh_manager.sh infrastructure."
 ```
 
+
+
+---
+
+```
+git add -A && git commit -m "Add pod management utilities to ehr-sequencing project
+
+Copied and integrated runpod_ssh_manager.sh for local use:
+
+1. Created scripts/pod_management/ directory structure:
+   - runpod_ssh_manager.sh - SSH config manager
+   - README.md - Comprehensive documentation
+
+2. Benefits of local copy:
+   - Self-contained project setup
+   - No dependency on external scripts
+   - Project-specific documentation
+   - Easy to customize for ehr-sequencing needs
+
+3. Features of runpod_ssh_manager.sh:
+   - Add/update/remove pod configurations
+   - Automatic SSH config backup
+   - History tracking (~/.ssh/runpod_history.json)
+   - Interactive menu or CLI
+   - Connection testing
+
+4. Updated POD_WORKFLOW.md:
+   - References local script path
+   - Clear setup instructions
+   - Integration with transfer_results.sh
+
+5. Comprehensive README covers:
+   - Quick start workflow
+   - SSH hostname management
+   - Multiple pod management
+   - Integration with training scripts
+   - Troubleshooting guide
+   - Directory structure
+
+Usage:
+# Set up pod access
+cd scripts/pod_management
+./runpod_ssh_manager.sh add ehr-sequencing
+
+# Train on pod
+ssh runpod-ehr-sequencing-a40-main
+python train_behrt_demo.py --demo_data
+
+# Transfer results
+cd examples/pretrain_finetune
+./transfer_results.sh runpod-ehr-sequencing-a40-main behrt_large_mlm_lora16
+
+This makes the pod workflow completely self-contained within the project!"
+```
+

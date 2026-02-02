@@ -28,8 +28,8 @@ Supported Platforms:
 
 Data Options:
 - Random data (default): For quick syntax testing only (~0.1% accuracy)
-- Realistic data (--realistic_data): Realistic patterns (~30-60% accuracy)
-- Demo data (--demo_data): Very strong patterns for compelling demos (~70-85% accuracy)
+- Realistic data (--realistic-data): Realistic patterns (~30-60% accuracy)
+- Demo data (--demo-data): Very strong patterns for compelling demos (~70-85% accuracy)
 
 Metrics:
 - Accuracy: Standard accuracy (can be misleading for imbalanced data)
@@ -41,32 +41,32 @@ Metrics:
 Usage:
 
 # Auto-detect resources (RECOMMENDED - works anywhere!)
-python examples/pretrain_finetune/train_behrt_demo.py --demo_data
+python examples/pretrain_finetune/train_behrt_demo.py --demo-data
 
 # Auto-detect with realistic data
-python examples/pretrain_finetune/train_behrt_demo.py --realistic_data
+python examples/pretrain_finetune/train_behrt_demo.py --realistic-data
 
 # Override specific parameters (auto-detect fills the rest)
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo_data \
-    --batch_size 64 \
+    --demo-data \
+    --batch-size 64 \
     --epochs 50
 
 # Force specific model size (auto-detect adjusts other params)
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo_data \
-    --model_size large
+    --demo-data \
+    --model-size large
 
 # Disable auto-detection (use fixed defaults)
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --no_auto_resources \
-    --model_size large \
-    --demo_data
+    --no-auto-resources \
+    --model-size large \
+    --demo-data
 
 # Train full model without LoRA
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo_data \
-    --no_lora
+    --demo-data \
+    --no-lora
 """
 
 import torch
@@ -154,45 +154,45 @@ def main():
     parser = argparse.ArgumentParser(description='BEHRT Pre-training Demo')
     
     # Resource management
-    parser.add_argument('--auto_resources', action='store_true', default=True,
+    parser.add_argument('--auto-resources', action='store_true', default=True,
                        help='Auto-detect resources and set optimal defaults (default: True)')
-    parser.add_argument('--no_auto_resources', action='store_true',
+    parser.add_argument('--no-auto-resources', action='store_true',
                        help='Disable auto resource detection, use fixed defaults')
     
     # Model configuration
-    parser.add_argument('--model_size', type=str, default=None, choices=['small', 'medium', 'large'],
+    parser.add_argument('--model-size', type=str, default=None, choices=['small', 'medium', 'large'],
                        help='Model size (auto-detected if not specified)')
-    parser.add_argument('--use_lora', action='store_true', default=None,
+    parser.add_argument('--use-lora', action='store_true', default=None,
                        help='Use LoRA for efficient fine-tuning (auto-detected if not specified)')
-    parser.add_argument('--no_lora', action='store_true',
+    parser.add_argument('--no-lora', action='store_true',
                        help='Disable LoRA (train full model)')
-    parser.add_argument('--lora_rank', type=int, default=None,
+    parser.add_argument('--lora-rank', type=int, default=None,
                        help='LoRA rank (auto-detected if not specified)')
     
     # Training parameters
-    parser.add_argument('--num_patients', type=int, default=None,
+    parser.add_argument('--num-patients', type=int, default=None,
                        help='Number of synthetic patients (auto-detected if not specified)')
-    parser.add_argument('--vocab_size', type=int, default=1000,
+    parser.add_argument('--vocab-size', type=int, default=1000,
                        help='Vocabulary size')
     parser.add_argument('--epochs', type=int, default=None,
                        help='Number of training epochs (auto-detected if not specified)')
-    parser.add_argument('--batch_size', type=int, default=None,
+    parser.add_argument('--batch-size', type=int, default=None,
                        help='Batch size (auto-detected if not specified)')
     parser.add_argument('--lr', type=float, default=1e-4,
                        help='Learning rate')
-    parser.add_argument('--weight_decay', type=float, default=0.01,
+    parser.add_argument('--weight-decay', type=float, default=0.01,
                        help='Weight decay for AdamW optimizer')
     parser.add_argument('--dropout', type=float, default=0.1,
                        help='Dropout probability')
-    parser.add_argument('--early_stopping_patience', type=int, default=10,
+    parser.add_argument('--early-stopping-patience', type=int, default=10,
                        help='Early stopping patience (epochs without improvement)')
-    parser.add_argument('--realistic_data', action='store_true',
+    parser.add_argument('--realistic-data', action='store_true',
                        help='Use realistic synthetic data with disease patterns (recommended for showcasing)')
-    parser.add_argument('--demo_data', action='store_true',
+    parser.add_argument('--demo-data', action='store_true',
                        help='Use high-signal demo data with very strong patterns (70%+ accuracy, best for demos)')
-    parser.add_argument('--experiment_name', type=str, default=None,
+    parser.add_argument('--experiment-name', type=str, default=None,
                        help='Experiment name (default: auto-generated)')
-    parser.add_argument('--output_dir', type=str, default='experiments',
+    parser.add_argument('--output-dir', type=str, default='experiments',
                        help='Output directory')
     
     args = parser.parse_args()

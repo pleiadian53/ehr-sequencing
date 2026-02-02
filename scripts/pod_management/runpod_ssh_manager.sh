@@ -135,7 +135,7 @@ get_pod_details() {
     
     read -p "Pod Hostname/IP: " hostname
     read -p "Pod Port: " port
-    read -p "Pod Nickname (e.g., a40-50gb): " nickname
+    read -p "Host Alias (e.g., runpod-main, pod-a40): " host_alias
     read -p "SSH Key Path [~/.ssh/id_ed25519]: " ssh_key
     
     # Set defaults
@@ -147,10 +147,14 @@ get_pod_details() {
         exit 1
     fi
     
-    # Create host alias
-    local host_alias="runpod-${project_name}"
-    if [ -n "$nickname" ]; then
-        host_alias="${host_alias}-${nickname}"
+    # Create host alias if not provided
+    if [ -z "$host_alias" ]; then
+        if [ -n "$project_name" ]; then
+            host_alias="runpod-${project_name}"
+        else
+            log_error "Host alias is required when project name is not specified!"
+            exit 1
+        fi
     fi
     
     echo ""
@@ -168,7 +172,7 @@ get_pod_details() {
     fi
     
     # Return values via array (simulate return multiple values)
-    echo "$host_alias|$hostname|$port|$ssh_key|$nickname"
+    echo "$host_alias|$hostname|$port|$ssh_key|$host_alias"
 }
 
 # Add or update pod config
@@ -176,12 +180,7 @@ add_pod_config() {
     local project_name=$1
     
     if [ -z "$project_name" ]; then
-        read -p "Project name (e.g., ehr-sequencing, genai-lab): " project_name
-    fi
-    
-    if [ -z "$project_name" ]; then
-        log_error "Project name is required!"
-        exit 1
+        read -p "Project name (optional, press Enter to skip): " project_name
     fi
     
     # Get pod details
