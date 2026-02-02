@@ -144,37 +144,37 @@ def evaluate(model, dataloader, device):
 
 def main():
     parser = argparse.ArgumentParser(description='BEHRT Fine-tuning with Pre-trained Embeddings')
-    parser.add_argument('--model_size', type=str, default='medium', choices=['small', 'medium', 'large'],
+    parser.add_argument('--model-size', type=str, default='medium', choices=['small', 'medium', 'large'],
                        help='Model size')
-    parser.add_argument('--embedding_path', type=str, required=True,
+    parser.add_argument('--embedding-path', type=str, required=True,
                        help='Path to pre-trained embeddings (.pt file)')
-    parser.add_argument('--use_lora', action='store_true',
+    parser.add_argument('--use-lora', action='store_true',
                        help='Use LoRA for efficient fine-tuning')
-    parser.add_argument('--lora_rank', type=int, default=8,
+    parser.add_argument('--lora-rank', type=int, default=8,
                        help='LoRA rank')
-    parser.add_argument('--num_patients', type=int, default=2000,
+    parser.add_argument('--num-patients', type=int, default=2000,
                        help='Number of patients (can be smaller with pre-trained embeddings)')
-    parser.add_argument('--vocab_size', type=int, default=1000,
+    parser.add_argument('--vocab-size', type=int, default=1000,
                        help='Vocabulary size (must match pre-trained embeddings)')
     parser.add_argument('--epochs', type=int, default=50,
                        help='Number of epochs')
-    parser.add_argument('--batch_size', type=int, default=32,
+    parser.add_argument('--batch-size', type=int, default=32,
                        help='Batch size')
     parser.add_argument('--lr', type=float, default=1e-4,
                        help='Learning rate')
-    parser.add_argument('--weight_decay', type=float, default=0.01,
+    parser.add_argument('--weight-decay', type=float, default=0.01,
                        help='Weight decay')
     parser.add_argument('--dropout', type=float, default=0.1,
                        help='Dropout probability')
-    parser.add_argument('--early_stopping_patience', type=int, default=10,
+    parser.add_argument('--early-stopping-patience', type=int, default=10,
                        help='Early stopping patience')
-    parser.add_argument('--realistic_data', action='store_true',
+    parser.add_argument('--realistic-data', action='store_true',
                        help='Use realistic synthetic data with disease patterns')
-    parser.add_argument('--freeze_embeddings', action='store_true', default=True,
+    parser.add_argument('--freeze-embeddings', action='store_true', default=True,
                        help='Freeze pre-trained embeddings (recommended)')
-    parser.add_argument('--experiment_name', type=str, default=None,
+    parser.add_argument('--experiment-name', type=str, default=None,
                        help='Experiment name')
-    parser.add_argument('--output_dir', type=str, default='experiments',
+    parser.add_argument('--output-dir', type=str, default='experiments',
                        help='Output directory')
     
     args = parser.parse_args()

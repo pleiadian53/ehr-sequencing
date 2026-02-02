@@ -33,11 +33,11 @@ This directory provides **two training workflows** with different use cases:
 **Example:**
 ```bash
 python train_behrt_demo.py \
-    --model_size large \
-    --use_lora \
-    --lora_rank 16 \
-    --num_patients 100000 \
-    --realistic_data  # Use realistic synthetic data
+    --model-size large \
+    --use-lora \
+    --lora-rank 16 \
+    --num-patients 100000 \
+    --realistic-data  # Use realistic synthetic data
 ```
 
 ### 2. Fine-tuning with Pre-trained Embeddings (`train_behrt_finetune.py`)
@@ -53,12 +53,12 @@ python train_behrt_demo.py \
 **Example:**
 ```bash
 python train_behrt_finetune.py \
-    --model_size large \
-    --embedding_path pretrained/med2vec_embeddings.pt \
-    --use_lora \
-    --lora_rank 16 \
-    --num_patients 5000 \
-    --realistic_data
+    --model-size large \
+    --embedding-path pretrained/med2vec_embeddings.pt \
+    --use-lora \
+    --lora-rank 16 \
+    --num-patients 5000 \
+    --realistic-data
 ```
 
 **Comparison:**
@@ -80,17 +80,17 @@ cd examples/pretrain_finetune
 
 # Basic training (no LoRA)
 python train_behrt_demo.py \
-    --model_size small \
-    --num_patients 100 \
+    --model-size small \
+    --num-patients 100 \
     --epochs 10 \
-    --batch_size 16
+    --batch-size 16
 
 # With LoRA (90% fewer trainable parameters)
 python train_behrt_demo.py \
-    --model_size small \
-    --use_lora \
-    --lora_rank 8 \
-    --num_patients 100 \
+    --model-size small \
+    --use-lora \
+    --lora-rank 8 \
+    --num-patients 100 \
     --epochs 10
 ```
 
@@ -111,13 +111,13 @@ python train_behrt_demo.py \
 ```bash
 # On RunPods A40
 python train_behrt_demo.py \
-    --model_size large \
-    --use_lora \
-    --lora_rank 16 \
-    --num_patients 1000 \
+    --model-size large \
+    --use-lora \
+    --lora-rank 16 \
+    --num-patients 1000 \
     --epochs 50 \
-    --batch_size 64 \
-    --experiment_name behrt_large_mlm_a40
+    --batch-size 64 \
+    --experiment-name behrt_large_mlm_a40
 ```
 
 ## LoRA Usage Examples
@@ -313,10 +313,10 @@ benchmark.save_report()
 ```bash
 # Test on small model with synthetic data
 python train_behrt_demo.py \
-    --model_size small \
-    --num_patients 100 \
+    --model-size small \
+    --num-patients 100 \
     --epochs 10 \
-    --experiment_name behrt_small_test
+    --experiment-name behrt_small_test
 
 # Verify outputs
 ls experiments/behrt_small_test/
@@ -334,12 +334,12 @@ pip install -e .
 
 # Pre-train large model with MLM
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --model_size large \
-    --num_patients 5000 \
+    --model-size large \
+    --num-patients 5000 \
     --epochs 100 \
-    --batch_size 128 \
-    --experiment_name behrt_large_pretrain_mlm \
-    --output_dir /workspace/experiments
+    --batch-size 128 \
+    --experiment-name behrt_large_pretrain_mlm \
+    --output-dir /workspace/experiments
 
 # IMPORTANT: Download results before terminating pod!
 # All outputs are in /workspace/experiments/behrt_large_pretrain_mlm/
@@ -362,10 +362,10 @@ scp -r root@<pod-ip>:/workspace/experiments/behrt_large_pretrain_mlm ./experimen
 # Load pre-trained model and fine-tune with LoRA
 python examples/pretrain_finetune/train_behrt_finetune.py \
     --pretrained_checkpoint experiments/behrt_large_pretrain_mlm/checkpoints/best_model.pt \
-    --use_lora \
-    --lora_rank 8 \
+    --use-lora \
+    --lora-rank 8 \
     --task survival \
-    --num_patients 1000 \
+    --num-patients 1000 \
     --epochs 20
 ```
 

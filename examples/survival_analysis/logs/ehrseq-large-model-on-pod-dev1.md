@@ -85,12 +85,12 @@ mamba activate ehrsequencing
 tmux new -s training
 
 python examples/train_survival_lstm_runpods.py \
-    --data_dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --data-dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
-    --batch_size 64 \
-    --early_stopping_patience 10 \
-    --output_dir checkpoints_large
+    --batch-size 64 \
+    --early-stopping-patience 10 \
+    --output-dir checkpoints_large
 ```
 
 ## Expected Results with 1000 Patients

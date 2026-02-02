@@ -32,20 +32,20 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train discrete-time survival LSTM')
     
     # Data arguments
-    parser.add_argument('--data_dir', type=str, required=True,
+    parser.add_argument('--data-dir', type=str, required=True,
                        help='Path to Synthea data directory')
     parser.add_argument('--outcome', type=str, default='synthetic',
                        choices=['synthetic', 'ckd_progression', 'random'],
                        help='Prediction outcome: synthetic (realistic simulated), ckd_progression (from codes), random (testing)')
-    parser.add_argument('--max_patients', type=int, default=None,
+    parser.add_argument('--max-patients', type=int, default=None,
                        help='Maximum number of patients to use (for testing)')
     
     # Model arguments
-    parser.add_argument('--embedding_dim', type=int, default=128,
+    parser.add_argument('--embedding-dim', type=int, default=128,
                        help='Dimension of code embeddings')
-    parser.add_argument('--hidden_dim', type=int, default=256,
+    parser.add_argument('--hidden-dim', type=int, default=256,
                        help='Dimension of LSTM hidden state')
-    parser.add_argument('--num_layers', type=int, default=2,
+    parser.add_argument('--num-layers', type=int, default=2,
                        help='Number of LSTM layers')
     parser.add_argument('--dropout', type=float, default=0.1,
                        help='Dropout probability')
@@ -53,20 +53,20 @@ def parse_args():
     # Training arguments
     parser.add_argument('--epochs', type=int, default=50,
                        help='Number of training epochs')
-    parser.add_argument('--batch_size', type=int, default=32,
+    parser.add_argument('--batch-size', type=int, default=32,
                        help='Batch size')
     parser.add_argument('--lr', type=float, default=1e-3,
                        help='Learning rate')
-    parser.add_argument('--weight_decay', type=float, default=1e-5,
+    parser.add_argument('--weight-decay', type=float, default=1e-5,
                        help='Weight decay')
     parser.add_argument('--device', type=str, default='auto',
                        choices=['auto', 'cpu', 'cuda', 'mps'],
                        help='Device to use for training')
     
     # Output arguments
-    parser.add_argument('--output_dir', type=str, default='checkpoints',
+    parser.add_argument('--output-dir', type=str, default='checkpoints',
                        help='Directory to save model checkpoints')
-    parser.add_argument('--save_every', type=int, default=10,
+    parser.add_argument('--save-every', type=int, default=10,
                        help='Save checkpoint every N epochs')
     
     return parser.parse_args()

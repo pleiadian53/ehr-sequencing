@@ -48,20 +48,20 @@ ls -lh /workspace/loinc-predictor/data/synthea/
 **Optimal settings**:
 ```bash
 python examples/train_survival_lstm_runpods.py \
-    --data_dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --data-dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
-    --batch_size 64 \
-    --embedding_dim 128 \
-    --hidden_dim 256 \
-    --num_layers 2 \
+    --batch-size 64 \
+    --embedding-dim 128 \
+    --hidden-dim 256 \
+    --num-layers 2 \
     --dropout 0.3 \
     --lr 0.001 \
-    --weight_decay 0.0001 \
-    --grad_clip 1.0 \
-    --early_stopping_patience 10 \
-    --lr_scheduler reduce_on_plateau \
-    --output_dir checkpoints_large
+    --weight-decay 0.0001 \
+    --grad-clip 1.0 \
+    --early-stopping-patience 10 \
+    --lr-scheduler reduce_on_plateau \
+    --output-dir checkpoints_large
 ```
 
 ### Expected Improvements
@@ -86,8 +86,8 @@ python examples/train_survival_lstm_runpods.py \
 Prevents overfitting by stopping when validation loss stops improving:
 
 ```python
---early_stopping_patience 10  # Stop if no improvement for 10 epochs
---min_delta 0.001              # Minimum improvement threshold
+--early-stopping-patience 10  # Stop if no improvement for 10 epochs
+--min-delta 0.001              # Minimum improvement threshold
 ```
 
 **Why this helps**: Your current run shows val loss increasing after epoch 14 (2.55 → 5.0), indicating overfitting. Early stopping would have stopped at epoch 14, saving time and preventing performance degradation.
@@ -96,9 +96,9 @@ Prevents overfitting by stopping when validation loss stops improving:
 Reduces learning rate when validation loss plateaus:
 
 ```python
---lr_scheduler reduce_on_plateau
---lr_patience 5      # Reduce LR if no improvement for 5 epochs
---lr_factor 0.5      # Reduce LR by 50%
+--lr-scheduler reduce_on_plateau
+--lr-patience 5      # Reduce LR if no improvement for 5 epochs
+--lr-factor 0.5      # Reduce LR by 50%
 ```
 
 **Why this helps**: Allows model to escape local minima and fine-tune in later epochs.
@@ -107,7 +107,7 @@ Reduces learning rate when validation loss plateaus:
 Prevents exploding gradients in RNNs:
 
 ```python
---grad_clip 1.0  # Clip gradients to max norm of 1.0
+--grad-clip 1.0  # Clip gradients to max norm of 1.0
 ```
 
 **Why this helps**: LSTMs can have unstable gradients with long sequences. Clipping ensures stable training.
@@ -116,7 +116,7 @@ Prevents exploding gradients in RNNs:
 Better GPU utilization and more stable gradients:
 
 ```python
---batch_size 64  # vs. 32 in original script
+--batch-size 64  # vs. 32 in original script
 ```
 
 **Why this helps**: 
@@ -129,7 +129,7 @@ Prevents overfitting on larger datasets:
 
 ```python
 --dropout 0.3         # vs. 0.1 in original
---weight_decay 0.0001 # vs. 0.00001 in original
+--weight-decay 0.0001 # vs. 0.00001 in original
 ```
 
 **Why this helps**: With 1000 patients, we can afford stronger regularization without underfitting.
@@ -183,12 +183,12 @@ cd /workspace/ehr-sequencing
 
 # Start training
 python examples/train_survival_lstm_runpods.py \
-    --data_dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --data-dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
-    --batch_size 64 \
-    --early_stopping_patience 10 \
-    --output_dir checkpoints_large
+    --batch-size 64 \
+    --early-stopping-patience 10 \
+    --output-dir checkpoints_large
 
 # Detach from tmux: Ctrl+B, then D
 # Reattach later: tmux attach -t survival_training
@@ -309,10 +309,10 @@ RuntimeError: CUDA out of memory. Tried to allocate 2.5 GB
 **Solutions**:
 ```bash
 # Reduce batch size
---batch_size 32  # or 16
+--batch-size 32  # or 16
 
 # Reduce model size
---embedding_dim 64 --hidden_dim 128
+--embedding-dim 64 --hidden-dim 128
 
 # Reduce sequence length (if very long visits)
 # Add to PatientSequenceBuilder: max_visits=50
@@ -325,10 +325,10 @@ RuntimeError: CUDA out of memory. Tried to allocate 2.5 GB
 **Solutions**:
 ```bash
 # Increase batch size (if memory allows)
---batch_size 128
+--batch-size 128
 
 # Reduce model complexity
---num_layers 1
+--num-layers 1
 
 # Use fewer patients for debugging
 # (but defeats the purpose of RunPods!)
@@ -363,10 +363,10 @@ print(f"Correlation: {correlation:.3f} (should be < -0.3)")
 ```bash
 # Stronger regularization
 --dropout 0.5
---weight_decay 0.001
+--weight-decay 0.001
 
 # Earlier stopping
---early_stopping_patience 5
+--early-stopping-patience 5
 
 # More data (if available)
 # Use all_cohorts instead of large_cohort_1000
@@ -499,12 +499,12 @@ mamba activate ehrsequencing
 tmux new -s training
 
 python examples/train_survival_lstm_runpods.py \
-    --data_dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --data-dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
-    --batch_size 64 \
-    --early_stopping_patience 10 \
-    --output_dir checkpoints_large
+    --batch-size 64 \
+    --early-stopping-patience 10 \
+    --output-dir checkpoints_large
 ```
 
 Good luck! 🚀

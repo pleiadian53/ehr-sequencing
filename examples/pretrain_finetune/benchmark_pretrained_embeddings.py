@@ -37,25 +37,25 @@ Usage:
 
 # 2-way comparison (default)
 python benchmark_pretrained_embeddings.py \
-    --model_size large \
-    --num_patients 10000 \
+    --model-size large \
+    --num-patients 10000 \
     --epochs 100 \
-    --batch_size 128
+    --batch-size 128
 
 # 3-way comparison (with external Med2Vec embeddings)
 python benchmark_pretrained_embeddings.py \
-    --model_size large \
-    --num_patients 10000 \
+    --model-size large \
+    --num-patients 10000 \
     --epochs 100 \
-    --batch_size 128 \
-    --external_embedding_path pretrained/med2vec_embeddings.pt
+    --batch-size 128 \
+    --external-embedding-path pretrained/med2vec_embeddings.pt
 
 # Quick test
 python benchmark_pretrained_embeddings.py \
-    --model_size small \
-    --num_patients 1000 \
+    --model-size small \
+    --num-patients 1000 \
     --epochs 20 \
-    --batch_size 32
+    --batch-size 32
 """
 
 import torch
@@ -546,27 +546,27 @@ def train_model(name: str, model, train_loader, val_loader, optimizer, device,
 
 def main():
     parser = argparse.ArgumentParser(description='Benchmark: Pre-training vs Fine-tuning')
-    parser.add_argument('--model_size', type=str, default='large', choices=['small', 'medium', 'large'],
+    parser.add_argument('--model-size', type=str, default='large', choices=['small', 'medium', 'large'],
                        help='Model size (use large for A40)')
-    parser.add_argument('--num_patients', type=int, default=10000,
+    parser.add_argument('--num-patients', type=int, default=10000,
                        help='Number of patients (use 10K+ for A40)')
-    parser.add_argument('--vocab_size', type=int, default=1000,
+    parser.add_argument('--vocab-size', type=int, default=1000,
                        help='Vocabulary size')
     parser.add_argument('--epochs', type=int, default=100,
                        help='Max epochs per run')
-    parser.add_argument('--batch_size', type=int, default=128,
+    parser.add_argument('--batch-size', type=int, default=128,
                        help='Batch size (use 128+ for A40)')
     parser.add_argument('--lr', type=float, default=1e-4,
                        help='Learning rate')
-    parser.add_argument('--weight_decay', type=float, default=0.01,
+    parser.add_argument('--weight-decay', type=float, default=0.01,
                        help='Weight decay')
     parser.add_argument('--dropout', type=float, default=0.2,
                        help='Dropout')
-    parser.add_argument('--lora_rank', type=int, default=16,
+    parser.add_argument('--lora-rank', type=int, default=16,
                        help='LoRA rank')
-    parser.add_argument('--external_embedding_path', type=str, default=None,
+    parser.add_argument('--external-embedding-path', type=str, default=None,
                        help='Path to external pre-trained embeddings (e.g., Med2Vec). If provided, adds 3rd comparison run.')
-    parser.add_argument('--output_dir', type=str, default='experiments/benchmark_embeddings',
+    parser.add_argument('--output-dir', type=str, default='experiments/benchmark_embeddings',
                        help='Output directory')
     
     args = parser.parse_args()

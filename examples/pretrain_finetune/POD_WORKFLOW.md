@@ -33,15 +33,15 @@ nvidia-smi
 ### Run Training with Auto Resource Detection
 ```bash
 # Auto-detects A40 and sets optimal parameters!
-python examples/pretrain_finetune/train_behrt_demo.py --demo_data
+python examples/pretrain_finetune/train_behrt_demo.py --demo-data
 
 # Or with realistic data
-python examples/pretrain_finetune/train_behrt_demo.py --realistic_data
+python examples/pretrain_finetune/train_behrt_demo.py --realistic-data
 
 # Override specific parameters if needed
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo_data \
-    --batch_size 64 \
+    --demo-data \
+    --batch-size 64 \
     --epochs 50
 ```
 
@@ -49,7 +49,7 @@ python examples/pretrain_finetune/train_behrt_demo.py \
 ```bash
 # Use nohup to keep training if SSH disconnects
 nohup python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo_data \
+    --demo-data \
     > training.log 2>&1 &
 
 # Check progress
@@ -57,7 +57,7 @@ tail -f training.log
 
 # Or use tmux/screen for persistent sessions
 tmux new -s training
-python examples/pretrain_finetune/train_behrt_demo.py --demo_data
+python examples/pretrain_finetune/train_behrt_demo.py --demo-data
 # Ctrl+B, D to detach
 # tmux attach -t training to reattach
 ```
@@ -513,7 +513,7 @@ scp -v ... 2>&1 | tee transfer.log
 **Minimal workflow:**
 ```bash
 # 1. Train on pod (auto-detects resources!)
-python train_behrt_demo.py --demo_data
+python train_behrt_demo.py --demo-data
 
 # 2. Transfer results (on local)
 ./transfer_results.sh <pod-ip> behrt_large_mlm_lora16

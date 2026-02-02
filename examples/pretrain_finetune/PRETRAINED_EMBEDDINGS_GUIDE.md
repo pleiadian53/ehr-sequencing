@@ -215,13 +215,13 @@ print(f"Vocab size: {vocab_size}, Embedding dim: {embedding_dim}")
 
 ```bash
 python examples/pretrain_finetune/train_behrt_finetune.py \
-    --model_size large \
-    --embedding_path pretrained/embeddings.pt \
-    --use_lora \
-    --lora_rank 16 \
-    --num_patients 5000 \
+    --model-size large \
+    --embedding-path pretrained/embeddings.pt \
+    --use-lora \
+    --lora-rank 16 \
+    --num-patients 5000 \
     --epochs 50 \
-    --realistic_data
+    --realistic-data
 ```
 
 ### Step 4: Evaluate Performance
@@ -229,8 +229,8 @@ python examples/pretrain_finetune/train_behrt_finetune.py \
 ```bash
 # Run benchmark to compare with training from scratch
 python examples/pretrain_finetune/benchmark_pretrained_embeddings.py \
-    --model_size large \
-    --num_patients 10000 \
+    --model-size large \
+    --num-patients 10000 \
     --epochs 100
 ```
 
@@ -435,14 +435,14 @@ def regularization_loss(model, initial_params, lambda_reg=0.01):
 ```bash
 # Stage 1: Adapt to target domain (unsupervised)
 python train_behrt_demo.py \
-    --embedding_path pretrained/general_medical.pt \
+    --embedding-path pretrained/general_medical.pt \
     --data_path target_domain_data.pkl \
     --task mlm \
     --epochs 20
 
 # Stage 2: Fine-tune on task (supervised)
 python train_behrt_finetune.py \
-    --embedding_path stage1_embeddings.pt \
+    --embedding-path stage1_embeddings.pt \
     --task classification \
     --epochs 50
 ```
@@ -571,15 +571,15 @@ print(f'Downloaded to: {path}')
 
 # 2. Fine-tune BEHRT
 python examples/pretrain_finetune/train_behrt_finetune.py \
-    --embedding_path ~/.cache/huggingface/hub/.../embeddings.pt \
-    --model_size large \
-    --num_patients 5000 \
-    --realistic_data
+    --embedding-path ~/.cache/huggingface/hub/.../embeddings.pt \
+    --model-size large \
+    --num-patients 5000 \
+    --realistic-data
 
 # 3. Evaluate
 python examples/pretrain_finetune/benchmark_pretrained_embeddings.py \
-    --model_size large \
-    --num_patients 10000
+    --model-size large \
+    --num-patients 10000
 ```
 
 ### Workflow 2: Creating Custom Embeddings
@@ -588,15 +588,15 @@ python examples/pretrain_finetune/benchmark_pretrained_embeddings.py \
 # 1. Train Med2Vec on your data
 python examples/code_embeddings/train_med2vec.py \
     --data_path data/ehr_sequences.pkl \
-    --embedding_dim 128 \
+    --embedding-dim 128 \
     --epochs 100 \
     --output_path pretrained/custom_embeddings.pt
 
 # 2. Use with BEHRT
 python examples/pretrain_finetune/train_behrt_finetune.py \
-    --embedding_path pretrained/custom_embeddings.pt \
-    --model_size medium \
-    --num_patients 2000
+    --embedding-path pretrained/custom_embeddings.pt \
+    --model-size medium \
+    --num-patients 2000
 ```
 
 ### Workflow 3: Comparing Multiple Embeddings
@@ -612,7 +612,7 @@ embeddings_to_test = [
 
 for emb_path in embeddings_to_test:
     if emb_path:
-        cmd = f"python train_behrt_finetune.py --embedding_path {emb_path}"
+        cmd = f"python train_behrt_finetune.py --embedding-path {emb_path}"
     else:
         cmd = "python train_behrt_demo.py"
     

@@ -9,7 +9,7 @@ This script demonstrates:
 5. Saving trained model
 
 Usage:
-    python examples/train_lstm_baseline.py --data_dir /path/to/synthea --output_dir ./outputs
+    python examples/train_lstm_baseline.py --data-dir /path/to/synthea --output-dir ./outputs
 """
 
 import argparse
@@ -35,31 +35,31 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train LSTM baseline model')
     
     # Data arguments
-    parser.add_argument('--data_dir', type=str, required=True,
+    parser.add_argument('--data-dir', type=str, required=True,
                        help='Path to Synthea data directory')
-    parser.add_argument('--max_patients', type=int, default=None,
+    parser.add_argument('--max-patients', type=int, default=None,
                        help='Maximum number of patients to load')
     
     # Model arguments
-    parser.add_argument('--model_size', type=str, default='small',
+    parser.add_argument('--model-size', type=str, default='small',
                        choices=['small', 'medium', 'large'],
                        help='Model size')
-    parser.add_argument('--visit_aggregation', type=str, default='mean',
+    parser.add_argument('--visit-aggregation', type=str, default='mean',
                        choices=['mean', 'sum', 'max', 'attention'],
                        help='Visit aggregation strategy')
     
     # Training arguments
-    parser.add_argument('--batch_size', type=int, default=32,
+    parser.add_argument('--batch-size', type=int, default=32,
                        help='Batch size')
-    parser.add_argument('--num_epochs', type=int, default=10,
+    parser.add_argument('--num-epochs', type=int, default=10,
                        help='Number of training epochs')
-    parser.add_argument('--learning_rate', type=float, default=0.001,
+    parser.add_argument('--learning-rate', type=float, default=0.001,
                        help='Learning rate')
-    parser.add_argument('--early_stopping_patience', type=int, default=5,
+    parser.add_argument('--early-stopping-patience', type=int, default=5,
                        help='Early stopping patience')
     
     # Output arguments
-    parser.add_argument('--output_dir', type=str, default='./outputs',
+    parser.add_argument('--output-dir', type=str, default='./outputs',
                        help='Output directory for checkpoints and logs')
     parser.add_argument('--device', type=str, default='auto',
                        choices=['auto', 'cpu', 'cuda', 'mps'],

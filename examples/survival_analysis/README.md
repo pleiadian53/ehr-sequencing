@@ -34,10 +34,10 @@ survival_analysis/
 **Example usage**:
 ```bash
 python examples/survival_analysis/train_lstm_demo.py \
-    --data_dir ~/work/loinc-predictor/data/synthea/all_cohorts/ \
+    --data-dir ~/work/loinc-predictor/data/synthea/all_cohorts/ \
     --outcome synthetic \
     --epochs 50 \
-    --batch_size 32
+    --batch-size 32
 ```
 
 **Expected performance**: C-index 0.50-0.60 (limited by small dataset)
@@ -66,20 +66,20 @@ python examples/survival_analysis/train_lstm_demo.py \
 ```bash
 # Local with medium dataset
 python examples/survival_analysis/train_lstm.py \
-    --data_dir ~/work/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --data-dir ~/work/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
-    --batch_size 32 \
-    --early_stopping_patience 10
+    --batch-size 32 \
+    --early-stopping-patience 10
 
 # Cloud GPU (RunPods, Vast.ai, etc.) with large dataset
 python examples/survival_analysis/train_lstm.py \
-    --data_dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --data-dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
-    --batch_size 64 \
-    --early_stopping_patience 10 \
-    --output_dir checkpoints_large
+    --batch-size 64 \
+    --early-stopping-patience 10 \
+    --output-dir checkpoints_large
 ```
 
 **Expected performance**: C-index 0.65-0.75 (with 1000+ patients)
@@ -125,10 +125,10 @@ Comprehensive guide covering:
 ```bash
 # Test on your local machine
 python examples/survival_analysis/train_lstm_basic.py \
-    --data_dir ~/work/loinc-predictor/data/synthea/all_cohorts/ \
+    --data-dir ~/work/loinc-predictor/data/synthea/all_cohorts/ \
     --outcome synthetic \
     --epochs 20 \
-    --batch_size 16
+    --batch-size 16
 ```
 
 ### 2. Cloud GPU Training (Large Dataset)
@@ -140,11 +140,11 @@ mamba activate ehrsequencing
 tmux new -s training
 
 python examples/survival_analysis/train_lstm_runpods.py \
-    --data_dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
+    --data-dir /workspace/loinc-predictor/data/synthea/large_cohort_1000/ \
     --outcome synthetic \
     --epochs 100 \
-    --batch_size 64 \
-    --early_stopping_patience 10
+    --batch-size 64 \
+    --early-stopping-patience 10
 ```
 
 ---
@@ -182,14 +182,14 @@ See `docs/runpods_training_guide.md` for detailed troubleshooting.
 **Solutions**:
 - Use `train_lstm_runpods.py` with early stopping
 - Increase dropout: `--dropout 0.5`
-- Increase weight decay: `--weight_decay 0.001`
+- Increase weight decay: `--weight-decay 0.001`
 - Use more data
 
 ### Issue: Out of Memory
 
 **Solutions**:
-- Reduce batch size: `--batch_size 16`
-- Reduce model size: `--embedding_dim 64 --hidden_dim 128`
+- Reduce batch size: `--batch-size 16`
+- Reduce model size: `--embedding-dim 64 --hidden-dim 128`
 - Use gradient checkpointing (advanced)
 
 ---

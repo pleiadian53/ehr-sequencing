@@ -631,7 +631,30 @@ rsync -avzP --no-perms --no-owner --no-group \
 
 ---
 
+Got it! I'll be ready when you return.
 
+## Current Status
+
+**Task:** Update ALL example scripts to use hyphens instead of underscores in CLI flags (following standard conventions like `rsync`, `git`)
+
+**Progress:**
+- ✅ **Completed:** [train_behrt_demo.py](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/examples/pretrain_finetune/train_behrt_demo.py:0:0-0:0) - All flags updated (e.g., `--demo-data`, `--batch-size`)
+- ✅ **Completed:** [runpod_ssh_manager.sh](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/runpods/scripts/runpod_ssh_manager.sh:0:0-0:0) - Simplified hostname configuration
+
+**Remaining Scripts to Fix:**
+1. [examples/pretrain_finetune/train_behrt_finetune.py](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/examples/pretrain_finetune/train_behrt_finetune.py:0:0-0:0)
+2. [examples/pretrain_finetune/benchmark_pretrained_embeddings.py](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/examples/pretrain_finetune/benchmark_pretrained_embeddings.py:0:0-0:0)
+3. [examples/survival_analysis/train_lstm.py](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/examples/survival_analysis/train_lstm.py:0:0-0:0)
+4. [examples/survival_analysis/train_lstm_demo.py](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/examples/survival_analysis/train_lstm_demo.py:0:0-0:0)
+5. [examples/train_lstm_baseline.py](cci:7://file:///Users/pleiadian53/work/ehr-sequencing/examples/train_lstm_baseline.py:0:0-0:0)
+
+**Then:**
+- Update all documentation/README files with new CLI examples
+- Commit everything together
+
+**Note:** Argparse automatically converts hyphens to underscores internally, so `--demo-data` becomes `args.demo_data` - only the CLI interface changes, not the code logic.
+
+I'll continue from here when you're back! 🎯
 
 
 

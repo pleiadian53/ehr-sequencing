@@ -249,31 +249,31 @@ print(f"LoRA: {params['lora']:,} ({params['lora_percent']:.1f}%)")
 #### Small Model (M1 MacBook, 100-500 patients)
 ```bash
 python train_behrt_demo.py \
-    --model_size small \
-    --use_lora \
-    --lora_rank 8 \
-    --num_patients 200 \
+    --model-size small \
+    --use-lora \
+    --lora-rank 8 \
+    --num-patients 200 \
     --epochs 50 \
-    --batch_size 16 \
+    --batch-size 16 \
     --lr 1e-4 \
-    --weight_decay 0.01 \
+    --weight-decay 0.01 \
     --dropout 0.1 \
-    --early_stopping_patience 10
+    --early-stopping-patience 10
 ```
 
 #### Large Model (A40 Pod, 1000-10000 patients)
 ```bash
 python train_behrt_demo.py \
-    --model_size large \
-    --use_lora \
-    --lora_rank 16 \
-    --num_patients 5000 \
+    --model-size large \
+    --use-lora \
+    --lora-rank 16 \
+    --num-patients 5000 \
     --epochs 100 \
-    --batch_size 128 \
+    --batch-size 128 \
     --lr 1e-4 \
-    --weight_decay 0.01 \
+    --weight-decay 0.01 \
     --dropout 0.2 \
-    --early_stopping_patience 10
+    --early-stopping-patience 10
 ```
 
 ### Tuning Strategy
@@ -284,34 +284,34 @@ python train_behrt_demo.py \
 ```bash
 # Try these in order:
 --dropout 0.3              # Increase dropout
---weight_decay 0.05        # Stronger L2 regularization
---early_stopping_patience 5  # Stop sooner
+--weight-decay 0.05        # Stronger L2 regularization
+--early-stopping-patience 5  # Stop sooner
 ```
 
 **Priority 2: Reduce Model Capacity**
 ```bash
---lora_rank 8              # Reduce LoRA rank (if using 16)
---model_size medium        # Use smaller model (if using large)
+--lora-rank 8              # Reduce LoRA rank (if using 16)
+--model-size medium        # Use smaller model (if using large)
 ```
 
 **Priority 3: More Data**
 ```bash
---num_patients 10000       # More data helps generalization
+--num-patients 10000       # More data helps generalization
 ```
 
 #### If Underfitting (Both losses high)
 
 **Priority 1: Increase Model Capacity**
 ```bash
---model_size large         # Larger model
---lora_rank 32             # Higher LoRA rank
+--model-size large         # Larger model
+--lora-rank 32             # Higher LoRA rank
 --dropout 0.05             # Reduce dropout
 ```
 
 **Priority 2: Train Longer**
 ```bash
 --epochs 200               # More epochs
---early_stopping_patience 20  # More patience
+--early-stopping-patience 20  # More patience
 ```
 
 **Priority 3: Adjust Learning Rate**
@@ -326,7 +326,7 @@ python train_behrt_demo.py \
 **Reduce Learning Rate:**
 ```bash
 --lr 1e-5                  # Much lower LR
---weight_decay 0.001       # Reduce weight decay
+--weight-decay 0.001       # Reduce weight decay
 ```
 
 **Add Gradient Clipping:**
@@ -396,7 +396,7 @@ Val Loss: 6.9163 Acc: 0.0009  # Noisy, jumping around
 
 **Fix:**
 ```bash
---num_patients 5000  # Use more patients
+--num-patients 5000  # Use more patients
 # With 80/20 split, val set = 1000 patients
 ```
 
@@ -420,11 +420,11 @@ Val Loss: 6.9163 Acc: 0.0009  # Noisy, jumping around
 **Fix:**
 ```bash
 # On A40 (40GB VRAM):
---batch_size 128  # Large model
---batch_size 256  # Medium model
+--batch-size 128  # Large model
+--batch-size 256  # Medium model
 
 # On M1 (16GB RAM):
---batch_size 16   # Small model
+--batch-size 16   # Small model
 ```
 
 ### 4. **Learning Rate Too High/Low**
@@ -560,8 +560,8 @@ plt.savefig('loss_analysis.png')
 4. Monitor patience counter: Stops at right time
 
 **How to Fix:**
-1. Add early stopping: `--early_stopping_patience 10`
-2. Add weight decay: `--weight_decay 0.01`
+1. Add early stopping: `--early-stopping-patience 10`
+2. Add weight decay: `--weight-decay 0.01`
 3. Increase dropout: `--dropout 0.2`
 4. Verify LoRA applied correctly (2-10% trainable)
 
