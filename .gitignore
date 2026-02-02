@@ -72,6 +72,24 @@ results/               # Experiment results
 runs/                  # MLflow/TensorBoard runs
 *.log
 
+# Experiment artifacts (selective tracking)
+# Track: plots, summaries, metrics
+# Ignore: checkpoints (large), training logs
+experiments/*/checkpoints/*.pt
+experiments/*/checkpoints/*.pth
+experiments/*/checkpoints/*.ckpt
+experiments/**/nohup.out
+experiments/**/training.log
+experiments/**/latest_lora_weights.pt
+experiments/**/lora_weights_epoch_*.pt
+# BUT DO track these important files:
+!experiments/*/plots/*.png
+!experiments/*/plots/*.jpg
+!experiments/*/logs/metrics_history.json
+!experiments/*/*.json
+!experiments/*/*.txt
+!experiments/*/checkpoints/best_lora_weights.pt
+
 # Legacy code (preserved but not actively developed)
 # legacy/  # Uncomment if you want to ignore legacy
 
