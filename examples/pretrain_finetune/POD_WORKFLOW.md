@@ -105,14 +105,53 @@ nohup.out                         # Training logs (if using nohup)
 - ❌ Skip: Intermediate checkpoints (large, not needed)
 - ❌ Skip: Latest checkpoint (unless resuming training)
 
+#### Using SSH Hostname (Recommended)
+
+If you've configured your pod with `runpod_ssh_manager.sh`:
+
 ```bash
 # On local machine
 cd /path/to/ehr-sequencing
 
+# Use the automated transfer script with SSH hostname
+./examples/pretrain_finetune/transfer_results.sh runpod-main behrt_large_mlm_lora16
+```
+
+That's it! The script automatically transfers all essential files.
+
+#### Manual Transfer (SSH Hostname)
+
+```bash
 # Create experiment directory locally
 mkdir -p experiments/behrt_large_mlm_lora16
 
-# Transfer essential files
+# Transfer essential files using SSH hostname
+scp -r runpod-main:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/plots \
+    experiments/behrt_large_mlm_lora16/
+
+scp -r runpod-main:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/logs \
+    experiments/behrt_large_mlm_lora16/
+
+scp runpod-main:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/checkpoints/best_lora_weights.pt \
+    experiments/behrt_large_mlm_lora16/checkpoints/
+
+scp runpod-main:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/*.json \
+    experiments/behrt_large_mlm_lora16/
+
+scp runpod-main:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/SUMMARY.txt \
+    experiments/behrt_large_mlm_lora16/
+
+# Transfer training logs if using nohup
+scp runpod-main:/workspace/ehr-sequencing/nohup.out \
+    experiments/behrt_large_mlm_lora16/training.log
+```
+
+#### Manual Transfer (Raw IP)
+
+If you haven't configured SSH hostname:
+
+```bash
+# Replace <pod-ip> with actual IP address
 scp -r root@<pod-ip>:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/plots \
     experiments/behrt_large_mlm_lora16/
 
@@ -128,7 +167,6 @@ scp root@<pod-ip>:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/*
 scp root@<pod-ip>:/workspace/ehr-sequencing/experiments/behrt_large_mlm_lora16/SUMMARY.txt \
     experiments/behrt_large_mlm_lora16/
 
-# Transfer training logs if using nohup
 scp root@<pod-ip>:/workspace/ehr-sequencing/nohup.out \
     experiments/behrt_large_mlm_lora16/training.log
 ```
@@ -352,45 +390,52 @@ du -sh experiments/behrt_large_mlm_lora16/*
 tar -czf results.tar.gz experiments/behrt_large_mlm_lora16/
 ```
 
-### Transfer Script (Save as `transfer_results.sh`)
+### Transfer Script
+
+The `transfer_results.sh` script is already provided in `examples/pretrain_finetune/`.
+
+**Features:**
+
+- Accepts both SSH hostnames and raw IP addresses
+- Automatically detects which format you're using
+- Transfers only essential files (plots, metrics, best checkpoint, summaries)
+- Provides clear progress messages
+
+**Usage with SSH hostname (recommended):**
 ```bash
-#!/bin/bash
-POD_IP=$1
-EXPERIMENT_NAME=$2
-
-if [ -z "$POD_IP" ] || [ -z "$EXPERIMENT_NAME" ]; then
-    echo "Usage: ./transfer_results.sh <pod-ip> <experiment-name>"
-    exit 1
-fi
-
-echo "Transferring results from pod..."
-
-# Create local directory
-mkdir -p experiments/$EXPERIMENT_NAME
-
-# Transfer essential files
-scp -r root@$POD_IP:/workspace/ehr-sequencing/experiments/$EXPERIMENT_NAME/plots \
-    experiments/$EXPERIMENT_NAME/
-
-scp -r root@$POD_IP:/workspace/ehr-sequencing/experiments/$EXPERIMENT_NAME/logs \
-    experiments/$EXPERIMENT_NAME/
-
-scp root@$POD_IP:/workspace/ehr-sequencing/experiments/$EXPERIMENT_NAME/checkpoints/best_lora_weights.pt \
-    experiments/$EXPERIMENT_NAME/checkpoints/ 2>/dev/null || echo "No best checkpoint found"
-
-scp root@$POD_IP:/workspace/ehr-sequencing/experiments/$EXPERIMENT_NAME/*.json \
-    experiments/$EXPERIMENT_NAME/
-
-scp root@$POD_IP:/workspace/ehr-sequencing/experiments/$EXPERIMENT_NAME/SUMMARY.txt \
-    experiments/$EXPERIMENT_NAME/
-
-echo "Transfer complete! Results in experiments/$EXPERIMENT_NAME/"
+cd examples/pretrain_finetune
+./transfer_results.sh runpod-main behrt_large_mlm_lora16
 ```
 
-**Usage:**
+**Usage with raw IP:**
 ```bash
-chmod +x transfer_results.sh
+cd examples/pretrain_finetune
 ./transfer_results.sh 123.45.67.89 behrt_large_mlm_lora16
+```
+
+**Setting up SSH hostname:**
+
+Use the `runpod_ssh_manager.sh` script to configure SSH hostnames:
+
+```bash
+# Add a new pod
+~/work/ehr-sequencing/runpods/scripts/runpod_ssh_manager.sh add ehr-sequencing
+
+# Follow prompts to enter:
+# - Pod Hostname/IP: 69.30.85.45
+# - Pod Port: 22177
+# - Pod Nickname: a40-main
+
+# This creates an SSH config entry like:
+# Host runpod-ehr-sequencing-a40-main
+#     HostName 69.30.85.45
+#     Port 22177
+#     User root
+#     ...
+
+# Now you can use the hostname:
+ssh runpod-ehr-sequencing-a40-main
+./transfer_results.sh runpod-ehr-sequencing-a40-main behrt_large_mlm_lora16
 ```
 
 ---
