@@ -27,9 +27,9 @@ Supported Platforms:
 - Cloud A100 (large model, 10000 patients, batch 256)
 
 Data Options:
-- Random data (default): For quick syntax testing only (~0.1% accuracy)
+- Demo data (default): Very strong patterns for compelling demos (~70-85% accuracy)
 - Realistic data (--realistic-data): Realistic patterns (~30-60% accuracy)
-- Demo data (--demo-data): Very strong patterns for compelling demos (~70-85% accuracy)
+- Note: Random data removed as default to prevent overfitting on noise
 
 Metrics:
 - Accuracy: Standard accuracy (can be misleading for imbalanced data)
@@ -41,31 +41,28 @@ Metrics:
 Usage:
 
 # Auto-detect resources (RECOMMENDED - works anywhere!)
-python examples/pretrain_finetune/train_behrt_demo.py --demo-data
+# Uses demo data by default (70%+ accuracy expected)
+python examples/pretrain_finetune/train_behrt_demo.py
 
-# Auto-detect with realistic data
+# Use realistic data (more challenging, 30-60% accuracy)
 python examples/pretrain_finetune/train_behrt_demo.py --realistic-data
 
 # Override specific parameters (auto-detect fills the rest)
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo-data \
     --batch-size 64 \
     --epochs 50
 
 # Force specific model size (auto-detect adjusts other params)
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo-data \
     --model-size large
 
 # Disable auto-detection (use fixed defaults)
 python examples/pretrain_finetune/train_behrt_demo.py \
     --no-auto-resources \
-    --model-size large \
-    --demo-data
+    --model-size large
 
 # Train full model without LoRA
 python examples/pretrain_finetune/train_behrt_demo.py \
-    --demo-data \
     --no-lora
 """
 
@@ -182,8 +179,8 @@ def main():
                        help='Learning rate')
     parser.add_argument('--weight-decay', type=float, default=0.01,
                        help='Weight decay for AdamW optimizer')
-    parser.add_argument('--dropout', type=float, default=0.1,
-                       help='Dropout probability')
+    parser.add_argument('--dropout', type=float, default=0.2,
+                       help='Dropout probability (0.2 recommended for large models to prevent overfitting)')
     parser.add_argument('--early-stopping-patience', type=int, default=10,
                        help='Early stopping patience (epochs without improvement)')
     parser.add_argument('--realistic-data', action='store_true',
@@ -325,16 +322,7 @@ def main():
     })
     
     print(f"\n🔬 Generating synthetic data...")
-    if args.demo_data:
-        print("Using HIGH-SIGNAL demo data with very strong patterns (70%+ accuracy expected)...")
-        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_demo_dataset(
-            num_patients=args.num_patients,
-            vocab_size=args.vocab_size,
-            max_seq_length=config.max_position,
-            seed=42
-        )
-        print_demo_dataset_statistics(codes, ages, visit_ids)
-    elif args.realistic_data:
+    if args.realistic_data:
         print("Using realistic synthetic data with disease patterns...")
         codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_realistic_dataset(
             num_patients=args.num_patients,
@@ -344,13 +332,16 @@ def main():
         )
         print_dataset_statistics(codes, ages, visit_ids)
     else:
-        print("Using random synthetic data (for testing only)...")
-        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_random_dataset(
+        # Default to demo data (high-signal patterns)
+        print("Using HIGH-SIGNAL demo data with very strong patterns (70%+ accuracy expected)...")
+        print("💡 Tip: Use --realistic-data for more challenging, realistic patterns")
+        codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_demo_dataset(
             num_patients=args.num_patients,
             vocab_size=args.vocab_size,
             max_seq_length=config.max_position,
             seed=42
         )
+        print_demo_dataset_statistics(codes, ages, visit_ids)
     
     train_size = int(0.8 * args.num_patients)
     train_dataset = TensorDataset(

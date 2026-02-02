@@ -5,7 +5,7 @@
   "hidden_dim": 512,
   "num_layers": 6,
   "num_heads": 8,
-  "dropout": 0.2,
+  "dropout": 0.1,
   "use_lora": true,
   "lora_rank": 16,
   "num_patients": 5000,
