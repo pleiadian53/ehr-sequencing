@@ -415,11 +415,12 @@ cd examples/pretrain_finetune
 
 **Setting up SSH hostname:**
 
-Use the `runpod_ssh_manager.sh` script to configure SSH hostnames:
+Use the `runpod_ssh_manager.sh` script (in `scripts/pod_management/`) to configure SSH hostnames:
 
 ```bash
 # Add a new pod
-~/work/ehr-sequencing/runpods/scripts/runpod_ssh_manager.sh add ehr-sequencing
+cd scripts/pod_management
+./runpod_ssh_manager.sh add ehr-sequencing
 
 # Follow prompts to enter:
 # - Pod Hostname/IP: 69.30.85.45
@@ -435,6 +436,9 @@ Use the `runpod_ssh_manager.sh` script to configure SSH hostnames:
 
 # Now you can use the hostname:
 ssh runpod-ehr-sequencing-a40-main
+
+# Transfer results
+cd examples/pretrain_finetune
 ./transfer_results.sh runpod-ehr-sequencing-a40-main behrt_large_mlm_lora16
 ```
 

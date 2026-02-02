@@ -80,3 +80,48 @@ New documentation and tools for pod-to-local workflow:
 This addresses the user's question about transferring results from pod to local system. The workflow is now fully documented with automation scripts."
 ```
 
+
+
+---
+
+
+
+```
+git add -A && git commit -m "Enhance transfer script to accept SSH hostnames from config
+
+Major improvements to transfer_results.sh:
+
+1. Smart host detection:
+   - Accepts SSH hostnames (e.g., 'runpod-main')
+   - Accepts raw IP addresses (e.g., '123.45.67.89')
+   - Automatically detects which format is provided
+   - Checks ~/.ssh/config for hostname entries
+
+2. Updated usage examples:
+   # Using SSH hostname (recommended)
+   ./transfer_results.sh runpod-main behrt_large_mlm_lora16
+   
+   # Using raw IP (still supported)
+   ./transfer_results.sh 123.45.67.89 behrt_large_mlm_lora16
+
+3. Integration with runpod_ssh_manager.sh:
+   - Leverages existing SSH config setup
+   - No need to remember IP addresses
+   - Consistent with 'ssh runpod-main' workflow
+   - Compression and connection settings from SSH config
+
+4. Updated POD_WORKFLOW.md:
+   - SSH hostname usage as recommended approach
+   - Instructions for setting up hostnames
+   - Manual transfer examples for both methods
+   - Clear explanation of benefits
+
+Benefits:
+- More convenient: use memorable names instead of IPs
+- Consistent: same hostname for ssh and scp
+- Automatic: uses SSH config settings (port, compression, etc.)
+- Flexible: still supports raw IPs for quick transfers
+
+This addresses the user's excellent suggestion to leverage the existing runpod_ssh_manager.sh infrastructure."
+```
+

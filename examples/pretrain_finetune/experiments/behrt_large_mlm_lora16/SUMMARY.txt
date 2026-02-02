@@ -1,0 +1,33 @@
+Experiment Summary: behrt_large_mlm_lora16
+================================================================================
+
+Duration: 0.29 hours
+Total epochs: 48
+
+Best Metrics:
+  best_train_loss: 1.2254
+  best_train_accuracy: 0.6077
+  best_val_loss: 2.0413
+  best_val_accuracy: 0.3253
+  best_val_top_5_accuracy: 0.7820
+  best_val_macro_f1: 0.2194
+  best_val_weighted_f1: 0.3213
+  best_val_perplexity: 55.8542
+
+Hyperparameters:
+  model_size: large
+  vocab_size: 1000
+  embedding_dim: 256
+  hidden_dim: 512
+  num_layers: 6
+  num_heads: 8
+  dropout: 0.1
+  use_lora: True
+  lora_rank: 16
+  num_patients: 5000
+  epochs: 100
+  batch_size: 128
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  early_stopping_patience: 10
+  device: cuda
