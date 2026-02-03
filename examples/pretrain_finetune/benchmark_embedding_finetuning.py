@@ -627,8 +627,9 @@ def main():
     print("Generating Comparison Plots and Summary")
     print(f"{'='*80}")
     
-    tracker.plot_training_curves()
-    tracker.plot_performance_metrics()
+    # Use BenchmarkVisualizer for plotting
+    visualizer = BenchmarkVisualizer(output_dir=args.output_dir)
+    visualizer.plot_all(tracker.get_all_runs())
     
     # ROC curves
     print("\n📈 Computing ROC curves...")
@@ -645,7 +646,9 @@ def main():
         fpr, tpr, auc_score = compute_roc_curve(probs, lbls, args.vocab_size)
         roc_data[name] = {'fpr': fpr, 'tpr': tpr, 'auc': auc_score}
     
-    tracker.plot_roc_curves(roc_data)
+    # Use CustomBenchmarkVisualizer for custom plots
+    custom_viz = CustomBenchmarkVisualizer(tracker)
+    custom_viz.plot_roc_curves(roc_data)
     
     # PR curves
     print("📈 Computing PR curves...")
@@ -654,7 +657,7 @@ def main():
         precision, recall, auc_score = compute_pr_curve(probs, lbls, args.vocab_size)
         pr_data[name] = {'precision': precision, 'recall': recall, 'auc': auc_score}
     
-    tracker.plot_pr_curves(pr_data)
+    custom_viz.plot_pr_curves(pr_data)
     
     # Summary table
     summary = tracker.generate_summary_table()
