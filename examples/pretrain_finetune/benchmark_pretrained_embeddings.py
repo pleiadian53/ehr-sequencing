@@ -81,6 +81,7 @@ from ehrsequencing.models.behrt import BEHRT, BEHRTConfig, BEHRTForMLM
 from ehrsequencing.models.lora import apply_lora_to_behrt, count_parameters
 from ehrsequencing.models.pretrained_embeddings import (
     save_embeddings,
+    load_embeddings,
     initialize_embedding_layer,
     print_embedding_statistics
 )
@@ -322,10 +323,8 @@ def train_epoch(model, dataloader, optimizer, device):
         codes, ages, visit_ids, attention_mask, labels = [b.to(device) for b in batch]
         
         optimizer.zero_grad()
-        outputs = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask)
-        
-        loss_fct = nn.CrossEntropyLoss()
-        loss = loss_fct(outputs.view(-1, outputs.size(-1)), labels.view(-1))
+        # BEHRTForMLM returns (logits, loss) when labels are provided
+        logits, loss = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask, labels=labels)
         
         loss.backward()
         optimizer.step()
@@ -333,7 +332,7 @@ def train_epoch(model, dataloader, optimizer, device):
         total_loss += loss.item()
         
         mask = labels != -100
-        predictions = outputs.argmax(dim=-1)
+        predictions = logits.argmax(dim=-1)
         total_correct += (predictions[mask] == labels[mask]).sum().item()
         total_masked += mask.sum().item()
     
@@ -357,20 +356,18 @@ def evaluate(model, dataloader, device):
         for batch in dataloader:
             codes, ages, visit_ids, attention_mask, labels = [b.to(device) for b in batch]
             
-            outputs = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask)
-            
-            loss_fct = nn.CrossEntropyLoss()
-            loss = loss_fct(outputs.view(-1, outputs.size(-1)), labels.view(-1))
+            # BEHRTForMLM returns (logits, loss) when labels are provided
+            logits, loss = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask, labels=labels)
             
             total_loss += loss.item()
             
             mask = labels != -100
-            predictions = outputs.argmax(dim=-1)
+            predictions = logits.argmax(dim=-1)
             total_correct += (predictions[mask] == labels[mask]).sum().item()
             total_masked += mask.sum().item()
             
             # Collect probabilities and labels for metrics
-            probs = torch.softmax(outputs, dim=-1)
+            probs = torch.softmax(logits, dim=-1)
             all_probs.append(probs[mask].cpu())
             all_labels.append(labels[mask].cpu())
     
@@ -585,12 +582,26 @@ def main():
     print(f"Batch size: {args.batch_size}")
     print(f"Using realistic synthetic data with disease patterns")
     
+    # Model config - create BEFORE data generation to use correct max_position
+    if args.model_size == 'small':
+        config = BEHRTConfig.small(vocab_size=args.vocab_size)
+    elif args.model_size == 'medium':
+        config = BEHRTConfig.medium(vocab_size=args.vocab_size)
+    else:
+        config = BEHRTConfig.large(vocab_size=args.vocab_size)
+    
+    config.dropout = args.dropout
+    
+    # Use model's max_position for sequence length to avoid out-of-bounds embedding errors
+    max_seq_length = config.max_position
+    print(f"Using max_seq_length={max_seq_length} (from model config)")
+    
     # Generate data once (shared across both runs)
     print(f"\n🔬 Generating realistic synthetic data...")
     codes, ages, visit_ids, attention_mask, masked_codes, labels = generate_realistic_dataset(
         num_patients=args.num_patients,
         vocab_size=args.vocab_size,
-        max_seq_length=512,
+        max_seq_length=max_seq_length,
         seed=42
     )
     print_dataset_statistics(codes, ages, visit_ids)
@@ -607,16 +618,6 @@ def main():
     
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size)
-    
-    # Model config
-    if args.model_size == 'small':
-        config = BEHRTConfig.small(vocab_size=args.vocab_size)
-    elif args.model_size == 'medium':
-        config = BEHRTConfig.medium(vocab_size=args.vocab_size)
-    else:
-        config = BEHRTConfig.large(vocab_size=args.vocab_size)
-    
-    config.dropout = args.dropout
     
     # ============================================================================
     # RUN 1: Pre-training from Scratch
