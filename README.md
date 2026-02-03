@@ -28,11 +28,16 @@ Medical Code Sequences   →  EHR Sequencing Models
 
 ## Project Status
 
-**Phase:** Foundation & Modernization  
-**Version:** 0.1.0 (Alpha)  
+**Phase:** BEHRT Implementation & Survival Analysis  
+**Version:** 0.2.0 (Beta)  
 **Status:** Active Development
 
-This project is being modernized from a legacy codebase (`temporal-phenotyping`) with updated architecture, modern dependencies, and comprehensive documentation.
+**Recent Milestones (February 2026):**
+- ✅ Phase 3 Complete: BEHRT (Transformer for EHR) with MLM pre-training
+- ✅ Benchmarking infrastructure for model comparison
+- ✅ LoRA fine-tuning support for efficient training
+- ✅ Survival analysis with LSTM baseline (C-index 0.53 on 1151 patients)
+- 🎯 **Current Focus:** BEHRT for survival analysis (readmission, mortality prediction)
 
 ---
 
@@ -89,17 +94,23 @@ dataset = builder.create_dataset(sequences)
 print(f"Created dataset with {len(dataset)} patients")
 print(f"Vocabulary size: {len(vocab)}")
 
-# 5. Train model (coming soon)
-# from ehrsequencing.models import LSTMProgressionModel
-# model = LSTMProgressionModel(vocab_size=len(vocab), ...)
-# model.train(dataset)
+# 5. Train model
+from ehrsequencing.models.behrt import BEHRTForMLM, BEHRTConfig
+from ehrsequencing.models.survival_lstm import DiscreteTimeSurvivalLSTM
+
+# Option A: BEHRT for MLM pre-training
+config = BEHRTConfig(vocab_size=len(vocab))
+model = BEHRTForMLM(config)
+
+# Option B: LSTM for survival analysis
+model = DiscreteTimeSurvivalLSTM(vocab_size=len(vocab))
 ```
 
 ---
 
 ## Features
 
-### Current (Phase 1) - ✅ Complete
+### Phase 1: Foundation - ✅ Complete
 - ✅ Modern project structure
 - ✅ Poetry + Conda dependency management
 - ✅ Platform-specific environments (macOS, CUDA, CPU)
@@ -108,16 +119,48 @@ print(f"Vocabulary size: {len(vocab)}")
 - ✅ Visit grouping with semantic code ordering
 - ✅ Patient sequence builder
 - ✅ Unit tests for data pipeline
-- ✅ LSTM baseline model with training utilities
 - ✅ Data exploration notebook
 
-### Planned (Phase 2-5)
-- ⬜ Med2Vec code embeddings
-- ⬜ LSTM and Transformer patient encoders
-- ⬜ BEHRT (BERT for EHR) implementation
-- ⬜ Disease trajectory prediction
-- ⬜ Phenotype discovery algorithms
+### Phase 1.5: Survival Analysis - ✅ Complete
+- ✅ Discrete-time survival LSTM model
+- ✅ Survival loss and C-index metrics
+- ✅ Synthetic outcome generator with validation
+- ✅ Production training pipeline with early stopping
+- ✅ Validated on 1151 patients (C-index 0.53)
+- ✅ RunPods A40 GPU training guide
+
+### Phase 2: Code Embeddings - ⏸️ Deferred
+- ⏸️ Med2Vec training implementation (skip-gram embeddings)
+- ⏸️ Standalone code embedding training pipeline
+- ✅ **External embeddings supported:** Can load pre-trained Med2Vec from PyHealth/HuggingFace
+- ✅ **Benchmarking support:** `examples/pretrain_finetune/benchmark_pretrained_embeddings.py`
+- **Note:** Training deferred in favor of Phase 3 (BEHRT with learned embeddings)
+- **Rationale:** Modern transformers learn embeddings end-to-end; pre-trained embeddings available externally
+- **Status:** Can use external embeddings for comparison; training implementation optional
+
+### Phase 3: BEHRT & Benchmarking - ✅ Complete
+- ✅ BEHRT (Transformer for EHR) with age/visit/segment embeddings
+- ✅ Masked Language Modeling (MLM) pre-training
+- ✅ LoRA fine-tuning for efficient training
+- ✅ Benchmarking infrastructure (tracker, visualizer, metrics)
+- ✅ PyHealth adapter for model comparison
+- ✅ 3 model sizes (small/medium/large) for different hardware
+- ✅ Comprehensive training and benchmarking examples
+
+### Phase 4: BEHRT Survival Analysis - 🎯 In Progress
+- 🔄 BEHRTForSurvival model (design complete)
+- ⬜ Fine-tuning pipeline for survival tasks
+- ⬜ Comparison with LSTM baseline
+- ⬜ Readmission prediction
+- ⬜ Mortality risk prediction
+- ⬜ Disease onset prediction
+
+### Future Phases
+- ⬜ Med2Vec code embeddings (optional baseline)
+- ⬜ Disease trajectory prediction with multi-horizon forecasting
+- ⬜ Phenotype discovery via clustering
 - ⬜ Interactive visualizations
+- ⬜ Real-world data validation (MIMIC-III/IV)
 
 ---
 
@@ -171,16 +214,25 @@ Medical codes are embedded into continuous vector space using:
 ### Sequence Models
 
 Patient sequences are encoded using:
-- **LSTM** - Recurrent models for temporal dependencies
-- **Transformers** - Attention-based models
-- **BEHRT** - BERT adapted for EHR with age/visit embeddings
+- **LSTM** - Recurrent models for temporal dependencies (baseline)
+- **BEHRT** - Bidirectional Transformer with EHR-specific embeddings:
+  - Code embeddings (medical codes)
+  - Age embeddings (patient age at each visit)
+  - Visit embeddings (visit sequence position)
+  - Segment embeddings (visit boundaries)
+- **Pre-training** - Masked Language Modeling (MLM) for self-supervised learning
+- **Fine-tuning** - LoRA for efficient adaptation to downstream tasks
 
 ### Applications
 
-- **Diagnosis Prediction** - Predict future conditions
-- **Mortality Risk** - Estimate survival probability
-- **Disease Subtyping** - Discover phenotypes via clustering
-- **Trajectory Analysis** - Understand disease progression patterns
+- **Diagnosis Prediction** - Predict future medical codes (MLM pre-training)
+- **Survival Analysis** - Discrete-time hazard prediction:
+  - Hospital readmission (30-day)
+  - Mortality risk (in-hospital, 30-day, 1-year)
+  - Disease onset (diabetes, heart failure, stroke)
+- **Model Comparison** - Benchmark BEHRT vs LSTM vs PyHealth
+- **Disease Subtyping** - Discover phenotypes via clustering (planned)
+- **Trajectory Analysis** - Understand disease progression patterns (planned)
 
 ---
 
@@ -198,6 +250,11 @@ Patient sequences are encoded using:
 ### Methods & Theory
 - **[Methods](docs/methods/)** - Methodology documentation
 - **[Pretrained Embeddings](docs/pretrained_embeddings_guide.md)** - Using Med2Vec, CUI2Vec, Clinical BERT
+- **[Benchmarking](src/ehrsequencing/benchmarks/README.md)** - Model comparison framework
+
+### Applications
+- **[Survival Analysis](docs/applications/survival_analysis.md)** - Readmission and mortality prediction
+- **[Benchmarking](docs/applications/benchmarking.md)** - Comparing BEHRT vs LSTM vs PyHealth
 
 ### Tutorials
 - **[Tutorials](docs/tutorials/)** - Getting started guides
