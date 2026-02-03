@@ -329,15 +329,13 @@ def train_model(name: str, model, train_loader, val_loader, optimizer, device,
     
     # Final evaluation
     print(f"\n📊 Computing final metrics for {name}...")
-    _, _, final_probs, final_labels = evaluate(model, val_loader, device)
+    _, _, final_probs, final_labels = evaluate(model, val_loader, device, return_predictions=True)
     metrics = compute_metrics(final_probs, final_labels, vocab_size)
     tracker.set_final_metrics(name, metrics)
     
-    print(f"   ROC-AUC (macro): {metrics['roc_auc_macro']:.4f}")
-    print(f"   ROC-AUC (micro): {metrics['roc_auc_micro']:.4f}")
+    print(f"   ROC-AUC: {metrics['roc_auc']:.4f}")
     print(f"   PR-AUC: {metrics['pr_auc']:.4f}")
-    print(f"   Avg Precision (macro): {metrics['avg_precision_macro']:.4f}")
-    print(f"   Classes present: {metrics['n_classes_present']}/{vocab_size}")
+    print(f"   Avg Precision: {metrics['average_precision']:.4f}")
     
     return final_probs, final_labels
 

@@ -258,6 +258,9 @@ def compute_metrics(
     """
     Compute performance metrics for multi-class classification.
     
+    Filters to only classes present in the dataset to avoid sklearn warnings about
+    one-class problems (common with large vocab but small test sets).
+    
     Args:
         probs: Predicted probabilities [N, vocab_size]
         labels: Ground truth labels [N]
@@ -270,26 +273,34 @@ def compute_metrics(
     probs_np = probs.numpy()
     labels_np = labels.numpy()
     
-    # Convert labels to one-hot
-    labels_onehot = np.zeros((len(labels_np), vocab_size))
-    labels_onehot[np.arange(len(labels_np)), labels_np] = 1
+    # Get unique classes present in labels (avoids one-class warnings)
+    present_classes = np.unique(labels_np)
+    n_present = len(present_classes)
+    
+    # Create one-hot encoding for present classes only
+    labels_onehot = np.zeros((len(labels_np), n_present))
+    for i, cls in enumerate(present_classes):
+        labels_onehot[labels_np == cls, i] = 1
+    
+    # Filter probabilities to present classes
+    probs_filtered = probs_np[:, present_classes]
     
     # Compute metrics
     try:
-        roc_auc = roc_auc_score(labels_onehot, probs_np, average='macro', multi_class='ovr')
+        roc_auc = roc_auc_score(labels_onehot, probs_filtered, average='macro', multi_class='ovr')
     except:
         roc_auc = 0.0
     
     try:
-        avg_precision = average_precision_score(labels_onehot, probs_np, average='macro')
+        avg_precision = average_precision_score(labels_onehot, probs_filtered, average='macro')
     except:
         avg_precision = 0.0
     
-    # For PR-AUC, compute per-class and average
+    # For PR-AUC, compute per-class and average (already filtered to present classes)
     pr_aucs = []
-    for i in range(min(vocab_size, probs_np.shape[1])):
-        if labels_onehot[:, i].sum() > 0:  # Only if class exists
-            precision, recall, _ = precision_recall_curve(labels_onehot[:, i], probs_np[:, i])
+    for i in range(n_present):
+        if labels_onehot[:, i].sum() > 0:  # Double-check (should always be true now)
+            precision, recall, _ = precision_recall_curve(labels_onehot[:, i], probs_filtered[:, i])
             pr_auc = auc(recall, precision)
             if not np.isnan(pr_auc):
                 pr_aucs.append(pr_auc)
