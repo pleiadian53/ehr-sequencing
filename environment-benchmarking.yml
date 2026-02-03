@@ -1,0 +1,40 @@
+name: ehrseq-benchmarking
+channels:
+  - conda-forge
+  - pytorch
+  - nvidia
+dependencies:
+  # Core Python
+  - python=3.10
+  
+  # PyTorch with CUDA support
+  - pytorch::pytorch>=2.0.0
+  - pytorch::torchvision
+  - pytorch::torchaudio
+  - pytorch::pytorch-cuda=11.8
+  
+  # Scientific computing
+  - numpy>=1.24.0
+  - scipy>=1.10.0
+  - pandas>=2.0.0
+  - scikit-learn>=1.3.0
+  
+  # Visualization
+  - matplotlib>=3.7.0
+  - seaborn>=0.12.0
+  
+  # Development tools
+  - pip
+  - jupyter
+  - ipython
+  
+  # Pip dependencies
+  - pip:
+      # PyHealth for benchmarking
+      - pyhealth>=1.1.0
+      
+      # Additional benchmarking tools
+      - tabulate  # For pretty tables
+      
+      # Install ehrsequencing in editable mode
+      - -e .

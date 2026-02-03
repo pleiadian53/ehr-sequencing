@@ -56,3 +56,8 @@ dependencies:
   # Install via pip (only packages not in conda-forge)
   - pip:
     - transformers>=4.30.0
+    
+    # Benchmarking (optional - for comparing against external libraries)
+    # Uncomment if you need to benchmark against PyHealth, TorchEHR, etc.
+    - pyhealth>=1.1.0
+    - tabulate  # For pretty benchmark tables
