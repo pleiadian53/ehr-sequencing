@@ -91,20 +91,36 @@ def generate_domain_shifted_datasets(
     print("="*80)
     
     print(f"\n📊 Source Dataset (seed={source_seed}):")
-    source_data = generate_realistic_dataset(
+    codes_src, ages_src, visit_ids_src, attention_mask_src, masked_codes_src, labels_src = generate_realistic_dataset(
         num_patients=source_patients,
         vocab_size=vocab_size,
+        max_seq_length=256,  # Use smaller seq length to avoid position embedding overflow
         seed=source_seed
     )
-    print_dataset_statistics(source_data)
+    source_data = {
+        'codes': codes_src,
+        'ages': ages_src,
+        'visit_ids': visit_ids_src,
+        'attention_mask': attention_mask_src,
+        'labels': labels_src
+    }
+    print_dataset_statistics(codes_src, ages_src, visit_ids_src)
     
     print(f"\n📊 Target Dataset (seed={target_seed}):")
-    target_data = generate_realistic_dataset(
+    codes_tgt, ages_tgt, visit_ids_tgt, attention_mask_tgt, masked_codes_tgt, labels_tgt = generate_realistic_dataset(
         num_patients=target_patients,
         vocab_size=vocab_size,
+        max_seq_length=256,  # Use smaller seq length to avoid position embedding overflow
         seed=target_seed
     )
-    print_dataset_statistics(target_data)
+    target_data = {
+        'codes': codes_tgt,
+        'ages': ages_tgt,
+        'visit_ids': visit_ids_tgt,
+        'attention_mask': attention_mask_tgt,
+        'labels': labels_tgt
+    }
+    print_dataset_statistics(codes_tgt, ages_tgt, visit_ids_tgt)
     
     return source_data, target_data
 
@@ -200,10 +216,9 @@ def train_with_early_stopping(
     metrics = compute_metrics(final_probs, final_labels, vocab_size)
     tracker.set_final_metrics(name, metrics)
     
-    print(f"   ROC-AUC (macro): {metrics['roc_auc_macro']:.4f}")
-    print(f"   ROC-AUC (micro): {metrics['roc_auc_micro']:.4f}")
+    print(f"   ROC-AUC: {metrics['roc_auc']:.4f}")
     print(f"   PR-AUC: {metrics['pr_auc']:.4f}")
-    print(f"   Avg Precision (macro): {metrics['avg_precision_macro']:.4f}")
+    print(f"   Avg Precision: {metrics['average_precision']:.4f}")
     
     return final_probs, final_labels
 
@@ -287,7 +302,12 @@ def main():
     
     # Save source model embeddings
     embedding_path = Path(args.output_dir) / 'source_embeddings.pt'
-    save_embeddings(model1.behrt, embedding_path)
+    embeddings = model1.behrt.embeddings.code_embedding.weight.data
+    save_embeddings(
+        embeddings, 
+        embedding_path,
+        metadata={'vocab_size': vocab_size, 'embedding_dim': config.embedding_dim}
+    )
     print(f"\n💾 Saved source embeddings: {embedding_path}")
     
     # ============================================================================
@@ -313,9 +333,9 @@ def main():
     tracker.set_training_time('Source→Target (zero-shot)', 0.0)
     tracker.set_final_metrics('Source→Target (zero-shot)', metrics2)
     
-    print(f"   ROC-AUC (macro): {metrics2['roc_auc_macro']:.4f}")
-    print(f"   ROC-AUC (micro): {metrics2['roc_auc_micro']:.4f}")
+    print(f"   ROC-AUC: {metrics2['roc_auc']:.4f}")
     print(f"   PR-AUC: {metrics2['pr_auc']:.4f}")
+    print(f"   Avg Precision: {metrics2['average_precision']:.4f}")
     
     # ============================================================================
     # RUN 3: Train on Source, Fine-tune on Target, Test on Target
@@ -325,8 +345,9 @@ def main():
     print("="*80)
     
     model3 = BEHRTForMLM(config).to(device)
-    load_embeddings(model3.behrt, embedding_path)
-    print(f"✅ Loaded source embeddings from {embedding_path}")
+    pretrained_emb, _ = load_embeddings(embedding_path)
+    initialize_embedding_layer(model3.behrt.embeddings.code_embedding, pretrained_emb, freeze=False)
+    print(f"✅ Loaded and initialized source embeddings from {embedding_path}")
     
     optimizer3 = torch.optim.AdamW(model3.parameters(), lr=args.learning_rate * 0.1)  # Lower LR for fine-tuning
     

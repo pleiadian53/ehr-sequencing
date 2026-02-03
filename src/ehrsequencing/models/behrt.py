@@ -53,7 +53,7 @@ class BEHRTConfig:
             hidden_dim=128,
             num_layers=2,
             num_heads=4,
-            max_position=50,
+            max_position=512,  # Support full sequence length
             dropout=0.1
         )
     
@@ -66,7 +66,7 @@ class BEHRTConfig:
             hidden_dim=256,
             num_layers=4,
             num_heads=8,
-            max_position=100,
+            max_position=512,
             dropout=0.1
         )
     
@@ -79,7 +79,7 @@ class BEHRTConfig:
             hidden_dim=512,
             num_layers=6,
             num_heads=8,
-            max_position=200,
+            max_position=512,
             dropout=0.1
         )
 
