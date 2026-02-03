@@ -182,7 +182,7 @@ class BenchmarkTracker:
     
     def plot_performance_metrics(self):
         """Plot performance metrics comparison."""
-        metrics_to_plot = ['roc_auc', 'pr_auc', 'average_precision']
+        metrics_to_plot = ['roc_auc_macro', 'roc_auc_micro', 'pr_auc', 'avg_precision_macro']
         
         fig, ax = plt.subplots(figsize=(10, 6))
         
@@ -263,9 +263,10 @@ class BenchmarkTracker:
                 'Best Epoch': run['best_epoch'],
                 'Final Train Acc': f"{run['train_accs'][-1]:.4f}" if run['train_accs'] else "N/A",
                 'Final Val Acc': f"{run['val_accs'][-1]:.4f}" if run['val_accs'] else "N/A",
-                'ROC-AUC': f"{run['final_metrics'].get('roc_auc', 0):.4f}",
+                'ROC-AUC (macro)': f"{run['final_metrics'].get('roc_auc_macro', 0):.4f}",
+                'ROC-AUC (micro)': f"{run['final_metrics'].get('roc_auc_micro', 0):.4f}",
                 'PR-AUC': f"{run['final_metrics'].get('pr_auc', 0):.4f}",
-                'AP': f"{run['final_metrics'].get('average_precision', 0):.4f}",
+                'AP (macro)': f"{run['final_metrics'].get('avg_precision_macro', 0):.4f}",
                 'Training Time (min)': f"{run['training_time']/60:.2f}",
                 'Trainable Params': run['config'].get('trainable_params', 'N/A')
             })
@@ -300,11 +301,13 @@ class BenchmarkTracker:
             f.write("="*120 + "\n\n")
             
             best_val_loss = min(self.runs.items(), key=lambda x: x[1]['best_val_loss'])
-            best_roc_auc = max(self.runs.items(), key=lambda x: x[1]['final_metrics'].get('roc_auc', 0))
+            best_roc_auc_macro = max(self.runs.items(), key=lambda x: x[1]['final_metrics'].get('roc_auc_macro', 0))
+            best_roc_auc_micro = max(self.runs.items(), key=lambda x: x[1]['final_metrics'].get('roc_auc_micro', 0))
             fastest = min(self.runs.items(), key=lambda x: x[1]['training_time'])
             
             f.write(f"Best Validation Loss: {best_val_loss[0]} ({best_val_loss[1]['best_val_loss']:.4f})\n")
-            f.write(f"Best ROC-AUC: {best_roc_auc[0]} ({best_roc_auc[1]['final_metrics'].get('roc_auc', 0):.4f})\n")
+            f.write(f"Best ROC-AUC (macro): {best_roc_auc_macro[0]} ({best_roc_auc_macro[1]['final_metrics'].get('roc_auc_macro', 0):.4f})\n")
+            f.write(f"Best ROC-AUC (micro): {best_roc_auc_micro[0]} ({best_roc_auc_micro[1]['final_metrics'].get('roc_auc_micro', 0):.4f})\n")
             f.write(f"Fastest Training: {fastest[0]} ({fastest[1]['training_time']/60:.2f} min)\n")
         
         print(f"📄 Saved summary: {txt_path}")
@@ -382,32 +385,58 @@ def evaluate(model, dataloader, device):
 
 
 def compute_metrics(probs: torch.Tensor, labels: torch.Tensor, vocab_size: int) -> Dict:
-    """Compute performance metrics."""
+    """Compute performance metrics.
+    
+    Uses macro-average (equal weight per class) as primary metric for medical codes
+    where rare classes are clinically important. Also computes micro-average for
+    comparison with baselines.
+    
+    Filters to only classes present in the dataset to avoid sklearn warnings about
+    one-class problems (common with 1000 vocab but small test sets).
+    """
     # Convert to numpy
     probs_np = probs.numpy()
     labels_np = labels.numpy()
     
-    # For multi-class, we'll use one-vs-rest approach
-    # Convert labels to one-hot
-    labels_onehot = np.zeros((len(labels_np), vocab_size))
-    labels_onehot[np.arange(len(labels_np)), labels_np] = 1
+    # Get unique classes present in labels (avoids one-class warnings)
+    present_classes = np.unique(labels_np)
+    n_present = len(present_classes)
     
-    # Compute metrics
+    # Create one-hot encoding for present classes only
+    labels_onehot = np.zeros((len(labels_np), n_present))
+    for i, cls in enumerate(present_classes):
+        labels_onehot[labels_np == cls, i] = 1
+    
+    # Filter probabilities to present classes
+    probs_filtered = probs_np[:, present_classes]
+    
+    # Compute ROC-AUC (macro and micro)
     try:
-        roc_auc = roc_auc_score(labels_onehot, probs_np, average='macro', multi_class='ovr')
+        roc_auc_macro = roc_auc_score(labels_onehot, probs_filtered, average='macro', multi_class='ovr')
     except:
-        roc_auc = 0.0
+        roc_auc_macro = 0.0
     
     try:
-        avg_precision = average_precision_score(labels_onehot, probs_np, average='macro')
+        roc_auc_micro = roc_auc_score(labels_onehot, probs_filtered, average='micro', multi_class='ovr')
     except:
-        avg_precision = 0.0
+        roc_auc_micro = 0.0
     
-    # For PR-AUC, compute per-class and average
+    # Compute average precision (macro and micro)
+    try:
+        avg_precision_macro = average_precision_score(labels_onehot, probs_filtered, average='macro')
+    except:
+        avg_precision_macro = 0.0
+    
+    try:
+        avg_precision_micro = average_precision_score(labels_onehot, probs_filtered, average='micro')
+    except:
+        avg_precision_micro = 0.0
+    
+    # For PR-AUC, compute per-class and average (already filtered to present classes)
     pr_aucs = []
-    for i in range(min(vocab_size, probs_np.shape[1])):
-        if labels_onehot[:, i].sum() > 0:  # Only if class exists
-            precision, recall, _ = precision_recall_curve(labels_onehot[:, i], probs_np[:, i])
+    for i in range(n_present):
+        if labels_onehot[:, i].sum() > 0:  # Double-check (should always be true now)
+            precision, recall, _ = precision_recall_curve(labels_onehot[:, i], probs_filtered[:, i])
             pr_auc = auc(recall, precision)
             if not np.isnan(pr_auc):
                 pr_aucs.append(pr_auc)
@@ -415,9 +444,12 @@ def compute_metrics(probs: torch.Tensor, labels: torch.Tensor, vocab_size: int) 
     pr_auc_avg = np.mean(pr_aucs) if pr_aucs else 0.0
     
     return {
-        'roc_auc': roc_auc,
+        'roc_auc_macro': roc_auc_macro,  # Primary: equal weight per class
+        'roc_auc_micro': roc_auc_micro,  # Secondary: equal weight per sample
         'pr_auc': pr_auc_avg,
-        'average_precision': avg_precision
+        'avg_precision_macro': avg_precision_macro,
+        'avg_precision_micro': avg_precision_micro,
+        'n_classes_present': n_present  # For debugging
     }
 
 
@@ -534,9 +566,11 @@ def train_model(name: str, model, train_loader, val_loader, optimizer, device,
     metrics = compute_metrics(final_probs, final_labels, vocab_size)
     tracker.set_final_metrics(name, metrics)
     
-    print(f"   ROC-AUC: {metrics['roc_auc']:.4f}")
+    print(f"   ROC-AUC (macro): {metrics['roc_auc_macro']:.4f}")
+    print(f"   ROC-AUC (micro): {metrics['roc_auc_micro']:.4f}")
     print(f"   PR-AUC: {metrics['pr_auc']:.4f}")
-    print(f"   Average Precision: {metrics['average_precision']:.4f}")
+    print(f"   Avg Precision (macro): {metrics['avg_precision_macro']:.4f}")
+    print(f"   Classes present: {metrics['n_classes_present']}/{vocab_size}")
     
     return final_probs, final_labels
 
