@@ -1,61 +1,55 @@
 """
-Benchmark: Pre-training vs Fine-tuning with Pre-trained Embeddings
+Benchmark: Embedding Fine-tuning Strategy Comparison
 
-This script compares BEHRT training workflows on the A40 pod:
+This script compares different strategies for using pre-trained embeddings:
 
-2-WAY COMPARISON (default):
-1. Pre-training from scratch (learning embeddings)
-2. Fine-tuning with learned embeddings (frozen embeddings from Run 1)
-
-3-WAY COMPARISON (with --external_embedding_path):
-1. Pre-training from scratch (learning embeddings)
-2. Fine-tuning with learned embeddings (frozen embeddings from Run 1)
-3. Fine-tuning with external embeddings (e.g., Med2Vec, frozen)
+3-WAY COMPARISON:
+1. Train from scratch (baseline - learn embeddings from data)
+2. Load pre-trained embeddings, FREEZE them (reduced capacity)
+3. Load pre-trained embeddings, FINE-TUNE them (transfer learning)
 
 HOW IT WORKS:
 - Generates realistic synthetic data ONCE (all runs use same dataset)
 - Run 1: Trains BEHRT from scratch, learning embeddings from the data
 - Saves the learned embeddings after training
-- Run 2: Loads embeddings from Run 1, freezes them, trains only LoRA + head
-- Run 3 (optional): Loads external embeddings (Med2Vec), freezes them, trains only LoRA + head
+- Run 2: Loads embeddings from Run 1, FREEZES them, trains only LoRA + head
+- Run 3: Loads embeddings from Run 1, FINE-TUNES them, trains full model
 - Compares performance: Which embedding strategy works best?
 
 This answers key questions:
-- Does using pre-trained embeddings help convergence/accuracy?
-- Is there a difference between self-learned vs external (Med2Vec) embeddings?
-- Can we skip expensive pre-training if we have good external embeddings?
+- Does freezing embeddings hurt performance? (Yes, expected)
+- Does fine-tuning pre-trained embeddings match or beat training from scratch?
+- What's the trade-off between frozen (faster) vs fine-tuned (better)?
+
+EXPECTED RESULTS:
+- Fine-tuned ≥ Scratch > Frozen (performance ranking)
+- Fine-tuned should converge faster than scratch (fewer epochs)
+- Frozen should show degraded performance (fewer trainable params)
 
 Outputs comprehensive performance comparison:
 - Training curves (loss, accuracy)
 - Performance metrics (PRAUC, AP, ROC-AUC)
 - Comparison plots and tables
-- Statistical significance tests
 
 Uses realistic synthetic data by default for meaningful evaluation.
 
 Usage:
 
-# 2-way comparison (default)
-python benchmark_pretrained_embeddings.py \
+# Full 3-way comparison (recommended)
+python benchmark_embedding_finetuning.py \
     --model-size large \
     --num-patients 10000 \
     --epochs 100 \
     --batch-size 128
 
-# 3-way comparison (with external Med2Vec embeddings)
-python benchmark_pretrained_embeddings.py \
-    --model-size large \
-    --num-patients 10000 \
-    --epochs 100 \
-    --batch-size 128 \
-    --external-embedding-path pretrained/med2vec_embeddings.pt
-
 # Quick test
-python benchmark_pretrained_embeddings.py \
+python benchmark_embedding_finetuning.py \
     --model-size small \
     --num-patients 1000 \
     --epochs 20 \
     --batch-size 32
+
+Note: For testing transfer learning across different datasets, use benchmark_transfer_learning.py
 """
 
 import torch
@@ -86,55 +80,30 @@ from ehrsequencing.models.pretrained_embeddings import (
     print_embedding_statistics
 )
 from ehrsequencing.data.realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
+from ehrsequencing.benchmarks import (
+    BenchmarkTracker,
+    BenchmarkVisualizer,
+    train_epoch,
+    evaluate,
+    compute_metrics,
+    compute_roc_curve,
+    compute_pr_curve
+)
 
 
-class BenchmarkTracker:
-    """Track and compare multiple training runs."""
+class CustomBenchmarkVisualizer:
+    """
+    Custom visualization methods for embedding comparison benchmark.
     
-    def __init__(self, output_dir: str = "experiments/benchmark_embeddings"):
-        self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-        
-        self.runs = {}
-        self.start_time = time.time()
-        
-        print(f"📊 Benchmark tracker initialized: {self.output_dir}")
+    Extends the base BenchmarkTracker with specialized plots for this experiment.
+    These methods will eventually be moved to BenchmarkVisualizer in the shared module.
+    """
     
-    def add_run(self, name: str, config: Dict):
-        """Add a new run to track."""
-        self.runs[name] = {
-            'config': config,
-            'metrics': [],
-            'train_losses': [],
-            'val_losses': [],
-            'train_accs': [],
-            'val_accs': [],
-            'best_val_loss': float('inf'),
-            'best_epoch': 0,
-            'training_time': 0,
-            'final_metrics': {}
-        }
-    
-    def log_epoch(self, name: str, epoch: int, train_loss: float, train_acc: float, 
-                  val_loss: float, val_acc: float):
-        """Log metrics for an epoch."""
-        run = self.runs[name]
-        run['train_losses'].append(train_loss)
-        run['val_losses'].append(val_loss)
-        run['train_accs'].append(train_acc)
-        run['val_accs'].append(val_acc)
-        
-        if val_loss < run['best_val_loss']:
-            run['best_val_loss'] = val_loss
-            run['best_epoch'] = epoch
-    
-    def set_training_time(self, name: str, duration: float):
-        """Set training duration for a run."""
-        self.runs[name]['training_time'] = duration
-    
-    def set_final_metrics(self, name: str, metrics: Dict):
-        """Set final evaluation metrics."""
-        self.runs[name]['final_metrics'] = metrics
+    def __init__(self, tracker: BenchmarkTracker):
+        """Initialize with a BenchmarkTracker instance."""
+        self.tracker = tracker
+        self.output_dir = tracker.output_dir
+        self.runs = tracker.runs
     
     def plot_training_curves(self):
         """Plot training curves for all runs."""
@@ -315,210 +284,8 @@ class BenchmarkTracker:
         return summary
 
 
-def train_epoch(model, dataloader, optimizer, device):
-    """Train for one epoch."""
-    model.train()
-    total_loss = 0
-    total_correct = 0
-    total_masked = 0
-    
-    for batch in dataloader:
-        codes, ages, visit_ids, attention_mask, labels = [b.to(device) for b in batch]
-        
-        optimizer.zero_grad()
-        # BEHRTForMLM returns (logits, loss) when labels are provided
-        logits, loss = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask, labels=labels)
-        
-        loss.backward()
-        optimizer.step()
-        
-        total_loss += loss.item()
-        
-        mask = labels != -100
-        predictions = logits.argmax(dim=-1)
-        total_correct += (predictions[mask] == labels[mask]).sum().item()
-        total_masked += mask.sum().item()
-    
-    avg_loss = total_loss / len(dataloader)
-    accuracy = total_correct / total_masked if total_masked > 0 else 0
-    
-    return avg_loss, accuracy
-
-
-def evaluate(model, dataloader, device):
-    """Evaluate on validation set."""
-    model.eval()
-    total_loss = 0
-    total_correct = 0
-    total_masked = 0
-    
-    all_probs = []
-    all_labels = []
-    
-    with torch.no_grad():
-        for batch in dataloader:
-            codes, ages, visit_ids, attention_mask, labels = [b.to(device) for b in batch]
-            
-            # BEHRTForMLM returns (logits, loss) when labels are provided
-            logits, loss = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask, labels=labels)
-            
-            total_loss += loss.item()
-            
-            mask = labels != -100
-            predictions = logits.argmax(dim=-1)
-            total_correct += (predictions[mask] == labels[mask]).sum().item()
-            total_masked += mask.sum().item()
-            
-            # Collect probabilities and labels for metrics
-            probs = torch.softmax(logits, dim=-1)
-            all_probs.append(probs[mask].cpu())
-            all_labels.append(labels[mask].cpu())
-    
-    avg_loss = total_loss / len(dataloader)
-    accuracy = total_correct / total_masked if total_masked > 0 else 0
-    
-    # Concatenate all predictions
-    all_probs = torch.cat(all_probs, dim=0)
-    all_labels = torch.cat(all_labels, dim=0)
-    
-    return avg_loss, accuracy, all_probs, all_labels
-
-
-def compute_metrics(probs: torch.Tensor, labels: torch.Tensor, vocab_size: int) -> Dict:
-    """Compute performance metrics.
-    
-    Uses macro-average (equal weight per class) as primary metric for medical codes
-    where rare classes are clinically important. Also computes micro-average for
-    comparison with baselines.
-    
-    Filters to only classes present in the dataset to avoid sklearn warnings about
-    one-class problems (common with 1000 vocab but small test sets).
-    """
-    # Convert to numpy
-    probs_np = probs.numpy()
-    labels_np = labels.numpy()
-    
-    # Get unique classes present in labels (avoids one-class warnings)
-    present_classes = np.unique(labels_np)
-    n_present = len(present_classes)
-    
-    # Create one-hot encoding for present classes only
-    labels_onehot = np.zeros((len(labels_np), n_present))
-    for i, cls in enumerate(present_classes):
-        labels_onehot[labels_np == cls, i] = 1
-    
-    # Filter probabilities to present classes
-    probs_filtered = probs_np[:, present_classes]
-    
-    # Compute ROC-AUC (macro and micro)
-    try:
-        roc_auc_macro = roc_auc_score(labels_onehot, probs_filtered, average='macro', multi_class='ovr')
-    except:
-        roc_auc_macro = 0.0
-    
-    try:
-        roc_auc_micro = roc_auc_score(labels_onehot, probs_filtered, average='micro', multi_class='ovr')
-    except:
-        roc_auc_micro = 0.0
-    
-    # Compute average precision (macro and micro)
-    try:
-        avg_precision_macro = average_precision_score(labels_onehot, probs_filtered, average='macro')
-    except:
-        avg_precision_macro = 0.0
-    
-    try:
-        avg_precision_micro = average_precision_score(labels_onehot, probs_filtered, average='micro')
-    except:
-        avg_precision_micro = 0.0
-    
-    # For PR-AUC, compute per-class and average (already filtered to present classes)
-    pr_aucs = []
-    for i in range(n_present):
-        if labels_onehot[:, i].sum() > 0:  # Double-check (should always be true now)
-            precision, recall, _ = precision_recall_curve(labels_onehot[:, i], probs_filtered[:, i])
-            pr_auc = auc(recall, precision)
-            if not np.isnan(pr_auc):
-                pr_aucs.append(pr_auc)
-    
-    pr_auc_avg = np.mean(pr_aucs) if pr_aucs else 0.0
-    
-    return {
-        'roc_auc_macro': roc_auc_macro,  # Primary: equal weight per class
-        'roc_auc_micro': roc_auc_micro,  # Secondary: equal weight per sample
-        'pr_auc': pr_auc_avg,
-        'avg_precision_macro': avg_precision_macro,
-        'avg_precision_micro': avg_precision_micro,
-        'n_classes_present': n_present  # For debugging
-    }
-
-
-def compute_roc_curve(probs: torch.Tensor, labels: torch.Tensor, vocab_size: int) -> Tuple:
-    """Compute ROC curve data."""
-    probs_np = probs.numpy()
-    labels_np = labels.numpy()
-    
-    labels_onehot = np.zeros((len(labels_np), vocab_size))
-    labels_onehot[np.arange(len(labels_np)), labels_np] = 1
-    
-    # Compute macro-average ROC curve
-    all_fpr = []
-    all_tpr = []
-    
-    for i in range(min(vocab_size, probs_np.shape[1])):
-        if labels_onehot[:, i].sum() > 0:
-            fpr, tpr, _ = roc_curve(labels_onehot[:, i], probs_np[:, i])
-            all_fpr.append(fpr)
-            all_tpr.append(tpr)
-    
-    # Interpolate all ROC curves at common FPR points
-    mean_fpr = np.linspace(0, 1, 100)
-    interp_tprs = []
-    
-    for fpr, tpr in zip(all_fpr, all_tpr):
-        interp_tpr = np.interp(mean_fpr, fpr, tpr)
-        interp_tpr[0] = 0.0
-        interp_tprs.append(interp_tpr)
-    
-    mean_tpr = np.mean(interp_tprs, axis=0) if interp_tprs else np.zeros_like(mean_fpr)
-    mean_tpr[-1] = 1.0
-    
-    auc_score = auc(mean_fpr, mean_tpr)
-    
-    return mean_fpr, mean_tpr, auc_score
-
-
-def compute_pr_curve(probs: torch.Tensor, labels: torch.Tensor, vocab_size: int) -> Tuple:
-    """Compute PR curve data."""
-    probs_np = probs.numpy()
-    labels_np = labels.numpy()
-    
-    labels_onehot = np.zeros((len(labels_np), vocab_size))
-    labels_onehot[np.arange(len(labels_np)), labels_np] = 1
-    
-    all_precision = []
-    all_recall = []
-    
-    for i in range(min(vocab_size, probs_np.shape[1])):
-        if labels_onehot[:, i].sum() > 0:
-            precision, recall, _ = precision_recall_curve(labels_onehot[:, i], probs_np[:, i])
-            all_precision.append(precision)
-            all_recall.append(recall)
-    
-    # Interpolate
-    mean_recall = np.linspace(0, 1, 100)
-    interp_precisions = []
-    
-    for precision, recall in zip(all_precision, all_recall):
-        # Reverse for interpolation
-        interp_precision = np.interp(mean_recall, recall[::-1], precision[::-1])
-        interp_precisions.append(interp_precision)
-    
-    mean_precision = np.mean(interp_precisions, axis=0) if interp_precisions else np.zeros_like(mean_recall)
-    
-    auc_score = auc(mean_recall, mean_precision)
-    
-    return mean_precision, mean_recall, auc_score
+# train_epoch, evaluate, compute_metrics, compute_roc_curve, compute_pr_curve
+# are now imported from ehrsequencing.benchmarks.training
 
 
 def train_model(name: str, model, train_loader, val_loader, optimizer, device, 
@@ -750,14 +517,63 @@ def main():
     )
     
     # ============================================================================
-    # RUN 3 (Optional): Fine-tuning with External Pre-trained Embeddings (e.g., Med2Vec)
+    # RUN 3: Fine-tuning with Pre-trained Embeddings (FINE-TUNED, not frozen)
+    # ============================================================================
+    print(f"\n{'='*80}")
+    print("RUN 3: Fine-tuning with Pre-trained Embeddings (fine-tuned embeddings)")
+    print(f"{'='*80}")
+    
+    model3 = BEHRTForMLM(config).to(device)
+    
+    # Load pre-trained embeddings from Run 1
+    print(f"\n📂 Loading pre-trained embeddings from Run 1 (will be fine-tuned)...")
+    pretrained_emb_finetune = model1.behrt.embeddings.code_embedding.weight.data.clone()
+    initialize_embedding_layer(
+        model3.behrt.embeddings.code_embedding,
+        pretrained_emb_finetune,
+        freeze=False  # Allow fine-tuning
+    )
+    
+    model3 = apply_lora_to_behrt(
+        model3,
+        rank=args.lora_rank,
+        lora_attention=True,
+        train_embeddings=True,  # Fine-tune embeddings
+        train_head=True
+    )
+    
+    params3 = count_parameters(model3)
+    print(f"\n📊 Model Parameters (Fine-tuning with trainable embeddings):")
+    print(f"   Total: {params3['total']:,}")
+    print(f"   Trainable: {params3['trainable']:,} ({params3['trainable_percent']:.1f}%)")
+    print(f"   Embeddings: {params3['embedding_trainable']:,}/{params3['embedding_total']:,} trainable (fine-tuned)")
+    
+    tracker.add_run('Fine-tuning (fine-tuned embeddings)', {
+        'trainable_params': f"{params3['trainable']:,} ({params3['trainable_percent']:.1f}%)",
+        'embeddings_trainable': True,
+        'lora_rank': args.lora_rank
+    })
+    
+    optimizer3 = torch.optim.AdamW(
+        filter(lambda p: p.requires_grad, model3.parameters()),
+        lr=args.lr,
+        weight_decay=args.weight_decay
+    )
+    
+    probs3, labels3 = train_model(
+        'Fine-tuning (fine-tuned embeddings)', model3, train_loader, val_loader,
+        optimizer3, device, args.epochs, tracker, args.vocab_size
+    )
+    
+    # ============================================================================
+    # RUN 4 (Optional): Fine-tuning with External Pre-trained Embeddings (e.g., Med2Vec)
     # ============================================================================
     if args.external_embedding_path:
         print(f"\n{'='*80}")
-        print("RUN 3: Fine-tuning with External Pre-trained Embeddings (e.g., Med2Vec)")
+        print("RUN 4: Fine-tuning with External Pre-trained Embeddings (e.g., Med2Vec)")
         print(f"{'='*80}")
         
-        model3 = BEHRTForMLM(config).to(device)
+        model4 = BEHRTForMLM(config).to(device)
         
         # Load external pre-trained embeddings
         print(f"\n📂 Loading external pre-trained embeddings from: {args.external_embedding_path}")
@@ -767,44 +583,44 @@ def main():
         
         # Initialize with external embeddings
         initialize_embedding_layer(
-            model3.behrt.embeddings.code_embedding,
+            model4.behrt.embeddings.code_embedding,
             external_emb,
             freeze=True
         )
         
-        model3 = apply_lora_to_behrt(
-            model3,
+        model4 = apply_lora_to_behrt(
+            model4,
             rank=args.lora_rank,
             lora_attention=True,
             train_embeddings=False,  # Freeze embeddings
             train_head=True
         )
         
-        params3 = count_parameters(model3)
+        params4 = count_parameters(model4)
         print(f"\n📊 Model Parameters (Fine-tuning with External):")
-        print(f"   Total: {params3['total']:,}")
-        print(f"   Trainable: {params3['trainable']:,} ({params3['trainable_percent']:.1f}%)")
-        print(f"   Embeddings: {params3['embedding_trainable']:,}/{params3['embedding_total']:,} trainable (frozen)")
+        print(f"   Total: {params4['total']:,}")
+        print(f"   Trainable: {params4['trainable']:,} ({params4['trainable_percent']:.1f}%)")
+        print(f"   Embeddings: {params4['embedding_trainable']:,}/{params4['embedding_total']:,} trainable (frozen)")
         
         tracker.add_run('Fine-tuning (external embeddings)', {
-            'trainable_params': f"{params3['trainable']:,} ({params3['trainable_percent']:.1f}%)",
+            'trainable_params': f"{params4['trainable']:,} ({params4['trainable_percent']:.1f}%)",
             'embeddings_trainable': False,
             'lora_rank': args.lora_rank,
             'embedding_source': args.external_embedding_path
         })
         
-        optimizer3 = torch.optim.AdamW(
-            filter(lambda p: p.requires_grad, model3.parameters()),
+        optimizer4 = torch.optim.AdamW(
+            filter(lambda p: p.requires_grad, model4.parameters()),
             lr=args.lr,
             weight_decay=args.weight_decay
         )
         
-        probs3, labels3 = train_model(
-            'Fine-tuning (external embeddings)', model3, train_loader, val_loader,
-            optimizer3, device, args.epochs, tracker, args.vocab_size
+        probs4, labels4 = train_model(
+            'Fine-tuning (external embeddings)', model4, train_loader, val_loader,
+            optimizer4, device, args.epochs, tracker, args.vocab_size
         )
     else:
-        probs3, labels3 = None, None
+        probs4, labels4 = None, None
     
     # ============================================================================
     # Generate Comparison Plots and Summary
@@ -821,10 +637,11 @@ def main():
     roc_data = {}
     runs_to_plot = [
         ('Pre-training (from scratch)', probs1, labels1),
-        ('Fine-tuning (pre-trained embeddings)', probs2, labels2)
+        ('Fine-tuning (pre-trained embeddings)', probs2, labels2),
+        ('Fine-tuning (fine-tuned embeddings)', probs3, labels3)
     ]
-    if probs3 is not None:
-        runs_to_plot.append(('Fine-tuning (external embeddings)', probs3, labels3))
+    if probs4 is not None:
+        runs_to_plot.append(('Fine-tuning (external embeddings)', probs4, labels4))
     
     for name, probs, lbls in runs_to_plot:
         fpr, tpr, auc_score = compute_roc_curve(probs, lbls, args.vocab_size)

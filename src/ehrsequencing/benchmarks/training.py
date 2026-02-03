@@ -53,9 +53,17 @@ def train_epoch(
         codes, ages, visit_ids, attention_mask, labels = [b.to(device) for b in batch]
         
         optimizer.zero_grad()
-        outputs = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask)
         
-        loss = loss_fn(outputs.view(-1, outputs.size(-1)), labels.view(-1))
+        # Handle both model types: (logits, loss) or just outputs
+        model_output = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask, labels=labels)
+        
+        if isinstance(model_output, tuple) and len(model_output) == 2:
+            # BEHRTForMLM returns (logits, loss)
+            outputs, loss = model_output
+        else:
+            # Standard model returns just outputs
+            outputs = model_output
+            loss = loss_fn(outputs.view(-1, outputs.size(-1)), labels.view(-1))
         
         loss.backward()
         optimizer.step()
@@ -111,9 +119,16 @@ def evaluate(
         for batch in dataloader:
             codes, ages, visit_ids, attention_mask, labels = [b.to(device) for b in batch]
             
-            outputs = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask)
+            # Handle both model types: (logits, loss) or just outputs
+            model_output = model(codes, ages=ages, visit_ids=visit_ids, attention_mask=attention_mask, labels=labels)
             
-            loss = loss_fn(outputs.view(-1, outputs.size(-1)), labels.view(-1))
+            if isinstance(model_output, tuple) and len(model_output) == 2:
+                # BEHRTForMLM returns (logits, loss)
+                outputs, loss = model_output
+            else:
+                # Standard model returns just outputs
+                outputs = model_output
+                loss = loss_fn(outputs.view(-1, outputs.size(-1)), labels.view(-1))
             
             total_loss += loss.item()
             
