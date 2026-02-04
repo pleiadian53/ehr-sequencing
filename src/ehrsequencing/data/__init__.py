@@ -14,6 +14,7 @@ from .sequence_builder import PatientSequence, PatientSequenceBuilder, PatientSe
 from .realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
 from .demo_synthetic import generate_demo_dataset, print_demo_dataset_statistics
 from .random_synthetic import generate_random_dataset
+from .domain_shift import generate_domain_shifted_datasets, list_scenarios, DOMAIN_SCENARIOS
 
 __all__ = [
     # Adapters
@@ -34,6 +35,10 @@ __all__ = [
     'generate_demo_dataset',
     'print_demo_dataset_statistics',
     'generate_random_dataset',
+    # Domain-shifted datasets for transfer learning
+    'generate_domain_shifted_datasets',
+    'list_scenarios',
+    'DOMAIN_SCENARIOS',
 ]
 
 # Will be populated as modules are developed
