@@ -55,7 +55,11 @@ import time
 from typing import Dict, Tuple
 
 from ehrsequencing.models.behrt import BEHRT, BEHRTConfig, BEHRTForMLM
-from ehrsequencing.models.pretrained_embeddings import save_embeddings, load_embeddings
+from ehrsequencing.models.pretrained_embeddings import (
+    save_embeddings, 
+    load_embeddings,
+    initialize_embedding_layer
+)
 from ehrsequencing.data.realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
 from ehrsequencing.benchmarks import (
     BenchmarkTracker,

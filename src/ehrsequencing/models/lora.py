@@ -10,8 +10,9 @@ Reference: "LoRA: Low-Rank Adaptation of Large Language Models" (Hu et al., 2021
 
 import torch
 import torch.nn as nn
-from typing import Optional, List
+from typing import Optional, List, Dict
 import math
+import re
 
 
 class LoRALayer(nn.Module):
@@ -109,7 +110,7 @@ class LinearWithLoRA(nn.Module):
         self.out_features = linear.out_features
         
         # Freeze original weights
-        self.linear.weight.requires_grad = False
+        self.linear.weight.requires_grad = False 
         if self.linear.bias is not None:
             self.linear.bias.requires_grad = False
     
@@ -191,6 +192,59 @@ def apply_lora_to_model(
     return model
 
 
+def _discover_lora_targets(
+    model: nn.Module,
+    include_attention: bool = True,
+    include_feedforward: bool = False,
+    exclude_patterns: Optional[List[str]] = None
+) -> Dict[str, nn.Module]:
+    """
+    Systematically discover all Linear layers suitable for LoRA adaptation.
+    
+    This function inspects the model architecture and identifies Linear layers
+    based on their location in the model hierarchy, avoiding hardcoded patterns.
+    
+    Args:
+        model: PyTorch model to inspect
+        include_attention: Include attention layers (self_attn modules)
+        include_feedforward: Include feedforward layers (linear1, linear2)
+        exclude_patterns: List of patterns to exclude (e.g., ['embedding', 'head'])
+    
+    Returns:
+        Dictionary mapping module names to modules
+    
+    Example:
+        >>> targets = _discover_lora_targets(model, include_attention=True)
+        >>> print(f"Found {len(targets)} LoRA targets")
+    """
+    exclude_patterns = exclude_patterns or ['embedding', 'embed', 'lm_head', 'mlm_head']
+    target_modules = {}
+    
+    for name, module in model.named_modules():
+        # Only consider Linear layers
+        if not isinstance(module, nn.Linear):
+            continue
+        
+        # Check exclusion patterns
+        if any(pattern in name.lower() for pattern in exclude_patterns):
+            continue
+        
+        # Check if in encoder (for BEHRT-like models)
+        if 'encoder' not in name:
+            continue
+        
+        # Filter by attention/feedforward
+        is_attention = 'self_attn' in name or 'attn' in name
+        is_feedforward = 'linear1' in name or 'linear2' in name or 'mlp' in name
+        
+        if include_attention and is_attention:
+            target_modules[name] = module
+        elif include_feedforward and is_feedforward:
+            target_modules[name] = module
+    
+    return target_modules
+
+
 def apply_lora_to_behrt(
     model: nn.Module,
     rank: int = 8,
@@ -239,34 +293,25 @@ def apply_lora_to_behrt(
         for param in model.parameters():
             param.requires_grad = False
     
-    target_modules = []
+    # Automatically discover LoRA-compatible modules
+    discovered_modules = _discover_lora_targets(
+        model, 
+        include_attention=lora_attention,
+        include_feedforward=lora_feedforward
+    )
     
-    if lora_attention:
-        # Apply to all attention projections in transformer encoder
-        target_modules.extend([
-            'encoder.*.self_attn.in_proj_weight',  # Q, K, V projections (combined)
-            'encoder.*.self_attn.out_proj',         # Output projection
-        ])
+    if not discovered_modules:
+        print("⚠️  No LoRA target modules found. Check model architecture.")
+        return model
     
-    if lora_feedforward:
-        # Apply to feedforward layers
-        target_modules.extend([
-            'encoder.*.linear1',  # First FFN layer
-            'encoder.*.linear2',  # Second FFN layer
-        ])
+    print(f"📍 Auto-discovered {len(discovered_modules)} LoRA target modules:")
+    for name in sorted(discovered_modules.keys()):
+        module = discovered_modules[name]
+        if isinstance(module, nn.Linear):
+            print(f"   - {name}: Linear({module.in_features}, {module.out_features})")
     
-    # PyTorch's TransformerEncoderLayer uses different naming
-    # We need to target the actual linear layers
-    patterns = []
-    if lora_attention:
-        patterns.extend([
-            '.*self_attn.*',  # All attention layers
-        ])
-    if lora_feedforward:
-        patterns.extend([
-            '.*linear1',  # First FFN layer
-            '.*linear2',  # Second FFN layer
-        ])
+    # Convert to regex patterns for apply_lora_to_model
+    patterns = [re.escape(name) for name in discovered_modules.keys()]
     
     # Apply LoRA to target modules
     model = apply_lora_to_model(model, target_modules=patterns, rank=rank, alpha=alpha, dropout=dropout)
