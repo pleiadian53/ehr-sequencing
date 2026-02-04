@@ -36,8 +36,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 
 from ehrsequencing.models.behrt import BEHRTForMLM, BEHRTConfig
 from ehrsequencing.models.lora import apply_lora_to_behrt
-from ehrsequencing.synthetic.demo_data import generate_demo_dataset, print_demo_dataset_statistics
-from ehrsequencing.synthetic.realistic_data import generate_realistic_dataset, print_dataset_statistics
+from ehrsequencing.synthetic import (
+    generate_demo_dataset,
+    print_demo_dataset_statistics,
+    generate_realistic_dataset,
+    print_dataset_statistics
+)
 
 # Import benchmarking tools
 try:

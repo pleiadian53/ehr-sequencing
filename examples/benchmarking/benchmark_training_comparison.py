@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 
 from ehrsequencing.models.behrt import BEHRTForMLM, BEHRTConfig
 from ehrsequencing.models.lora import apply_lora_to_behrt
-from ehrsequencing.synthetic.demo_data import generate_demo_dataset
+from ehrsequencing.synthetic import generate_demo_dataset
 
 # Import reusable benchmarking utilities
 from ehrsequencing.benchmarks import (

@@ -76,7 +76,7 @@ import argparse
 from ehrsequencing.models.behrt import BEHRT, BEHRTConfig, BEHRTForMLM
 from ehrsequencing.models.lora import apply_lora_to_behrt, count_parameters
 from ehrsequencing.utils.experiment_tracker import ExperimentTracker
-from ehrsequencing.data import (
+from ehrsequencing.synthetic import (
     generate_realistic_dataset,
     print_dataset_statistics,
     generate_demo_dataset,
