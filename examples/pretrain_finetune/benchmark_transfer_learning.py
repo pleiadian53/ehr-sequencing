@@ -78,14 +78,25 @@ def generate_domain_shifted_datasets(
     target_seed: int = 123
 ) -> Tuple[Dict, Dict]:
     """
-    Generate two datasets with different distributions to simulate domain shift.
+    Generate two datasets with REAL domain shift to test transfer learning.
+    
+    Domain Shift Strategy:
+    - Source: Younger population (20-60), lower chronic disease prevalence
+    - Target: Older population (50-90), higher chronic disease prevalence
+    - Different code frequency distributions
+    - Different temporal patterns
+    
+    This simulates real-world scenarios like:
+    - Training on general population, deploying to elderly care
+    - Training on one hospital system, deploying to another
+    - Training on historical data, deploying to recent data
     
     Args:
         source_patients: Number of patients in source dataset
         target_patients: Number of patients in target dataset
         vocab_size: Vocabulary size
         source_seed: Random seed for source dataset
-        target_seed: Random seed for target dataset (different distribution)
+        target_seed: Random seed for target dataset
     
     Returns:
         Tuple of (source_data, target_data) dictionaries
@@ -93,12 +104,33 @@ def generate_domain_shifted_datasets(
     print("\n" + "="*80)
     print("GENERATING DOMAIN-SHIFTED DATASETS")
     print("="*80)
+    print("\n🔄 Domain Shift Strategy:")
+    print("   Source: Younger population (20-60 yrs), lower chronic disease rates")
+    print("   Target: Older population (50-90 yrs), higher chronic disease rates")
+    print("   This simulates deploying a model trained on general population to elderly care")
     
-    print(f"\n📊 Source Dataset (seed={source_seed}):")
+    # Source domain: Younger, healthier population
+    print(f"\n📊 Source Dataset (seed={source_seed}) - YOUNGER POPULATION:")
+    print("   Age range: 20-60 years")
+    print("   Disease prevalence: Lower (general population)")
+    
+    # Temporarily modify disease patterns for source domain
+    from ehrsequencing.data.realistic_synthetic import DISEASE_PATTERNS
+    original_patterns = {}
+    for disease_name, pattern in DISEASE_PATTERNS.items():
+        original_patterns[disease_name] = {
+            'prevalence': pattern.prevalence,
+            'age_range': pattern.age_range
+        }
+        # Reduce prevalence for younger population
+        pattern.prevalence *= 0.6  # 40% reduction
+        # Shift age range younger
+        pattern.age_range = (max(20, pattern.age_range[0] - 15), min(60, pattern.age_range[1] - 20))
+    
     codes_src, ages_src, visit_ids_src, attention_mask_src, masked_codes_src, labels_src = generate_realistic_dataset(
         num_patients=source_patients,
         vocab_size=vocab_size,
-        max_seq_length=256,  # Use smaller seq length to avoid position embedding overflow
+        max_seq_length=256,
         seed=source_seed
     )
     source_data = {
@@ -110,11 +142,22 @@ def generate_domain_shifted_datasets(
     }
     print_dataset_statistics(codes_src, ages_src, visit_ids_src)
     
-    print(f"\n📊 Target Dataset (seed={target_seed}):")
+    # Target domain: Older, sicker population
+    print(f"\n📊 Target Dataset (seed={target_seed}) - OLDER POPULATION:")
+    print("   Age range: 50-90 years")
+    print("   Disease prevalence: Higher (elderly care)")
+    
+    # Modify disease patterns for target domain
+    for disease_name, pattern in DISEASE_PATTERNS.items():
+        # Increase prevalence for older population
+        pattern.prevalence = original_patterns[disease_name]['prevalence'] * 1.8  # 80% increase
+        # Shift age range older
+        pattern.age_range = (max(50, pattern.age_range[0] + 20), min(90, pattern.age_range[1] + 15))
+    
     codes_tgt, ages_tgt, visit_ids_tgt, attention_mask_tgt, masked_codes_tgt, labels_tgt = generate_realistic_dataset(
         num_patients=target_patients,
         vocab_size=vocab_size,
-        max_seq_length=256,  # Use smaller seq length to avoid position embedding overflow
+        max_seq_length=256,
         seed=target_seed
     )
     target_data = {
@@ -125,6 +168,15 @@ def generate_domain_shifted_datasets(
         'labels': labels_tgt
     }
     print_dataset_statistics(codes_tgt, ages_tgt, visit_ids_tgt)
+    
+    # Restore original patterns
+    for disease_name, pattern in DISEASE_PATTERNS.items():
+        pattern.prevalence = original_patterns[disease_name]['prevalence']
+        pattern.age_range = original_patterns[disease_name]['age_range']
+    
+    print("\n✅ Domain shift created successfully!")
+    print(f"   Expected transfer learning challenge: Medium-High")
+    print(f"   Source and target have different age demographics and disease patterns")
     
     return source_data, target_data
 
