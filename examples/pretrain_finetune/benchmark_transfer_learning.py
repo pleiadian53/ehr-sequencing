@@ -60,7 +60,7 @@ from ehrsequencing.models.pretrained_embeddings import (
     load_embeddings,
     initialize_embedding_layer
 )
-from ehrsequencing.data import generate_domain_shifted_datasets
+from ehrsequencing.synthetic import generate_domain_shifted_datasets
 from ehrsequencing.benchmarks import (
     BenchmarkTracker,
     BenchmarkVisualizer,

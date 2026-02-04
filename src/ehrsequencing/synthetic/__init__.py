@@ -2,7 +2,7 @@
 Synthetic data generation for EHR sequence modeling.
 
 This package provides tools for generating synthetic outcomes and labels
-for various survival analysis and disease progression modeling tasks.
+for various survival analysis, disease progression, and medical LLM tasks.
 
 Modules:
     survival: Synthetic outcome generators for survival analysis
@@ -10,11 +10,17 @@ Modules:
         - Continuous-time survival (Cox proportional hazards)
         - Competing risks
     
-    progression: Disease progression simulators
-        - Multi-state disease models
-        - Stage-based progression
+    realistic_synthetic: Realistic EHR sequences for medical LLM training
+        - Disease patterns with temporal progression
+        - Co-morbidities and realistic code sequences
+        - For BEHRT and other sequence models
     
-    utils: Utility functions for synthetic data generation
+    domain_shift: Domain-shifted datasets for transfer learning
+        - Pre-configured scenarios (general→elderly, hospital A→B, etc.)
+        - Clean API for transfer learning benchmarks
+    
+    demo_synthetic: Quick demo datasets for testing
+    random_synthetic: Random synthetic data (baseline comparison)
 """
 
 from .survival import (
@@ -22,9 +28,23 @@ from .survival import (
     ContinuousTimeSurvivalGenerator,
     CompetingRisksGenerator,
 )
+from .realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
+from .domain_shift import generate_domain_shifted_datasets, list_scenarios, DOMAIN_SCENARIOS
+from .demo_synthetic import generate_demo_dataset, print_demo_dataset_statistics
+from .random_synthetic import generate_random_dataset
 
 __all__ = [
+    # Survival analysis
     'DiscreteTimeSurvivalGenerator',
     'ContinuousTimeSurvivalGenerator',
     'CompetingRisksGenerator',
+    # Medical LLM / Sequence modeling
+    'generate_realistic_dataset',
+    'print_dataset_statistics',
+    'generate_domain_shifted_datasets',
+    'list_scenarios',
+    'DOMAIN_SCENARIOS',
+    'generate_demo_dataset',
+    'print_demo_dataset_statistics',
+    'generate_random_dataset',
 ]

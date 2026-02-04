@@ -51,7 +51,7 @@ from ehrsequencing.models.pretrained_embeddings import (
     print_embedding_statistics
 )
 from ehrsequencing.utils.experiment_tracker import ExperimentTracker
-from ehrsequencing.data.realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
+from ehrsequencing.synthetic import generate_realistic_dataset, print_dataset_statistics
 
 
 def generate_synthetic_data(

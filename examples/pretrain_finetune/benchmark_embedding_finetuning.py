@@ -79,7 +79,7 @@ from ehrsequencing.models.pretrained_embeddings import (
     initialize_embedding_layer,
     print_embedding_statistics
 )
-from ehrsequencing.data.realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
+from ehrsequencing.synthetic import generate_realistic_dataset, print_dataset_statistics
 from ehrsequencing.benchmarks import (
     BenchmarkTracker,
     BenchmarkVisualizer,
