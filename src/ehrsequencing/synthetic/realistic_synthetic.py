@@ -127,7 +127,8 @@ def generate_patient_trajectory(
     patient_id: int,
     vocab_size: int = 1000,
     max_visits: int = 50,
-    seed: Optional[int] = None
+    seed: Optional[int] = None,
+    disease_patterns: Optional[Dict] = None
 ) -> Tuple[List[List[int]], List[int], List[int]]:
     """
     Generate a realistic patient trajectory with disease patterns.
@@ -137,6 +138,7 @@ def generate_patient_trajectory(
         vocab_size: Total vocabulary size
         max_visits: Maximum number of visits
         seed: Random seed for reproducibility
+        disease_patterns: Optional custom disease patterns (for domain shift)
     
     Returns:
         Tuple of (visits, ages, visit_ids) where:
@@ -149,12 +151,15 @@ def generate_patient_trajectory(
     else:
         rng = np.random.RandomState(patient_id)
     
+    # Use provided patterns or default
+    patterns = disease_patterns if disease_patterns is not None else DISEASE_PATTERNS
+    
     # Generate patient demographics
     base_age = rng.randint(20, 70)
     
     # Select diseases for this patient based on age and prevalence
     patient_diseases = []
-    for disease_name, pattern in DISEASE_PATTERNS.items():
+    for disease_name, pattern in patterns.items():
         # Check if patient's age is in range for this disease
         if pattern.age_range[0] <= base_age <= pattern.age_range[1]:
             # Sample based on prevalence
@@ -164,8 +169,8 @@ def generate_patient_trajectory(
     # Add co-morbidities
     for disease1, disease2, prob in COMORBIDITY_PAIRS:
         if any(d[0] == disease1 for d in patient_diseases):
-            if disease2 in DISEASE_PATTERNS and rng.random() < prob:
-                pattern = DISEASE_PATTERNS[disease2]
+            if disease2 in patterns and rng.random() < prob:
+                pattern = patterns[disease2]
                 if not any(d[0] == disease2 for d in patient_diseases):
                     patient_diseases.append((disease2, pattern))
     
@@ -250,7 +255,8 @@ def generate_realistic_dataset(
     vocab_size: int = 1000,
     max_seq_length: int = 512,
     mask_prob: float = 0.15,
-    seed: Optional[int] = None
+    seed: Optional[int] = None,
+    disease_patterns: Optional[Dict] = None
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     """
     Generate a realistic synthetic EHR dataset with learnable patterns.
@@ -261,6 +267,7 @@ def generate_realistic_dataset(
         max_seq_length: Maximum sequence length
         mask_prob: Probability of masking a code for MLM
         seed: Random seed
+        disease_patterns: Optional custom disease patterns (for domain shift)
     
     Returns:
         Tuple of (codes, ages, visit_ids, attention_mask, masked_codes, labels)
@@ -269,9 +276,12 @@ def generate_realistic_dataset(
         np.random.seed(seed)
         torch.manual_seed(seed)
     
+    # Use provided patterns or default
+    patterns = disease_patterns if disease_patterns is not None else DISEASE_PATTERNS
+    
     print(f"Generating realistic synthetic data: {num_patients} patients, vocab={vocab_size}")
     print("Disease patterns:")
-    for name, pattern in DISEASE_PATTERNS.items():
+    for name, pattern in patterns.items():
         print(f"  - {pattern.name}: {pattern.prevalence*100:.1f}% prevalence")
     
     all_codes = []
@@ -284,7 +294,8 @@ def generate_realistic_dataset(
     for patient_id in range(num_patients):
         # Generate patient trajectory
         visits, ages, visit_ids = generate_patient_trajectory(
-            patient_id, vocab_size, max_visits=max_seq_length, seed=seed
+            patient_id, vocab_size, max_visits=max_seq_length, seed=seed,
+            disease_patterns=disease_patterns
         )
         
         # Flatten visits into sequence

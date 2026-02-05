@@ -11,6 +11,7 @@ Domain shift simulates real-world scenarios like:
 """
 
 import torch
+import copy
 from typing import Dict, Tuple, Optional
 from dataclasses import dataclass
 
@@ -91,14 +92,23 @@ DOMAIN_SCENARIOS = {
 }
 
 
-def apply_domain_config(config: DomainConfig) -> None:
+def create_modified_patterns(config: DomainConfig) -> Dict:
     """
-    Apply domain configuration to global DISEASE_PATTERNS.
+    Create a deep copy of DISEASE_PATTERNS with domain configuration applied.
+    
+    This approach avoids modifying the global DISEASE_PATTERNS and ensures
+    that modifications are properly passed to the generation functions.
     
     Args:
         config: Domain configuration to apply
+    
+    Returns:
+        Dictionary of modified disease patterns
     """
-    for disease_name, pattern in DISEASE_PATTERNS.items():
+    # Deep copy to avoid modifying global patterns
+    modified_patterns = copy.deepcopy(DISEASE_PATTERNS)
+    
+    for disease_name, pattern in modified_patterns.items():
         # Adjust prevalence
         pattern.prevalence *= config.prevalence_multiplier
         
@@ -107,34 +117,8 @@ def apply_domain_config(config: DomainConfig) -> None:
         new_min = max(config.age_min, min_age + config.age_shift)
         new_max = min(config.age_max, max_age + config.age_shift)
         pattern.age_range = (new_min, new_max)
-
-
-def restore_original_patterns(original_patterns: Dict) -> None:
-    """
-    Restore DISEASE_PATTERNS to original values.
     
-    Args:
-        original_patterns: Dictionary of original pattern values
-    """
-    for disease_name, pattern in DISEASE_PATTERNS.items():
-        pattern.prevalence = original_patterns[disease_name]['prevalence']
-        pattern.age_range = original_patterns[disease_name]['age_range']
-
-
-def save_original_patterns() -> Dict:
-    """
-    Save current DISEASE_PATTERNS values.
-    
-    Returns:
-        Dictionary of original pattern values
-    """
-    original_patterns = {}
-    for disease_name, pattern in DISEASE_PATTERNS.items():
-        original_patterns[disease_name] = {
-            'prevalence': pattern.prevalence,
-            'age_range': pattern.age_range
-        }
-    return original_patterns
+    return modified_patterns
 
 
 def generate_domain_shifted_datasets(
@@ -205,71 +189,64 @@ def generate_domain_shifted_datasets(
         print(f"   Target: {target_config.name}")
         print(f"           {target_config.description}")
     
-    # Save original patterns
-    original_patterns = save_original_patterns()
+    # Create modified pattern copies for each domain
+    source_patterns = create_modified_patterns(source_config)
+    target_patterns = create_modified_patterns(target_config)
     
-    try:
-        # Generate source dataset
-        if verbose:
-            print(f"\n📊 Source Dataset: {source_config.name}")
-            print(f"   Patients: {source_patients}")
-            print(f"   Age range: {source_config.age_min}-{source_config.age_max} years")
-            print(f"   Disease prevalence: {source_config.prevalence_multiplier:.1f}x baseline")
-        
-        apply_domain_config(source_config)
-        codes_src, ages_src, visit_ids_src, attention_mask_src, masked_codes_src, labels_src = generate_realistic_dataset(
-            num_patients=source_patients,
-            vocab_size=vocab_size,
-            max_seq_length=max_seq_length,
-            seed=source_seed
-        )
-        source_data = {
-            'codes': codes_src,
-            'ages': ages_src,
-            'visit_ids': visit_ids_src,
-            'attention_mask': attention_mask_src,
-            'labels': labels_src
-        }
-        if verbose:
-            print_dataset_statistics(codes_src, ages_src, visit_ids_src)
-        
-        # Restore and apply target configuration
-        restore_original_patterns(original_patterns)
-        
-        # Generate target dataset
-        if verbose:
-            print(f"\n📊 Target Dataset: {target_config.name}")
-            print(f"   Patients: {target_patients}")
-            print(f"   Age range: {target_config.age_min}-{target_config.age_max} years")
-            print(f"   Disease prevalence: {target_config.prevalence_multiplier:.1f}x baseline")
-        
-        apply_domain_config(target_config)
-        codes_tgt, ages_tgt, visit_ids_tgt, attention_mask_tgt, masked_codes_tgt, labels_tgt = generate_realistic_dataset(
-            num_patients=target_patients,
-            vocab_size=vocab_size,
-            max_seq_length=max_seq_length,
-            seed=target_seed
-        )
-        target_data = {
-            'codes': codes_tgt,
-            'ages': ages_tgt,
-            'visit_ids': visit_ids_tgt,
-            'attention_mask': attention_mask_tgt,
-            'labels': labels_tgt
-        }
-        if verbose:
-            print_dataset_statistics(codes_tgt, ages_tgt, visit_ids_tgt)
-        
-        if verbose:
-            print("\n✅ Domain shift created successfully!")
-            print(f"   Expected transfer learning challenge: Medium-High")
-            print(f"   Source and target have different demographics and disease patterns")
-        
-        return source_data, target_data
-        
-    finally:
-        # Always restore original patterns
-        restore_original_patterns(original_patterns)
+    # Generate source dataset
+    if verbose:
+        print(f"\n📊 Source Dataset: {source_config.name}")
+        print(f"   Patients: {source_patients}")
+        print(f"   Age range: {source_config.age_min}-{source_config.age_max} years")
+        print(f"   Disease prevalence: {source_config.prevalence_multiplier:.1f}x baseline")
+    
+    codes_src, ages_src, visit_ids_src, attention_mask_src, masked_codes_src, labels_src = generate_realistic_dataset(
+        num_patients=source_patients,
+        vocab_size=vocab_size,
+        max_seq_length=max_seq_length,
+        seed=source_seed,
+        disease_patterns=source_patterns
+    )
+    source_data = {
+        'codes': codes_src,
+        'ages': ages_src,
+        'visit_ids': visit_ids_src,
+        'attention_mask': attention_mask_src,
+        'labels': labels_src
+    }
+    if verbose:
+        print_dataset_statistics(codes_src, ages_src, visit_ids_src)
+    
+    # Generate target dataset
+    if verbose:
+        print(f"\n📊 Target Dataset: {target_config.name}")
+        print(f"   Patients: {target_patients}")
+        print(f"   Age range: {target_config.age_min}-{target_config.age_max} years")
+        print(f"   Disease prevalence: {target_config.prevalence_multiplier:.1f}x baseline")
+    
+    codes_tgt, ages_tgt, visit_ids_tgt, attention_mask_tgt, masked_codes_tgt, labels_tgt = generate_realistic_dataset(
+        num_patients=target_patients,
+        vocab_size=vocab_size,
+        max_seq_length=max_seq_length,
+        seed=target_seed,
+        disease_patterns=target_patterns
+    )
+    target_data = {
+        'codes': codes_tgt,
+        'ages': ages_tgt,
+        'visit_ids': visit_ids_tgt,
+        'attention_mask': attention_mask_tgt,
+        'labels': labels_tgt
+    }
+    if verbose:
+        print_dataset_statistics(codes_tgt, ages_tgt, visit_ids_tgt)
+    
+    if verbose:
+        print("\n✅ Domain shift created successfully!")
+        print(f"   Expected transfer learning challenge: Medium-High")
+        print(f"   Source and target have different demographics and disease patterns")
+    
+    return source_data, target_data
 
 
 def list_scenarios() -> None:
