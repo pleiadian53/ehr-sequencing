@@ -1,0 +1,408 @@
+nohup: ignoring input
+/workspace/miniforge3/envs/ehrsequencing/lib/python3.10/site-packages/pyhealth/tasks/cardiology_detect.py:3: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+
+================================================================================
+GENERATING DOMAIN-SHIFTED DATASETS
+================================================================================
+
+🔄 Scenario: general_to_elderly
+   Source: General Population
+           Younger, healthier population (primary care)
+   Target: Elderly Care
+           Older, sicker population (specialized care)
+
+📊 Source Dataset: General Population
+   Patients: 10000
+   Age range: 20-60 years
+   Disease prevalence: 0.6x baseline
+Generating realistic synthetic data: 10000 patients, vocab=1000
+Disease patterns:
+  - Type 2 Diabetes: 6.0% prevalence
+  - Hypertension: 9.0% prevalence
+  - Asthma: 4.8% prevalence
+  - Depression: 7.2% prevalence
+  - COPD: 3.6% prevalence
+  - Heart Failure: 3.0% prevalence
+  - Chronic Kidney Disease: 4.2% prevalence
+  - Rheumatoid Arthritis: 5.4% prevalence
+
+📊 Dataset Statistics:
+   Number of patients: 10000
+   Sequence length: 256
+   Avg sequence length: 12.3 ± 11.7
+   Unique codes used: 63
+   Age range: 20-83
+   Avg age: 47.8
+   Avg visits per patient: 5.0
+
+   Top 10 most frequent codes:
+      1. Code 500: 22922 (18.68%) - Routine care
+      2. Code 501: 15383 (12.54%) - Routine care
+      3. Code 502: 11524 ( 9.39%) - Routine care
+      4. Code 503:  7711 ( 6.28%) - Routine care
+      5. Code 111:  2804 ( 2.29%) - Hypertension (treatment)
+      6. Code 110:  2750 ( 2.24%) - Hypertension (treatment)
+      7. Code 112:  2684 ( 2.19%) - Hypertension (treatment)
+      8. Code 311:  2679 ( 2.18%) - Hypertension (monitoring)
+      9. Code 132:  2160 ( 1.76%) - Depression (treatment)
+      10. Code 131:  2130 ( 1.74%) - Depression (treatment)
+
+📊 Target Dataset: Elderly Care
+   Patients: 5000
+   Age range: 50-90 years
+   Disease prevalence: 1.8x baseline
+Generating realistic synthetic data: 5000 patients, vocab=1000
+Disease patterns:
+  - Type 2 Diabetes: 18.0% prevalence
+  - Hypertension: 27.0% prevalence
+  - Asthma: 14.4% prevalence
+  - Depression: 21.6% prevalence
+  - COPD: 10.8% prevalence
+  - Heart Failure: 9.0% prevalence
+  - Chronic Kidney Disease: 12.6% prevalence
+  - Rheumatoid Arthritis: 16.2% prevalence
+
+📊 Dataset Statistics:
+   Number of patients: 5000
+   Sequence length: 256
+   Avg sequence length: 12.5 ± 13.3
+   Unique codes used: 55
+   Age range: 20-92
+   Avg age: 56.1
+   Avg visits per patient: 5.1
+
+   Top 10 most frequent codes:
+      1. Code 500: 11729 (18.81%) - Routine care
+      2. Code 501:  7862 (12.61%) - Routine care
+      3. Code 502:  5998 ( 9.62%) - Routine care
+      4. Code 503:  3971 ( 6.37%) - Routine care
+      5. Code 311:  1589 ( 2.55%) - Hypertension (monitoring)
+      6. Code 131:  1495 ( 2.40%) - Depression (treatment)
+      7. Code 132:  1491 ( 2.39%) - Depression (treatment)
+      8. Code 130:  1429 ( 2.29%) - Depression (treatment)
+      9. Code 111:  1393 ( 2.23%) - Hypertension (treatment)
+      10. Code 110:  1354 ( 2.17%) - Hypertension (treatment)
+
+✅ Domain shift created successfully!
+   Expected transfer learning challenge: Medium-High
+   Source and target have different demographics and disease patterns
+📊 Benchmark tracker initialized: /workspace/ehr-sequencing/experiments/transfer_learning
+
+🔧 Model Configuration: large
+   Vocab size: 1000
+   Embedding dim: 256
+   Hidden dim: 512
+   Layers: 6
+   Heads: 8
+
+================================================================================
+RUN 1: Train on Source, Test on Source (Baseline)
+================================================================================
+/workspace/ehr-sequencing/src/ehrsequencing/models/behrt.py:140: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(
+✅ Added run: Source→Source
+
+================================================================================
+Training: Source→Source
+================================================================================
+Epoch 1/100 | Train Loss: 2.2228 Acc: 0.6785 | Val Loss: 0.4846 Acc: 0.9604 🏆 | Patience: 0/10
+Epoch 2/100 | Train Loss: 0.2139 Acc: 0.9912 | Val Loss: 0.0580 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 3/100 | Train Loss: 0.0469 Acc: 1.0000 | Val Loss: 0.0197 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 4/100 | Train Loss: 0.0227 Acc: 1.0000 | Val Loss: 0.0112 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 5/100 | Train Loss: 0.0146 Acc: 1.0000 | Val Loss: 0.0074 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 6/100 | Train Loss: 0.0106 Acc: 1.0000 | Val Loss: 0.0054 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 7/100 | Train Loss: 0.0081 Acc: 1.0000 | Val Loss: 0.0042 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 8/100 | Train Loss: 0.0065 Acc: 1.0000 | Val Loss: 0.0034 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 9/100 | Train Loss: 0.0053 Acc: 1.0000 | Val Loss: 0.0028 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 10/100 | Train Loss: 0.0045 Acc: 1.0000 | Val Loss: 0.0023 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 11/100 | Train Loss: 0.0039 Acc: 1.0000 | Val Loss: 0.0020 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 12/100 | Train Loss: 0.0033 Acc: 1.0000 | Val Loss: 0.0018 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 13/100 | Train Loss: 0.0029 Acc: 1.0000 | Val Loss: 0.0015 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 14/100 | Train Loss: 0.0026 Acc: 1.0000 | Val Loss: 0.0014 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 15/100 | Train Loss: 0.0023 Acc: 1.0000 | Val Loss: 0.0012 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 16/100 | Train Loss: 0.0021 Acc: 1.0000 | Val Loss: 0.0011 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 17/100 | Train Loss: 0.0019 Acc: 1.0000 | Val Loss: 0.0010 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 18/100 | Train Loss: 0.0017 Acc: 1.0000 | Val Loss: 0.0009 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 19/100 | Train Loss: 0.0016 Acc: 1.0000 | Val Loss: 0.0008 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 20/100 | Train Loss: 0.0014 Acc: 1.0000 | Val Loss: 0.0008 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 21/100 | Train Loss: 0.0013 Acc: 1.0000 | Val Loss: 0.0007 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 22/100 | Train Loss: 0.0012 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 23/100 | Train Loss: 0.0012 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 24/100 | Train Loss: 0.0011 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 25/100 | Train Loss: 0.0010 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 26/100 | Train Loss: 0.0009 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 27/100 | Train Loss: 0.0009 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 28/100 | Train Loss: 0.0008 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 29/100 | Train Loss: 0.0008 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 30/100 | Train Loss: 0.0007 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 31/100 | Train Loss: 0.0007 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 32/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 33/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 34/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 35/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 36/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 37/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 38/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 39/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 40/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 41/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 42/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 43/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 44/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 45/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 46/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 47/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 48/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 49/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 50/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 51/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 52/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 53/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 54/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 55/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 56/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 57/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 58/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 59/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 60/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 61/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 62/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 63/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 64/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 65/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 66/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 67/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 68/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 69/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 70/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 71/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 72/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 73/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 74/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 75/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 76/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 77/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 78/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 79/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 80/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 81/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 82/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 83/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 84/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 85/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 86/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 87/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 88/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 89/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 90/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 91/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 92/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 93/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 94/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 95/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 96/100 | Train Loss: 0.0001 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 97/100 | Train Loss: 0.0000 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 98/100 | Train Loss: 0.0000 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 99/100 | Train Loss: 0.0000 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 100/100 | Train Loss: 0.0000 Acc: 1.0000 | Val Loss: 0.0000 Acc: 1.0000 🏆 | Patience: 0/10
+
+📊 Computing final metrics for Source→Source...
+   ROC-AUC: 1.0000
+   PR-AUC: 1.0000
+   Avg Precision: 1.0000
+💾 Saved embeddings to /workspace/ehr-sequencing/experiments/transfer_learning/source_embeddings.pt
+   Shape: torch.Size([1000, 256])
+   Metadata: {'vocab_size': 1000, 'embedding_dim': 256}
+
+💾 Saved source embeddings: /workspace/ehr-sequencing/experiments/transfer_learning/source_embeddings.pt
+
+================================================================================
+RUN 2: Train on Source, Test on Target (Zero-shot Transfer)
+================================================================================
+
+📊 Evaluating source model on target domain (zero-shot)...
+✅ Added run: Source→Target (zero-shot)
+   ROC-AUC: 1.0000
+   PR-AUC: 1.0000
+   Avg Precision: 1.0000
+
+================================================================================
+RUN 3: Train on Source, Fine-tune on Target (Transfer Learning)
+================================================================================
+/workspace/ehr-sequencing/src/ehrsequencing/models/behrt.py:140: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(
+📂 Loaded embeddings from /workspace/ehr-sequencing/experiments/transfer_learning/source_embeddings.pt
+   Shape: torch.Size([1000, 256])
+   Metadata: {'vocab_size': 1000, 'embedding_dim': 256}
+✅ Initialized embedding layer with pre-trained weights (trainable)
+✅ Loaded and initialized source embeddings from /workspace/ehr-sequencing/experiments/transfer_learning/source_embeddings.pt
+✅ Added run: Source→Target (fine-tuned)
+
+================================================================================
+Training: Source→Target (fine-tuned)
+================================================================================
+Epoch 1/20 | Train Loss: 5.6465 Acc: 0.1783 | Val Loss: 4.6923 Acc: 0.2308 🏆 | Patience: 0/5
+Epoch 2/20 | Train Loss: 4.2160 Acc: 0.3014 | Val Loss: 3.7285 Acc: 0.3952 🏆 | Patience: 0/5
+Epoch 3/20 | Train Loss: 3.3889 Acc: 0.4724 | Val Loss: 3.0620 Acc: 0.5257 🏆 | Patience: 0/5
+Epoch 4/20 | Train Loss: 2.8428 Acc: 0.5915 | Val Loss: 2.5254 Acc: 0.6589 🏆 | Patience: 0/5
+Epoch 5/20 | Train Loss: 2.3704 Acc: 0.6930 | Val Loss: 2.0979 Acc: 0.7316 🏆 | Patience: 0/5
+Epoch 6/20 | Train Loss: 1.9966 Acc: 0.7640 | Val Loss: 1.7439 Acc: 0.8037 🏆 | Patience: 0/5
+Epoch 7/20 | Train Loss: 1.6983 Acc: 0.8231 | Val Loss: 1.4408 Acc: 0.8621 🏆 | Patience: 0/5
+Epoch 8/20 | Train Loss: 1.4347 Acc: 0.8702 | Val Loss: 1.1845 Acc: 0.8976 🏆 | Patience: 0/5
+Epoch 9/20 | Train Loss: 1.2127 Acc: 0.9057 | Val Loss: 0.9736 Acc: 0.9215 🏆 | Patience: 0/5
+Epoch 10/20 | Train Loss: 1.0152 Acc: 0.9286 | Val Loss: 0.8013 Acc: 0.9422 🏆 | Patience: 0/5
+Epoch 11/20 | Train Loss: 0.8633 Acc: 0.9507 | Val Loss: 0.6550 Acc: 0.9581 🏆 | Patience: 0/5
+Epoch 12/20 | Train Loss: 0.7193 Acc: 0.9650 | Val Loss: 0.5386 Acc: 0.9676 🏆 | Patience: 0/5
+Epoch 13/20 | Train Loss: 0.6175 Acc: 0.9750 | Val Loss: 0.4448 Acc: 0.9761 🏆 | Patience: 0/5
+Epoch 14/20 | Train Loss: 0.5126 Acc: 0.9830 | Val Loss: 0.3696 Acc: 0.9836 🏆 | Patience: 0/5
+Epoch 15/20 | Train Loss: 0.4413 Acc: 0.9871 | Val Loss: 0.3095 Acc: 0.9857 🏆 | Patience: 0/5
+Epoch 16/20 | Train Loss: 0.3874 Acc: 0.9897 | Val Loss: 0.2596 Acc: 0.9899 🏆 | Patience: 0/5
+Epoch 17/20 | Train Loss: 0.3284 Acc: 0.9914 | Val Loss: 0.2199 Acc: 0.9915 🏆 | Patience: 0/5
+Epoch 18/20 | Train Loss: 0.2823 Acc: 0.9927 | Val Loss: 0.1872 Acc: 0.9958 🏆 | Patience: 0/5
+Epoch 19/20 | Train Loss: 0.2521 Acc: 0.9936 | Val Loss: 0.1617 Acc: 0.9968 🏆 | Patience: 0/5
+Epoch 20/20 | Train Loss: 0.2229 Acc: 0.9944 | Val Loss: 0.1402 Acc: 0.9968 🏆 | Patience: 0/5
+
+📊 Computing final metrics for Source→Target (fine-tuned)...
+   ROC-AUC: 1.0000
+   PR-AUC: 1.0000
+   Avg Precision: 1.0000
+
+================================================================================
+RUN 4: Train on Target from Scratch (Upper Bound)
+================================================================================
+/workspace/ehr-sequencing/src/ehrsequencing/models/behrt.py:140: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(
+✅ Added run: Target (from scratch)
+
+================================================================================
+Training: Target (from scratch)
+================================================================================
+Epoch 1/100 | Train Loss: 3.2289 Acc: 0.4927 | Val Loss: 1.5117 Acc: 0.8000 🏆 | Patience: 0/10
+Epoch 2/100 | Train Loss: 0.8871 Acc: 0.9064 | Val Loss: 0.3197 Acc: 0.9830 🏆 | Patience: 0/10
+Epoch 3/100 | Train Loss: 0.2204 Acc: 0.9912 | Val Loss: 0.0896 Acc: 0.9979 🏆 | Patience: 0/10
+Epoch 4/100 | Train Loss: 0.0821 Acc: 0.9988 | Val Loss: 0.0394 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 5/100 | Train Loss: 0.0427 Acc: 1.0000 | Val Loss: 0.0238 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 6/100 | Train Loss: 0.0282 Acc: 1.0000 | Val Loss: 0.0166 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 7/100 | Train Loss: 0.0207 Acc: 1.0000 | Val Loss: 0.0127 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 8/100 | Train Loss: 0.0166 Acc: 1.0000 | Val Loss: 0.0100 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 9/100 | Train Loss: 0.0133 Acc: 1.0000 | Val Loss: 0.0083 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 10/100 | Train Loss: 0.0114 Acc: 1.0000 | Val Loss: 0.0070 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 11/100 | Train Loss: 0.0097 Acc: 1.0000 | Val Loss: 0.0060 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 12/100 | Train Loss: 0.0084 Acc: 1.0000 | Val Loss: 0.0052 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 13/100 | Train Loss: 0.0074 Acc: 1.0000 | Val Loss: 0.0046 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 14/100 | Train Loss: 0.0066 Acc: 1.0000 | Val Loss: 0.0041 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 15/100 | Train Loss: 0.0059 Acc: 1.0000 | Val Loss: 0.0037 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 16/100 | Train Loss: 0.0054 Acc: 1.0000 | Val Loss: 0.0033 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 17/100 | Train Loss: 0.0049 Acc: 1.0000 | Val Loss: 0.0030 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 18/100 | Train Loss: 0.0045 Acc: 1.0000 | Val Loss: 0.0028 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 19/100 | Train Loss: 0.0041 Acc: 1.0000 | Val Loss: 0.0025 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 20/100 | Train Loss: 0.0038 Acc: 1.0000 | Val Loss: 0.0023 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 21/100 | Train Loss: 0.0035 Acc: 1.0000 | Val Loss: 0.0022 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 22/100 | Train Loss: 0.0032 Acc: 1.0000 | Val Loss: 0.0020 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 23/100 | Train Loss: 0.0030 Acc: 1.0000 | Val Loss: 0.0019 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 24/100 | Train Loss: 0.0028 Acc: 1.0000 | Val Loss: 0.0018 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 25/100 | Train Loss: 0.0027 Acc: 1.0000 | Val Loss: 0.0017 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 26/100 | Train Loss: 0.0025 Acc: 1.0000 | Val Loss: 0.0016 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 27/100 | Train Loss: 0.0024 Acc: 1.0000 | Val Loss: 0.0015 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 28/100 | Train Loss: 0.0022 Acc: 1.0000 | Val Loss: 0.0014 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 29/100 | Train Loss: 0.0021 Acc: 1.0000 | Val Loss: 0.0013 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 30/100 | Train Loss: 0.0020 Acc: 1.0000 | Val Loss: 0.0013 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 31/100 | Train Loss: 0.0019 Acc: 1.0000 | Val Loss: 0.0012 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 32/100 | Train Loss: 0.0018 Acc: 1.0000 | Val Loss: 0.0011 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 33/100 | Train Loss: 0.0017 Acc: 1.0000 | Val Loss: 0.0011 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 34/100 | Train Loss: 0.0017 Acc: 1.0000 | Val Loss: 0.0010 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 35/100 | Train Loss: 0.0016 Acc: 1.0000 | Val Loss: 0.0010 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 36/100 | Train Loss: 0.0015 Acc: 1.0000 | Val Loss: 0.0009 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 37/100 | Train Loss: 0.0014 Acc: 1.0000 | Val Loss: 0.0009 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 38/100 | Train Loss: 0.0014 Acc: 1.0000 | Val Loss: 0.0009 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 39/100 | Train Loss: 0.0013 Acc: 1.0000 | Val Loss: 0.0008 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 40/100 | Train Loss: 0.0013 Acc: 1.0000 | Val Loss: 0.0008 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 41/100 | Train Loss: 0.0012 Acc: 1.0000 | Val Loss: 0.0008 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 42/100 | Train Loss: 0.0012 Acc: 1.0000 | Val Loss: 0.0007 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 43/100 | Train Loss: 0.0011 Acc: 1.0000 | Val Loss: 0.0007 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 44/100 | Train Loss: 0.0011 Acc: 1.0000 | Val Loss: 0.0007 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 45/100 | Train Loss: 0.0010 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 46/100 | Train Loss: 0.0010 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 47/100 | Train Loss: 0.0010 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 48/100 | Train Loss: 0.0009 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 49/100 | Train Loss: 0.0009 Acc: 1.0000 | Val Loss: 0.0006 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 50/100 | Train Loss: 0.0009 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 51/100 | Train Loss: 0.0008 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 52/100 | Train Loss: 0.0008 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 53/100 | Train Loss: 0.0008 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 54/100 | Train Loss: 0.0008 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 55/100 | Train Loss: 0.0007 Acc: 1.0000 | Val Loss: 0.0005 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 56/100 | Train Loss: 0.0007 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 57/100 | Train Loss: 0.0007 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 58/100 | Train Loss: 0.0007 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 59/100 | Train Loss: 0.0007 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 60/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 61/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 62/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 63/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 64/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0004 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 65/100 | Train Loss: 0.0006 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 66/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 67/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 68/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 69/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 70/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 71/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 72/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 73/100 | Train Loss: 0.0005 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 74/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 75/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 76/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 77/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0003 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 78/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 79/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 80/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 81/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 82/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 83/100 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 84/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 85/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 86/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 87/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 88/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 89/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 90/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 91/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 92/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 93/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 94/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 95/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 96/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 97/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 98/100 | Train Loss: 0.0003 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 99/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0002 Acc: 1.0000 🏆 | Patience: 0/10
+Epoch 100/100 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0001 Acc: 1.0000 🏆 | Patience: 0/10
+
+📊 Computing final metrics for Target (from scratch)...
+   ROC-AUC: 1.0000
+   PR-AUC: 1.0000
+   Avg Precision: 1.0000
+
+================================================================================
+GENERATING BENCHMARK SUMMARY
+================================================================================
+📄 Saved summary: /workspace/ehr-sequencing/experiments/transfer_learning/SUMMARY.txt
+
+📊 Generating all benchmark visualizations...
+📈 Saved training curves: /workspace/ehr-sequencing/experiments/transfer_learning/training_curves.png
+📊 Saved performance metrics: /workspace/ehr-sequencing/experiments/transfer_learning/performance_metrics.png
+📈 Saved convergence plot: /workspace/ehr-sequencing/experiments/transfer_learning/convergence_loss.png
+📈 Saved convergence plot: /workspace/ehr-sequencing/experiments/transfer_learning/convergence_accuracy.png
+⏱️  Saved training time plot: /workspace/ehr-sequencing/experiments/transfer_learning/training_time.png
+✅ All visualizations saved to: /workspace/ehr-sequencing/experiments/transfer_learning
+
+================================================================================
+✅ BENCHMARK COMPLETE
+================================================================================
+
+📁 Results saved to: /workspace/ehr-sequencing/experiments/transfer_learning
+   - SUMMARY.txt: Performance comparison table
+   - summary.json: Machine-readable results
+   - *.png: Visualization plots
+   - source_embeddings.pt: Trained embeddings from source domain

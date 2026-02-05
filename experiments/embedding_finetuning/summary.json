@@ -1,0 +1,38 @@
+[
+  {
+    "Model": "Pre-training (from scratch)",
+    "Best Val Loss": "1.8264",
+    "Best Epoch": 45,
+    "Final Train Acc": "0.5337",
+    "Final Val Acc": "0.3575",
+    "ROC-AUC": "0.9655",
+    "PR-AUC": "0.2943",
+    "AP": "0.3014",
+    "Training Time (min)": "94.47",
+    "Trainable Params": "1,530,856 (7.5%)"
+  },
+  {
+    "Model": "Fine-tuning (pre-trained embeddings)",
+    "Best Val Loss": "2.1135",
+    "Best Epoch": 54,
+    "Final Train Acc": "0.4705",
+    "Final Val Acc": "0.3145",
+    "ROC-AUC": "0.9500",
+    "PR-AUC": "0.2365",
+    "AP": "0.2436",
+    "Training Time (min)": "48.35",
+    "Trainable Params": "874,984 (4.3%)"
+  },
+  {
+    "Model": "Fine-tuning (fine-tuned embeddings)",
+    "Best Val Loss": "1.8384",
+    "Best Epoch": 48,
+    "Final Train Acc": "0.5483",
+    "Final Val Acc": "0.3659",
+    "ROC-AUC": "0.9650",
+    "PR-AUC": "0.2952",
+    "AP": "0.3018",
+    "Training Time (min)": "45.23",
+    "Trainable Params": "1,530,856 (7.5%)"
+  }
+]

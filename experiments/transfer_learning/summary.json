@@ -1,0 +1,50 @@
+[
+  {
+    "Model": "Source\u2192Source",
+    "Best Val Loss": "0.0000",
+    "Best Epoch": 99,
+    "Final Train Acc": "1.0000",
+    "Final Val Acc": "1.0000",
+    "ROC-AUC": "1.0000",
+    "PR-AUC": "1.0000",
+    "AP": "1.0000",
+    "Training Time (min)": "87.43",
+    "Trainable Params": "20,347,880"
+  },
+  {
+    "Model": "Source\u2192Target (zero-shot)",
+    "Best Val Loss": "inf",
+    "Best Epoch": 0,
+    "Final Train Acc": "N/A",
+    "Final Val Acc": "N/A",
+    "ROC-AUC": "1.0000",
+    "PR-AUC": "1.0000",
+    "AP": "1.0000",
+    "Training Time (min)": "0.00",
+    "Trainable Params": "0 (frozen)"
+  },
+  {
+    "Model": "Source\u2192Target (fine-tuned)",
+    "Best Val Loss": "0.1402",
+    "Best Epoch": 19,
+    "Final Train Acc": "0.9944",
+    "Final Val Acc": "0.9968",
+    "ROC-AUC": "1.0000",
+    "PR-AUC": "1.0000",
+    "AP": "1.0000",
+    "Training Time (min)": "9.01",
+    "Trainable Params": "20,347,880"
+  },
+  {
+    "Model": "Target (from scratch)",
+    "Best Val Loss": "0.0001",
+    "Best Epoch": 99,
+    "Final Train Acc": "1.0000",
+    "Final Val Acc": "1.0000",
+    "ROC-AUC": "1.0000",
+    "PR-AUC": "1.0000",
+    "AP": "1.0000",
+    "Training Time (min)": "45.10",
+    "Trainable Params": "20,347,880"
+  }
+]

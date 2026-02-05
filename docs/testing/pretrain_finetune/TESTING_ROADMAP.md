@@ -175,49 +175,85 @@ tail -f /workspace/ehr-sequencing/experiments/sessions/transfer_learning_large.o
 
 ---
 
-## Test 1.3: Embedding Quality Analysis (Medium Scale)
+## Test 1.3: Embedding Quality Analysis
 
 **What it tests:** Detailed analysis of embedding quality and transferability
 
-**Command:**
-```bash
-# Medium-scale for faster iteration
-python benchmark_pretrained_embeddings.py \
-    --model-size medium \
-    --num-patients 5000 \
-    --epochs 50 \
-    --batch-size 128 \
-    --external-embedding-path pretrained/med2vec_embeddings.pt
+**Status:** ✅ Covered by Tests 1.1 and 1.2
+
+**Analysis Approach:**
+
+Embedding quality is evaluated through the existing benchmarks:
+
+1. **Test 1.1 (Embedding Fine-tuning):**
+   - Compares Scratch vs Frozen vs Fine-tuned embeddings
+   - Measures embedding initialization impact
+   - Output: `experiments/embedding_finetuning/`
+
+2. **Test 1.2 (Transfer Learning):**
+   - Tests embedding transferability across domains
+   - Measures zero-shot vs fine-tuned performance
+   - Output: `experiments/transfer_learning/`
+
+**Embedding Quality Metrics:**
+
+From Test 1.1 outputs:
+- Training convergence speed (fine-tuned should be faster)
+- Final performance (fine-tuned ≥ scratch > frozen)
+- Embedding statistics in saved `.pt` files
+
+From Test 1.2 outputs:
+- Zero-shot transfer performance (measures generalization)
+- Fine-tuning improvement (measures adaptability)
+- Domain shift robustness
+
+**Additional Analysis (Optional):**
+
+For deeper embedding analysis, you can:
+
+```python
+# Load saved embeddings
+import torch
+embeddings = torch.load('experiments/embedding_finetuning/final_embeddings.pt')
+
+# Analyze embedding space
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+
+# Visualize embeddings
+tsne = TSNE(n_components=2)
+embedding_2d = tsne.fit_transform(embeddings.cpu().numpy())
+plt.scatter(embedding_2d[:, 0], embedding_2d[:, 1])
+plt.savefig('embedding_visualization.png')
 ```
 
-**Expected Runtime:** ~2-3 hours
-
-**Analysis:**
-1. Compare embedding statistics (see `pretrained/embedding_analysis.txt`)
-2. Check if Med2Vec embeddings align with learned embeddings
-3. Visualize embedding spaces (t-SNE/UMAP)
-
-**Deliverable:** `experiments/embedding_comparison/SUMMARY.txt`
+**Note:** A dedicated `benchmark_pretrained_embeddings.py` script for external embeddings (e.g., Med2Vec) is planned for future development but not yet implemented.
 
 ---
 
-## Test 1.3: Quick Validation (Sanity Check)
+## Test 1.4: Quick Validation (Sanity Check)
 
-**What it tests:** Fast validation that everything works
+**What it tests:** Fast validation that everything works before long runs
 
 **Command:**
 ```bash
-# Quick test (1K patients, 20 epochs)
-python benchmark_pretrained_embeddings.py \
+# Quick test with small model (1K patients, 10 epochs)
+cd examples/pretrain_finetune
+
+python benchmark_embedding_finetuning.py \
     --model-size small \
     --num-patients 1000 \
-    --epochs 20 \
-    --batch-size 32
+    --epochs 10 \
+    --batch-size 32 \
+    --output-dir /tmp/quick_validation
 ```
 
 **Expected Runtime:** ~15-30 minutes
 
-**Purpose:** Verify scripts work before long runs
+**Purpose:** 
+- Verify scripts work before committing to long runs
+- Test on local machine before deploying to pod
+- Quick iteration during development
 
 ---
 

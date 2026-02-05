@@ -1,0 +1,26 @@
+[
+  {
+    "Model": "Pre-training (from scratch)",
+    "Best Val Loss": "4.9301",
+    "Best Epoch": 2,
+    "Final Train Acc": "0.1534",
+    "Final Val Acc": "0.1296",
+    "ROC-AUC": "nan",
+    "PR-AUC": "0.0584",
+    "AP": "0.0039",
+    "Training Time (min)": "0.06",
+    "Trainable Params": "1,450,984 (7.1%)"
+  },
+  {
+    "Model": "Fine-tuning (pre-trained embeddings)",
+    "Best Val Loss": "5.2497",
+    "Best Epoch": 2,
+    "Final Train Acc": "0.1524",
+    "Final Val Acc": "0.1377",
+    "ROC-AUC": "nan",
+    "PR-AUC": "0.0588",
+    "AP": "0.0035",
+    "Training Time (min)": "0.03",
+    "Trainable Params": "874,984 (4.3%)"
+  }
+]
