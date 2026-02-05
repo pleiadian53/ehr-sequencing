@@ -1469,36 +1469,70 @@
 - Transfer learning should beat training from scratch when target data is limited</p>
 <p><strong>This is the real test of embedding quality and transferability.</strong></p>
 <hr />
-<h2 id="test-13-embedding-quality-analysis-medium-scale">Test 1.3: Embedding Quality Analysis (Medium Scale)<a class="headerlink" href="#test-13-embedding-quality-analysis-medium-scale" title="Permanent link">&para;</a></h2>
+<h2 id="test-13-embedding-quality-analysis">Test 1.3: Embedding Quality Analysis<a class="headerlink" href="#test-13-embedding-quality-analysis" title="Permanent link">&para;</a></h2>
 <p><strong>What it tests:</strong> Detailed analysis of embedding quality and transferability</p>
-<p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Medium-scale for faster iteration</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>python<span class="w"> </span>benchmark_pretrained_embeddings.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--model-size<span class="w"> </span>medium<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--num-patients<span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--epochs<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--batch-size<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--external-embedding-path<span class="w"> </span>pretrained/med2vec_embeddings.pt
-</span></code></pre></div></p>
-<p><strong>Expected Runtime:</strong> ~2-3 hours</p>
-<p><strong>Analysis:</strong>
-1. Compare embedding statistics (see <code>pretrained/embedding_analysis.txt</code>)
-2. Check if Med2Vec embeddings align with learned embeddings
-3. Visualize embedding spaces (t-SNE/UMAP)</p>
-<p><strong>Deliverable:</strong> <code>experiments/embedding_comparison/SUMMARY.txt</code></p>
+<p><strong>Status:</strong> ✅ Covered by Tests 1.1 and 1.2</p>
+<p><strong>Analysis Approach:</strong></p>
+<p>Embedding quality is evaluated through the existing benchmarks:</p>
+<ol>
+<li><strong>Test 1.1 (Embedding Fine-tuning):</strong></li>
+<li>Compares Scratch vs Frozen vs Fine-tuned embeddings</li>
+<li>Measures embedding initialization impact</li>
+<li>
+<p>Output: <code>experiments/embedding_finetuning/</code></p>
+</li>
+<li>
+<p><strong>Test 1.2 (Transfer Learning):</strong></p>
+</li>
+<li>Tests embedding transferability across domains</li>
+<li>Measures zero-shot vs fine-tuned performance</li>
+<li>Output: <code>experiments/transfer_learning/</code></li>
+</ol>
+<p><strong>Embedding Quality Metrics:</strong></p>
+<p>From Test 1.1 outputs:
+- Training convergence speed (fine-tuned should be faster)
+- Final performance (fine-tuned ≥ scratch &gt; frozen)
+- Embedding statistics in saved <code>.pt</code> files</p>
+<p>From Test 1.2 outputs:
+- Zero-shot transfer performance (measures generalization)
+- Fine-tuning improvement (measures adaptability)
+- Domain shift robustness</p>
+<p><strong>Additional Analysis (Optional):</strong></p>
+<p>For deeper embedding analysis, you can:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Load saved embeddings</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">embeddings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;experiments/embedding_finetuning/final_embeddings.pt&#39;</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Analyze embedding space</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.manifold</span><span class="w"> </span><span class="kn">import</span> <span class="n">TSNE</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Visualize embeddings</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="n">embedding_2d</span> <span class="o">=</span> <span class="n">tsne</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">embeddings</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">embedding_2d</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">embedding_2d</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;embedding_visualization.png&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Note:</strong> A dedicated <code>benchmark_pretrained_embeddings.py</code> script for external embeddings (e.g., Med2Vec) is planned for future development but not yet implemented.</p>
 <hr />
-<h2 id="test-13-quick-validation-sanity-check">Test 1.3: Quick Validation (Sanity Check)<a class="headerlink" href="#test-13-quick-validation-sanity-check" title="Permanent link">&para;</a></h2>
-<p><strong>What it tests:</strong> Fast validation that everything works</p>
+<h2 id="test-14-quick-validation-sanity-check">Test 1.4: Quick Validation (Sanity Check)<a class="headerlink" href="#test-14-quick-validation-sanity-check" title="Permanent link">&para;</a></h2>
+<p><strong>What it tests:</strong> Fast validation that everything works before long runs</p>
 <p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Quick test (1K patients, 20 epochs)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>python<span class="w"> </span>benchmark_pretrained_embeddings.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--model-size<span class="w"> </span>small<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--num-patients<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--epochs<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--batch-size<span class="w"> </span><span class="m">32</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Quick test with small model (1K patients, 10 epochs)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">cd</span><span class="w"> </span>examples/pretrain_finetune
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>python<span class="w"> </span>benchmark_embedding_finetuning.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--model-size<span class="w"> </span>small<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--num-patients<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--epochs<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>--batch-size<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span>--output-dir<span class="w"> </span>/tmp/quick_validation
 </span></code></pre></div></p>
 <p><strong>Expected Runtime:</strong> ~15-30 minutes</p>
-<p><strong>Purpose:</strong> Verify scripts work before long runs</p>
+<p><strong>Purpose:</strong> 
+- Verify scripts work before committing to long runs
+- Test on local machine before deploying to pod
+- Quick iteration during development</p>
 <hr />
 <h1 id="phase-2-behrt-vs-pyhealth-comparison">Phase 2: BEHRT vs PyHealth Comparison<a class="headerlink" href="#phase-2-behrt-vs-pyhealth-comparison" title="Permanent link">&para;</a></h1>
 <p><strong>Question:</strong> Does BEHRT's EHR-specific design (age/visit embeddings) outperform generic transformers?</p>
@@ -2083,7 +2117,7 @@
 3. Visualize embedding spaces (t-SNE/UMAP)</p>
 <p><strong>Deliverable:</strong> <code>experiments/embedding_comparison/SUMMARY.txt</code></p>
 <hr />
-<h2 id="test-13-quick-validation-sanity-check_1">Test 1.3: Quick Validation (Sanity Check)<a class="headerlink" href="#test-13-quick-validation-sanity-check_1" title="Permanent link">&para;</a></h2>
+<h2 id="test-13-quick-validation-sanity-check">Test 1.3: Quick Validation (Sanity Check)<a class="headerlink" href="#test-13-quick-validation-sanity-check" title="Permanent link">&para;</a></h2>
 <p><strong>What it tests:</strong> Fast validation that everything works</p>
 <p><strong>Command:</strong>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Quick test (1K patients, 20 epochs)</span>
