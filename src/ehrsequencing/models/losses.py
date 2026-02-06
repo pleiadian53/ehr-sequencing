@@ -214,6 +214,157 @@ class MultiTaskSurvivalLoss(nn.Module):
         return total_loss
 
 
+class PairwiseRankingLoss(nn.Module):
+    """
+    Pairwise ranking loss for survival analysis.
+    
+    Directly optimizes discrimination (C-index) by penalizing incorrectly
+    ordered pairs of patients. Patient with earlier event should have higher risk.
+    
+    Loss = (1/|P|) * sum_{(i,j) in P} max(0, r_j - r_i + margin)
+    
+    where P is the set of comparable pairs (i has event before j).
+    
+    This loss directly optimizes ranking quality but may sacrifice calibration.
+    Use hybrid loss (NLL + Ranking) for best of both worlds.
+    
+    Args:
+        margin: Margin for ranking loss (default: 0.1)
+    
+    Example:
+        >>> loss_fn = PairwiseRankingLoss(margin=0.1)
+        >>> risk_scores = model.compute_risk_score(hazards)
+        >>> loss = loss_fn(risk_scores, event_times, event_indicators)
+    """
+    
+    def __init__(self, margin: float = 0.1):
+        super().__init__()
+        self.margin = margin
+    
+    def forward(
+        self,
+        risk_scores: torch.Tensor,
+        event_times: torch.Tensor,
+        event_indicators: torch.Tensor
+    ) -> torch.Tensor:
+        """
+        Compute pairwise ranking loss (vectorized).
+        
+        Args:
+            risk_scores: (batch_size,) - Predicted risk scores
+            event_times: (batch_size,) - Event/censoring times
+            event_indicators: (batch_size,) - 1 if event, 0 if censored
+        
+        Returns:
+            loss: Scalar tensor
+        """
+        batch_size = len(risk_scores)
+        device = risk_scores.device
+        
+        # Create pairwise comparison matrices
+        # Shape: (batch_size, batch_size)
+        risk_diff = risk_scores.unsqueeze(1) - risk_scores.unsqueeze(0)  # r_i - r_j
+        time_diff = event_times.unsqueeze(1) - event_times.unsqueeze(0)  # t_i - t_j
+        
+        # Mask for comparable pairs
+        # i has event and i occurs before or at same time as j
+        event_mask = event_indicators.unsqueeze(1).float()  # (batch, 1)
+        time_mask = (time_diff <= 0).float()  # i occurs before/at j
+        comparable_mask = event_mask * time_mask
+        
+        # Remove diagonal (self-comparisons)
+        comparable_mask = comparable_mask * (1 - torch.eye(batch_size, device=device))
+        
+        # Compute loss: penalize if r_j >= r_i (i.e., r_i - r_j <= 0)
+        # We want r_i > r_j, so penalize max(0, -risk_diff + margin)
+        pairwise_loss = torch.relu(-risk_diff + self.margin)
+        
+        # Apply mask and average
+        masked_loss = pairwise_loss * comparable_mask
+        n_pairs = comparable_mask.sum()
+        
+        if n_pairs > 0:
+            return masked_loss.sum() / n_pairs
+        else:
+            return torch.tensor(0.0, device=device)
+
+
+class HybridSurvivalLoss(nn.Module):
+    """
+    Hybrid loss: NLL + Pairwise Ranking.
+    
+    Combines calibration (NLL) and discrimination (ranking) for best of both worlds.
+    
+    Loss = lambda_nll * NLL + lambda_rank * Ranking
+    
+    Args:
+        lambda_nll: Weight for NLL loss (default: 1.0)
+        lambda_rank: Weight for ranking loss (default: 0.1)
+        margin: Margin for ranking loss (default: 0.1)
+        eps: Epsilon for NLL numerical stability (default: 1e-7)
+    
+    Example:
+        >>> loss_fn = HybridSurvivalLoss(lambda_nll=1.0, lambda_rank=0.1)
+        >>> hazards = model(codes, ages, visit_ids, segment_ids, attention_mask)
+        >>> risk_scores = model.compute_risk_score(hazards)
+        >>> loss, loss_dict = loss_fn(
+        ...     hazards, risk_scores, event_times, event_indicators, sequence_mask
+        ... )
+    """
+    
+    def __init__(
+        self,
+        lambda_nll: float = 1.0,
+        lambda_rank: float = 0.1,
+        margin: float = 0.1,
+        eps: float = 1e-7
+    ):
+        super().__init__()
+        self.lambda_nll = lambda_nll
+        self.lambda_rank = lambda_rank
+        
+        self.nll_loss = DiscreteTimeSurvivalLoss(eps=eps)
+        self.rank_loss = PairwiseRankingLoss(margin=margin)
+    
+    def forward(
+        self,
+        hazards: torch.Tensor,
+        risk_scores: torch.Tensor,
+        event_times: torch.Tensor,
+        event_indicators: torch.Tensor,
+        sequence_mask: torch.Tensor
+    ) -> tuple[torch.Tensor, dict[str, float]]:
+        """
+        Compute hybrid loss.
+        
+        Args:
+            hazards: (batch, max_visits) - Predicted hazards for NLL
+            risk_scores: (batch,) - Predicted risk scores for ranking
+            event_times: (batch,) - Event/censoring times
+            event_indicators: (batch,) - 1 if event, 0 if censored
+            sequence_mask: (batch, max_visits) - Mask for valid visits
+        
+        Returns:
+            total_loss: Scalar tensor
+            loss_dict: Dictionary with individual loss components
+        """
+        # Compute individual losses
+        nll = self.nll_loss(hazards, event_times, event_indicators, sequence_mask)
+        rank = self.rank_loss(risk_scores, event_times, event_indicators)
+        
+        # Weighted combination
+        total_loss = self.lambda_nll * nll + self.lambda_rank * rank
+        
+        # Return total loss and components for logging
+        loss_dict = {
+            'total': total_loss.item(),
+            'nll': nll.item(),
+            'rank': rank.item()
+        }
+        
+        return total_loss, loss_dict
+
+
 def concordance_index(
     hazards: torch.Tensor,
     event_times: torch.Tensor,
