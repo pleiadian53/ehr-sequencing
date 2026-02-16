@@ -62,7 +62,6 @@ class BEHRTSurvivalDataset(Dataset):
                 - codes: (seq_len,) - Flattened code sequence
                 - ages: (seq_len,) - Age at each code
                 - visit_ids: (seq_len,) - Visit ID for each code
-                - segment_ids: (seq_len,) - Segment ID (always 0)
                 - attention_mask: (seq_len,) - 1 for real codes, 0 for padding
                 - event_time: Scalar - Visit index of event/censoring
                 - event_indicator: Scalar - 1 if event, 0 if censored
@@ -105,9 +104,6 @@ class BEHRTSurvivalDataset(Dataset):
             visit_ids.extend([0] * padding_len)
             attention_mask.extend([0] * padding_len)
         
-        # Segment IDs (always 0 for single sequence)
-        segment_ids = [0] * self.max_seq_length
-        
         # Extract survival labels
         outcome = patient.get('outcome', {})
         event_time = outcome.get('event_time', len(visits) - 1)
@@ -117,7 +113,6 @@ class BEHRTSurvivalDataset(Dataset):
             'codes': torch.tensor(codes, dtype=torch.long),
             'ages': torch.tensor(ages, dtype=torch.float),
             'visit_ids': torch.tensor(visit_ids, dtype=torch.long),
-            'segment_ids': torch.tensor(segment_ids, dtype=torch.long),
             'attention_mask': torch.tensor(attention_mask, dtype=torch.long),
             'event_time': torch.tensor(event_time, dtype=torch.long),
             'event_indicator': torch.tensor(event_indicator, dtype=torch.float),
@@ -141,7 +136,6 @@ def collate_behrt_survival(batch: List[Dict[str, torch.Tensor]]) -> Dict[str, to
         'codes': torch.stack([item['codes'] for item in batch]),
         'ages': torch.stack([item['ages'] for item in batch]),
         'visit_ids': torch.stack([item['visit_ids'] for item in batch]),
-        'segment_ids': torch.stack([item['segment_ids'] for item in batch]),
         'attention_mask': torch.stack([item['attention_mask'] for item in batch]),
         'event_time': torch.stack([item['event_time'] for item in batch]),
         'event_indicator': torch.stack([item['event_indicator'] for item in batch]),

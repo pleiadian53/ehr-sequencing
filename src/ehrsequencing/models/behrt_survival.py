@@ -139,7 +139,9 @@ class BEHRTForSurvival(nn.Module):
         attention_mask: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Aggregate code-level embeddings to visit-level.
+        Aggregate code-level embeddings to visit-level using vectorized operations.
+        
+        Uses scatter_add for efficient O(B·L) aggregation instead of O(B·V·L) loops.
         
         Args:
             code_embeddings: (batch, seq_len, hidden_dim) - BEHRT output
@@ -156,39 +158,52 @@ class BEHRTForSurvival(nn.Module):
         # Find max visit ID in batch
         max_visit_id = visit_ids.max().item() + 1
         
-        # Initialize visit embeddings
+        # Initialize visit embeddings and counts
         visit_embeddings = torch.zeros(
             batch_size, max_visit_id, hidden_dim,
             device=device,
             dtype=code_embeddings.dtype
         )
-        
-        # Initialize visit mask
-        visit_mask = torch.zeros(
+        visit_counts = torch.zeros(
             batch_size, max_visit_id,
             device=device,
-            dtype=torch.bool
+            dtype=torch.float32
         )
         
-        # Aggregate codes within each visit (mean pooling)
-        for b in range(batch_size):
-            for v in range(max_visit_id):
-                # Find codes belonging to this visit
-                mask = (visit_ids[b] == v) & (attention_mask[b].bool())
-                
-                if mask.any():
-                    # Mean pool codes in this visit
-                    visit_embeddings[b, v] = code_embeddings[b, mask].mean(dim=0)
-                    visit_mask[b, v] = True
+        # Mask out padding codes
+        valid_mask = attention_mask.bool()
+        masked_embeddings = code_embeddings * valid_mask.unsqueeze(-1)
         
-        return visit_embeddings, visit_mask.float()
+        # Expand visit_ids for scatter_add: (batch, seq_len, hidden_dim)
+        visit_ids_expanded = visit_ids.unsqueeze(-1).expand(-1, -1, hidden_dim)
+        
+        # Sum embeddings per visit using scatter_add
+        visit_embeddings.scatter_add_(
+            dim=1,
+            index=visit_ids_expanded,
+            src=masked_embeddings
+        )
+        
+        # Count codes per visit
+        ones = valid_mask.float()
+        visit_counts.scatter_add_(
+            dim=1,
+            index=visit_ids,
+            src=ones
+        )
+        
+        # Compute mean by dividing by counts (avoid division by zero)
+        visit_mask = (visit_counts > 0).float()
+        visit_counts = torch.clamp(visit_counts, min=1.0)  # Avoid div by 0
+        visit_embeddings = visit_embeddings / visit_counts.unsqueeze(-1)
+        
+        return visit_embeddings, visit_mask
     
     def forward(
         self,
         codes: torch.Tensor,
         ages: torch.Tensor,
         visit_ids: torch.Tensor,
-        segment_ids: torch.Tensor,
         attention_mask: torch.Tensor,
         return_visit_embeddings: bool = False
     ) -> torch.Tensor:
@@ -198,8 +213,8 @@ class BEHRTForSurvival(nn.Module):
         Args:
             codes: (batch, seq_len) - Flattened code sequence
             ages: (batch, seq_len) - Age at each code
-            visit_ids: (batch, seq_len) - Visit ID for each code
-            segment_ids: (batch, seq_len) - Segment ID (always 0 for single sequence)
+            visit_ids: (batch, seq_len) - Visit ID for each code (used for both
+                       BEHRT visit embeddings and aggregation)
             attention_mask: (batch, seq_len) - 1 for real codes, 0 for padding
             return_visit_embeddings: If True, return visit embeddings along with hazards
         
@@ -212,7 +227,7 @@ class BEHRTForSurvival(nn.Module):
         code_embeddings = self.behrt(
             codes=codes,
             ages=ages,
-            segments=segment_ids,
+            visit_ids=visit_ids,
             attention_mask=attention_mask
         )  # (batch, seq_len, hidden_dim)
         
