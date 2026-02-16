@@ -36,8 +36,10 @@ Medical Code Sequences   →  EHR Sequencing Models
 - ✅ Phase 3 Complete: BEHRT (Transformer for EHR) with MLM pre-training
 - ✅ Benchmarking infrastructure for model comparison
 - ✅ LoRA fine-tuning support for efficient training
-- ✅ Survival analysis with LSTM baseline (C-index 0.53 on 1151 patients)
-- 🎯 **Current Focus:** BEHRT for survival analysis (readmission, mortality prediction)
+- ✅ Transfer learning benchmarking with domain shift scenarios
+- ✅ LSTM baseline for survival analysis (C-index 0.53 on 1151 patients)
+- ✅ **Phase 4 Complete:** BEHRTForSurvival with three loss functions (NLL, Ranking, Hybrid)
+- 🎯 **Current Focus:** Benchmarking BEHRT vs LSTM for survival analysis
 
 ---
 
@@ -103,7 +105,13 @@ config = BEHRTConfig(vocab_size=len(vocab))
 model = BEHRTForMLM(config)
 
 # Option B: LSTM for survival analysis
+from ehrsequencing.models import DiscreteTimeSurvivalLSTM
 model = DiscreteTimeSurvivalLSTM(vocab_size=len(vocab))
+
+# Option C: BEHRT for survival analysis
+from ehrsequencing.models import BEHRTForSurvival, BEHRTSurvivalConfig
+config = BEHRTSurvivalConfig.from_pretrained_small(vocab_size=len(vocab))
+model = BEHRTForSurvival(config)
 ```
 
 ---
@@ -147,13 +155,14 @@ model = DiscreteTimeSurvivalLSTM(vocab_size=len(vocab))
 - ✅ 3 model sizes (small/medium/large) for different hardware
 - ✅ Comprehensive training and benchmarking examples
 
-### Phase 4: BEHRT Survival Analysis - 🎯 In Progress
-- 🔄 BEHRTForSurvival model (design complete)
-- ⬜ Fine-tuning pipeline for survival tasks
-- ⬜ Comparison with LSTM baseline
-- ⬜ Readmission prediction
-- ⬜ Mortality risk prediction
-- ⬜ Disease onset prediction
+### Phase 4: BEHRT Survival Analysis - ✅ Complete
+- ✅ BEHRTForSurvival model with visit aggregation
+- ✅ Three loss functions: NLL (calibration), Pairwise Ranking (C-index), Hybrid
+- ✅ BEHRT survival dataset adapter (flattened sequences with visit boundaries)
+- ✅ Training pipeline with early stopping and C-index evaluation
+- ✅ Comprehensive benchmarking script comparing all loss functions
+- ✅ Documentation: Loss functions and optimization tutorial
+- 🎯 **Next:** Run experiments comparing BEHRT vs LSTM on readmission/mortality
 
 ### Future Phases
 - ⬜ Med2Vec code embeddings (optional baseline)
@@ -207,6 +216,7 @@ Sequence: [V1, V2, V3, ...]
 ### Code Embeddings
 
 Medical codes are embedded into continuous vector space using:
+
 - **Med2Vec** - Skip-gram model for code co-occurrence
 - **Graph embeddings** - Leveraging medical ontologies
 - **Pre-trained models** - BioBERT, ClinicalBERT
@@ -214,23 +224,35 @@ Medical codes are embedded into continuous vector space using:
 ### Sequence Models
 
 Patient sequences are encoded using:
-- **LSTM** - Recurrent models for temporal dependencies (baseline)
-- **BEHRT** - Bidirectional Transformer with EHR-specific embeddings:
+
+#### LSTM Baseline
+
+- Recurrent models for temporal dependencies
+- Visit-level encoding with mean pooling
+- Discrete-time survival analysis
+- Baseline for comparison
+
+#### BEHRT (Transformer for EHR)
+
+- Bidirectional Transformer with EHR-specific embeddings:
   - Code embeddings (medical codes)
   - Age embeddings (patient age at each visit)
   - Visit embeddings (visit sequence position)
   - Segment embeddings (visit boundaries)
-- **Pre-training** - Masked Language Modeling (MLM) for self-supervised learning
-- **Fine-tuning** - LoRA for efficient adaptation to downstream tasks
+- **Pre-training:** Masked Language Modeling (MLM) for self-supervised learning
+- **Fine-tuning:** LoRA for efficient adaptation to downstream tasks
+- **Survival Analysis:** BEHRTForSurvival with visit aggregation and hazard prediction
 
 ### Applications
 
 - **Diagnosis Prediction** - Predict future medical codes (MLM pre-training)
-- **Survival Analysis** - Discrete-time hazard prediction:
-  - Hospital readmission (30-day)
-  - Mortality risk (in-hospital, 30-day, 1-year)
-  - Disease onset (diabetes, heart failure, stroke)
+- **Survival Analysis** - Discrete-time hazard prediction with multiple loss functions:
+  - **NLL Loss** - Standard negative log-likelihood (optimizes calibration)
+  - **Pairwise Ranking Loss** - Directly optimizes C-index (discrimination)
+  - **Hybrid Loss** - Combines NLL + Ranking (best of both worlds)
+  - Applications: Hospital readmission, mortality risk, disease onset
 - **Model Comparison** - Benchmark BEHRT vs LSTM vs PyHealth
+- **Transfer Learning** - Domain shift scenarios and embedding fine-tuning
 - **Disease Subtyping** - Discover phenotypes via clustering (planned)
 - **Trajectory Analysis** - Understand disease progression patterns (planned)
 
@@ -249,12 +271,21 @@ Patient sequences are encoded using:
 
 ### Methods & Theory
 - **[Methods](docs/methods/)** - Methodology documentation
+- **[Discrete-Time Survival Analysis](docs/methods/discrete_time_survival_analysis/)** - Tutorial on survival analysis for EHR
+- **[Loss Functions and Optimization](docs/methods/discrete_time_survival_analysis/loss_functions_and_optimization.md)** - NLL vs C-index, ranking losses, hybrid approaches
 - **[Pretrained Embeddings](docs/pretrained_embeddings_guide.md)** - Using Med2Vec, CUI2Vec, Clinical BERT
 - **[Benchmarking](src/ehrsequencing/benchmarks/README.md)** - Model comparison framework
 
 ### Applications
+
 - **[Survival Analysis](docs/applications/survival_analysis.md)** - Readmission and mortality prediction
 - **[Benchmarking](docs/applications/benchmarking.md)** - Comparing BEHRT vs LSTM vs PyHealth
+
+### Examples
+
+- **[Train BEHRT Survival](examples/survival_analysis/train_behrt_survival.py)** - Training script with NLL/Ranking/Hybrid losses
+- **[Benchmark Loss Functions](examples/survival_analysis/benchmark_loss_functions.py)** - Compare loss functions for C-index optimization
+- **[Transfer Learning](examples/pretrain_finetune/)** - Embedding fine-tuning and domain shift experiments
 
 ### Tutorials
 - **[Tutorials](docs/tutorials/)** - Getting started guides
@@ -299,4 +330,4 @@ MIT License - See [LICENSE](LICENSE) for details
 
 ---
 
-**Status:** 🚧 Under Active Development | **Version:** 0.1.0 | **Updated:** January 2026
+**Status:** 🚧 Under Active Development | **Version:** 0.2.0 | **Updated:** February 2026
