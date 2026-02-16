@@ -134,7 +134,6 @@ model = BEHRTForSurvival(config)
 - ✅ Survival loss and C-index metrics
 - ✅ Synthetic outcome generator with validation
 - ✅ Production training pipeline with early stopping
-- ✅ Validated on 1151 patients (C-index 0.53)
 - ✅ RunPods A40 GPU training guide
 
 ### Phase 2: Code Embeddings - ⏸️ Deferred

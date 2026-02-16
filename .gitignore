@@ -57,7 +57,8 @@ dmypy.json
 .ruff_cache/
 
 # Project-specific directories
-dev/                    # Private development notes (not shared)
+# Private development notes (not shared)
+dev/
 # RunPods configuration (user-specific, NOT for public)
 # Contains local paths, SSH configs, and personal workflow
 runpods/
