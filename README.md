@@ -38,8 +38,8 @@ Medical Code Sequences   →  EHR Sequencing Models
 - ✅ LoRA fine-tuning support for efficient training
 - ✅ Transfer learning benchmarking with domain shift scenarios
 - ✅ LSTM baseline for survival analysis (C-index 0.53 on 1151 patients)
-- ✅ **Phase 4 Complete:** BEHRTForSurvival with three loss functions (NLL, Ranking, Hybrid)
-- 🎯 **Current Focus:** Benchmarking BEHRT vs LSTM for survival analysis
+- 🔄 **Phase 4 Implemented:** BEHRTForSurvival with three loss functions (NLL, Ranking, Hybrid)
+- 🎯 **Current Focus:** Validating implementations through systematic end-to-end testing
 
 ---
 
@@ -155,14 +155,15 @@ model = BEHRTForSurvival(config)
 - ✅ 3 model sizes (small/medium/large) for different hardware
 - ✅ Comprehensive training and benchmarking examples
 
-### Phase 4: BEHRT Survival Analysis - ✅ Complete
+### Phase 4: BEHRT Survival Analysis - 🔄 Implemented (Validation In Progress)
 - ✅ BEHRTForSurvival model with visit aggregation
 - ✅ Three loss functions: NLL (calibration), Pairwise Ranking (C-index), Hybrid
 - ✅ BEHRT survival dataset adapter (flattened sequences with visit boundaries)
 - ✅ Training pipeline with early stopping and C-index evaluation
 - ✅ Comprehensive benchmarking script comparing all loss functions
 - ✅ Documentation: Loss functions and optimization tutorial
-- 🎯 **Next:** Run experiments comparing BEHRT vs LSTM on readmission/mortality
+- 🔄 **Validation:** Systematic end-to-end testing via examples/ and notebooks/
+- 🎯 **Next:** Complete validation, then run BEHRT vs LSTM comparison experiments
 
 ### Future Phases
 - ⬜ Med2Vec code embeddings (optional baseline)
