@@ -255,13 +255,12 @@ def train_epoch(
         codes = batch['codes'].to(device)
         ages = batch['ages'].to(device)
         visit_ids = batch['visit_ids'].to(device)
-        segment_ids = batch['segment_ids'].to(device)
         attention_mask = batch['attention_mask'].to(device)
         event_times = batch['event_time'].to(device)
         event_indicators = batch['event_indicator'].to(device)
         
         # Forward pass
-        hazards = model(codes, ages, visit_ids, segment_ids, attention_mask)
+        hazards = model(codes, ages, visit_ids, attention_mask)
         
         # Compute loss
         if loss_type == 'nll':
@@ -336,13 +335,12 @@ def evaluate(
             codes = batch['codes'].to(device)
             ages = batch['ages'].to(device)
             visit_ids = batch['visit_ids'].to(device)
-            segment_ids = batch['segment_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             event_times = batch['event_time'].to(device)
             event_indicators = batch['event_indicator'].to(device)
             
             # Forward pass
-            hazards = model(codes, ages, visit_ids, segment_ids, attention_mask)
+            hazards = model(codes, ages, visit_ids, attention_mask)
             risk_scores = model.compute_risk_score(hazards)
             
             # Compute loss
