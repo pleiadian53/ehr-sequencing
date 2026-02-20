@@ -12,13 +12,9 @@
         <meta name="author" content="EHR Sequencing Research Team">
       
       
-        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/data_generation/data_generation_guide/">
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/">
       
       
-        <link rel="prev" href="../">
-      
-      
-        <link rel="next" href="../synthea_csv_export_troubleshooting/">
       
       
         
@@ -29,7 +25,7 @@
     
     
       
-        <title>Data Generation Guide - EHR Sequencing</title>
+        <title>BEHRT for Discrete-Time Survival Analysis: Documentation - EHR Sequencing</title>
       
     
     
@@ -82,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#generating-synthea-data-for-ehr-sequence-modeling" class="md-skip">
+        <a href="#behrt-for-discrete-time-survival-analysis-documentation" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Generation Guide
+              BEHRT for Discrete-Time Survival Analysis: Documentation
             
           </span>
         </div>
@@ -290,7 +286,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../methods/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -306,13 +302,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../data_generation/" class="md-tabs__link">
           
   
   
@@ -773,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../methods/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -855,7 +849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../methods/causal-survival-analysis-1.md" class="md-nav__link">
+      <a href="../causal-survival-analysis-1.md" class="md-nav__link">
         
   
   
@@ -883,7 +877,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../methods/causal-survival-analysis-2.md" class="md-nav__link">
+      <a href="../causal-survival-analysis-2.md" class="md-nav__link">
         
   
   
@@ -919,7 +913,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../methods/modern-code-embeddings.md" class="md-nav__link">
+      <a href="../modern-code-embeddings.md" class="md-nav__link">
         
   
   
@@ -951,31 +945,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -993,7 +984,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1011,7 +1002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../data_generation/" class="md-nav__link">
         
   
   
@@ -1036,37 +1027,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data Generation Guide
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../data_generation/data_generation_guide/" class="md-nav__link">
         
   
   
@@ -1082,192 +1046,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#option-1-generate-new-synthea-data-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option 1: Generate New Synthea Data (Recommended)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Option 1: Generate New Synthea Data (Recommended)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#install-synthea" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install Synthea
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#generate-1000-patients" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generate 1000+ Patients
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#generate-with-specific-conditions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generate with Specific Conditions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Options
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#option-2-use-public-synthea-datasets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option 2: Use Public Synthea Datasets
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Option 2: Use Public Synthea Datasets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#syntheticmass-dataset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SyntheticMass Dataset
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mitre-synthea-downloads" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MITRE Synthea Downloads
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#option-3-use-real-de-identified-ehr-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option 3: Use Real De-identified EHR Data
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#updating-the-training-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Updating the Training Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#expected-performance-by-dataset-size" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Expected Performance by Dataset Size
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1280,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../synthea_csv_export_troubleshooting/" class="md-nav__link">
+      <a href="../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
         
   
   
@@ -1463,22 +1241,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#option-1-generate-new-synthea-data-recommended" class="md-nav__link">
+  <a href="#document-series" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option 1: Generate New Synthea Data (Recommended)
+        Document Series
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Option 1: Generate New Synthea Data (Recommended)">
+    <nav class="md-nav" aria-label="Document Series">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#install-synthea" class="md-nav__link">
+  <a href="#01_behrt_model_overviewmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install Synthea
+        01_behrt_model_overview.md
       
     </span>
   </a>
@@ -1486,10 +1264,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-1000-patients" class="md-nav__link">
+  <a href="#01a_visit_embeddingsmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Generate 1000+ Patients
+        01a_visit_embeddings.md
       
     </span>
   </a>
@@ -1497,21 +1275,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-with-specific-conditions" class="md-nav__link">
+  <a href="#01b_ehr_tokens_tensorsmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Generate with Specific Conditions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Options
+        01b_ehr_tokens_tensors.md
       
     </span>
   </a>
@@ -1524,22 +1291,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#option-2-use-public-synthea-datasets" class="md-nav__link">
+  <a href="#quick-navigation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option 2: Use Public Synthea Datasets
+        Quick Navigation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Option 2: Use Public Synthea Datasets">
+    <nav class="md-nav" aria-label="Quick Navigation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#syntheticmass-dataset" class="md-nav__link">
+  <a href="#by-topic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SyntheticMass Dataset
+        By Topic
       
     </span>
   </a>
@@ -1547,10 +1314,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mitre-synthea-downloads" class="md-nav__link">
+  <a href="#by-use-case" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MITRE Synthea Downloads
+        By Use Case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#by-experience-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        By Experience Level
       
     </span>
   </a>
@@ -1563,10 +1341,310 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#option-3-use-real-de-identified-ehr-data" class="md-nav__link">
+  <a href="#common-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option 3: Use Real De-identified EHR Data
+        Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-whats-the-difference-between-visit-id-embedding-and-aggregated-visit-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What's the difference between visit ID embedding and aggregated visit embedding?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-why-flatten-hierarchical-ehr-data-instead-of-using-a-hierarchical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why flatten hierarchical EHR data instead of using a hierarchical model?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-which-survival-loss-should-i-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Which survival loss should I use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-should-i-use-frozen-behrt-lora-or-full-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Should I use frozen BEHRT, LoRA, or full fine-tuning?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-how-do-i-handle-padding-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How do I handle padding correctly?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-is-scatter_add-doing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What is scatter_add doing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-new-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For New Implementations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Debugging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Related Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-training-and-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-training and Fine-tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embeddings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmarking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmarking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Code References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coming-soon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coming Soon
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Coming Soon">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planned-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-notation-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mathematical Notation Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mathematical Notation Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-symbols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Symbols
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Notation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog
       
     </span>
   </a>
@@ -1574,43 +1652,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#updating-the-training-pipeline" class="md-nav__link">
+  <a href="#feedback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Updating the Training Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#expected-performance-by-dataset-size" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Expected Performance by Dataset Size
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
+        Feedback
       
     </span>
   </a>
@@ -1634,7 +1679,7 @@
 
 
   
-    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/data_generation/data_generation_guide.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/discrete_time_survival_analysis/README.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1642,178 +1687,415 @@
   
 
 
-<h1 id="generating-synthea-data-for-ehr-sequence-modeling">Generating Synthea Data for EHR Sequence Modeling<a class="headerlink" href="#generating-synthea-data-for-ehr-sequence-modeling" title="Permanent link">&para;</a></h1>
+<h1 id="behrt-for-discrete-time-survival-analysis-documentation">BEHRT for Discrete-Time Survival Analysis: Documentation<a class="headerlink" href="#behrt-for-discrete-time-survival-analysis-documentation" title="Permanent link">&para;</a></h1>
+<p><strong>Last Updated:</strong> 2026-02-03<br />
+<strong>Purpose:</strong> Comprehensive guide to BEHRT-based survival modeling</p>
+<hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Deep learning models for EHR sequences require substantial training data to learn meaningful patterns. While small datasets (100-200 patients) are useful for rapid prototyping and development, production models typically need:</p>
+<p>This documentation series explains how BEHRT (Bidirectional Encoder Representations from Transformers) is adapted for discrete-time survival analysis on EHR data. The documents progress from high-level architecture to low-level implementation details.</p>
+<p><strong>Target audience:</strong> Researchers, ML engineers, and data scientists working with EHR survival models.</p>
+<hr />
+<h2 id="document-series">Document Series<a class="headerlink" href="#document-series" title="Permanent link">&para;</a></h2>
+<h3 id="01_behrt_model_overviewmd"><a href="01_behrt_model_overview/">01_behrt_model_overview.md</a><a class="headerlink" href="#01_behrt_model_overviewmd" title="Permanent link">&para;</a></h3>
+<p><strong>What:</strong> Complete optimization pipeline from tokens to gradients</p>
+<p><strong>Topics covered:</strong>
+- Learning hierarchy (embeddings → transformer → task heads)
+- Training objectives (MLM, next-visit, survival)
+- Loss functions (NLL, ranking, hybrid)
+- Training strategies (frozen, LoRA, full fine-tune)
+- Optimization loop and gradient flow</p>
+<p><strong>Read this if:</strong>
+- New to BEHRT survival models
+- Want end-to-end pipeline understanding
+- Need to choose training strategy
+- Deciding which loss function to use</p>
+<p><strong>Key takeaway:</strong> BEHRT learns contextual representations through pre-training, then adapts to survival prediction via task-specific heads and losses.</p>
+<hr />
+<h3 id="01a_visit_embeddingsmd"><a href="01a_visit_embeddings/">01a_visit_embeddings.md</a><a class="headerlink" href="#01a_visit_embeddingsmd" title="Permanent link">&para;</a></h3>
+<p><strong>What:</strong> Deep dive into two conceptually different "visit embeddings"</p>
+<p><strong>Topics covered:</strong>
+- Visit ID embeddings (input-side lookup)
+- Aggregated visit embeddings (output-side representation)
+- Direct comparison and key differences
+- scatter_add mechanics and implementation
+- Gradient flow and optimization implications</p>
+<p><strong>Read this if:</strong>
+- Confused about "visit embedding" terminology
+- Need to understand aggregation process
+- Implementing visit-level models
+- Debugging aggregation issues</p>
+<p><strong>Key takeaway:</strong> Visit ID embedding = "this token is from visit 3" (input metadata). Aggregated visit embedding = "visit 3 contains these conditions" (output representation).</p>
+<hr />
+<h3 id="01b_ehr_tokens_tensorsmd"><a href="01b_ehr_tokens_tensors/">01b_ehr_tokens_tensors.md</a><a class="headerlink" href="#01b_ehr_tokens_tensorsmd" title="Permanent link">&para;</a></h3>
+<p><strong>What:</strong> How hierarchical EHR data becomes flat token sequences</p>
+<p><strong>Topics covered:</strong>
+- Flattening hierarchical data (patient → visits → codes)
+- Preserving structure through visit_ids
+- Dual role of visit_ids (feature + index)
+- Attention masking and padding discipline
+- Implementation best practices</p>
+<p><strong>Read this if:</strong>
+- Want to understand data preprocessing
+- Need to implement flattening logic
+- Debugging padding/masking issues
+- Comparing hierarchical vs flat architectures</p>
+<p><strong>Key takeaway:</strong> Flattening is pragmatic and enables BEHRT pre-training, but requires rigorous attention masking to preserve hierarchical structure.</p>
+<hr />
+<h2 id="quick-navigation">Quick Navigation<a class="headerlink" href="#quick-navigation" title="Permanent link">&para;</a></h2>
+<h3 id="by-topic">By Topic<a class="headerlink" href="#by-topic" title="Permanent link">&para;</a></h3>
+<p><strong>Architecture:</strong>
+- Model components → <code>01_behrt_model_overview.md</code> (Section 1)
+- Embedding layers → <code>01_behrt_model_overview.md</code> (Section 1.1-1.2)
+- Visit aggregation → <code>01a_visit_embeddings.md</code> (Section 2)</p>
+<p><strong>Data Processing:</strong>
+- Flattening hierarchy → <code>01b_ehr_tokens_tensors.md</code> (Section 2)
+- Attention masking → <code>01b_ehr_tokens_tensors.md</code> (Section 4)
+- Padding handling → <code>01b_ehr_tokens_tensors.md</code> (Section 4)</p>
+<p><strong>Training:</strong>
+- Pre-training objectives → <code>01_behrt_model_overview.md</code> (Section 2.1-2.2)
+- Survival losses → <code>01_behrt_model_overview.md</code> (Section 2.3)
+- Training strategies → <code>01_behrt_model_overview.md</code> (Section 3)</p>
+<p><strong>Implementation:</strong>
+- scatter_add mechanics → <code>01a_visit_embeddings.md</code> (Section 4)
+- Masking best practices → <code>01b_ehr_tokens_tensors.md</code> (Section 9)
+- Common pitfalls → <code>01_behrt_model_overview.md</code> (Section 8)</p>
+<h3 id="by-use-case">By Use Case<a class="headerlink" href="#by-use-case" title="Permanent link">&para;</a></h3>
+<p><strong>"I want to..."</strong></p>
 <ul>
-<li><strong>Minimum</strong>: 1,000+ patients for basic performance</li>
-<li><strong>Recommended</strong>: 5,000-10,000 patients for robust models</li>
-<li><strong>Optimal</strong>: 50,000+ patients for state-of-the-art results</li>
+<li><strong>Understand the full pipeline</strong> → Read <code>01_behrt_model_overview.md</code></li>
+<li><strong>Implement visit aggregation</strong> → Read <code>01a_visit_embeddings.md</code></li>
+<li><strong>Preprocess EHR data</strong> → Read <code>01b_ehr_tokens_tensors.md</code></li>
+<li><strong>Choose a loss function</strong> → <code>01_behrt_model_overview.md</code> (Section 2.3)</li>
+<li><strong>Choose training strategy</strong> → <code>01_behrt_model_overview.md</code> (Section 3)</li>
+<li><strong>Debug padding issues</strong> → <code>01b_ehr_tokens_tensors.md</code> (Section 4)</li>
+<li><strong>Understand gradient flow</strong> → <code>01a_visit_embeddings.md</code> (Section 6)</li>
 </ul>
-<p>This guide shows how to generate synthetic EHR data at scale using Synthea, a realistic patient generator that creates complete medical histories with encounters, conditions, procedures, medications, and observations.</p>
-<h2 id="option-1-generate-new-synthea-data-recommended">Option 1: Generate New Synthea Data (Recommended)<a class="headerlink" href="#option-1-generate-new-synthea-data-recommended" title="Permanent link">&para;</a></h2>
-<h3 id="install-synthea">Install Synthea<a class="headerlink" href="#install-synthea" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Download Synthea</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>~/work/data
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>wget<span class="w"> </span>https://github.com/synthetichealth/synthea/releases/download/master-branch-latest/synthea-with-dependencies.jar
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Or clone and build from source</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/synthetichealth/synthea.git
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">cd</span><span class="w"> </span>synthea
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>./gradlew<span class="w"> </span>build<span class="w"> </span>check<span class="w"> </span><span class="nb">test</span>
+<h3 id="by-experience-level">By Experience Level<a class="headerlink" href="#by-experience-level" title="Permanent link">&para;</a></h3>
+<p><strong>Beginner (new to project):</strong>
+1. Start with <code>01_behrt_model_overview.md</code> (skip math details first pass)
+2. Read <code>01b_ehr_tokens_tensors.md</code> (understand data processing)
+3. Skim <code>01a_visit_embeddings.md</code> (come back when confused about embeddings)</p>
+<p><strong>Intermediate (familiar with basics):</strong>
+1. Deep dive into <code>01_behrt_model_overview.md</code> (all sections)
+2. Study <code>01a_visit_embeddings.md</code> (understand visit representations)
+3. Review <code>01b_ehr_tokens_tensors.md</code> (implementation details)</p>
+<p><strong>Advanced (modifying codebase):</strong>
+1. Use as reference for implementation decisions
+2. Consult gradient flow sections for optimization debugging
+3. Review best practices sections before major changes</p>
+<hr />
+<h2 id="common-questions">Common Questions<a class="headerlink" href="#common-questions" title="Permanent link">&para;</a></h2>
+<h3 id="q-whats-the-difference-between-visit-id-embedding-and-aggregated-visit-embedding">Q: What's the difference between visit ID embedding and aggregated visit embedding?<a class="headerlink" href="#q-whats-the-difference-between-visit-id-embedding-and-aggregated-visit-embedding" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Visit ID embedding is an <strong>input feature</strong> (learned lookup table added to tokens before transformer). Aggregated visit embedding is an <strong>output representation</strong> (computed from transformer outputs by grouping tokens).</p>
+<p><strong>See:</strong> <code>01a_visit_embeddings.md</code> (complete explanation)</p>
+<h3 id="q-why-flatten-hierarchical-ehr-data-instead-of-using-a-hierarchical-model">Q: Why flatten hierarchical EHR data instead of using a hierarchical model?<a class="headerlink" href="#q-why-flatten-hierarchical-ehr-data-instead-of-using-a-hierarchical-model" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Flattening enables:
+- Use of pre-trained BEHRT
+- Full cross-visit attention
+- Simpler architecture
+- Better code reuse</p>
+<p><strong>Trade-off:</strong> Requires careful attention masking.</p>
+<p><strong>See:</strong> <code>01b_ehr_tokens_tensors.md</code> (Section 5)</p>
+<h3 id="q-which-survival-loss-should-i-use">Q: Which survival loss should I use?<a class="headerlink" href="#q-which-survival-loss-should-i-use" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Depends on your evaluation metric:
+- <strong>NLL:</strong> Best for calibration (Brier score)
+- <strong>Ranking:</strong> Best for discrimination (C-index)
+- <strong>Hybrid:</strong> Balances both (recommended starting point)</p>
+<p><strong>See:</strong> <code>01_behrt_model_overview.md</code> (Section 2.3)</p>
+<h3 id="q-should-i-use-frozen-behrt-lora-or-full-fine-tuning">Q: Should I use frozen BEHRT, LoRA, or full fine-tuning?<a class="headerlink" href="#q-should-i-use-frozen-behrt-lora-or-full-fine-tuning" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Depends on dataset size and resources:
+- <strong>Frozen:</strong> Small data (&lt; 1K patients), fast prototyping
+- <strong>LoRA:</strong> Standard scenario (1K-10K patients), best efficiency/performance
+- <strong>Full:</strong> Large data (&gt; 10K patients), maximum flexibility</p>
+<p><strong>See:</strong> <code>01_behrt_model_overview.md</code> (Section 3)</p>
+<h3 id="q-how-do-i-handle-padding-correctly">Q: How do I handle padding correctly?<a class="headerlink" href="#q-how-do-i-handle-padding-correctly" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Three critical steps:
+1. Create attention mask: <code>mask = (codes != 0).long()</code>
+2. Pass to transformer: <code>model(..., attention_mask=mask)</code>
+3. Mask before aggregation: <code>hidden * mask.unsqueeze(-1)</code></p>
+<p><strong>See:</strong> <code>01b_ehr_tokens_tensors.md</code> (Section 4)</p>
+<h3 id="q-what-is-scatter_add-doing">Q: What is scatter_add doing?<a class="headerlink" href="#q-what-is-scatter_add-doing" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Vectorized group-by-sum operation that aggregates tokens into visits:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>For each token i: add hidden_states[i] to visit_embedding[visit_ids[i]]
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Then divide by visit size (mean pooling)
 </span></code></pre></div>
-<h3 id="generate-1000-patients">Generate 1000+ Patients<a class="headerlink" href="#generate-1000-patients" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate 1000 patients</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>java<span class="w"> </span>-jar<span class="w"> </span>synthea-with-dependencies.jar<span class="w"> </span>-p<span class="w"> </span><span class="m">1000</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Output will be in ./output/csv/</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Move to your data directory</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mv<span class="w"> </span>output/csv<span class="w"> </span>~/work/loinc-predictor/data/synthea/large_cohort/
-</span></code></pre></div>
-<h3 id="generate-with-specific-conditions">Generate with Specific Conditions<a class="headerlink" href="#generate-with-specific-conditions" title="Permanent link">&para;</a></h3>
-<p>For disease progression modeling, generate patients with specific conditions:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># CKD patients</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>java<span class="w"> </span>-jar<span class="w"> </span>synthea-with-dependencies.jar<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-m<span class="w"> </span>chronic_kidney_disease
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Diabetes patients</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>java<span class="w"> </span>-jar<span class="w"> </span>synthea-with-dependencies.jar<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-m<span class="w"> </span>diabetes
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Combine multiple cohorts</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>mkdir<span class="w"> </span>~/work/loinc-predictor/data/synthea/combined_1000/
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>cat<span class="w"> </span>large_cohort/patients.csv<span class="w"> </span>&gt;<span class="w"> </span>combined_1000/patients.csv
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>cat<span class="w"> </span>large_cohort/encounters.csv<span class="w"> </span>&gt;<span class="w"> </span>combined_1000/encounters.csv
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># ... repeat for other files</span>
-</span></code></pre></div>
-<h3 id="configuration-options">Configuration Options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h3>
-<p>Edit <code>src/main/resources/synthea.properties</code>:</p>
-<div class="language-properties highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Generate more realistic data</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">exporter.years_of_history</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Include more conditions</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="na">generate.only_alive_patients</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="na">generate.append_numbers_to_person_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Increase prevalence of chronic conditions</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="na">generate.chronic_kidney_disease.prevalence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.15</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="na">generate.diabetes.prevalence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.20</span>
-</span></code></pre></div>
-<h2 id="option-2-use-public-synthea-datasets">Option 2: Use Public Synthea Datasets<a class="headerlink" href="#option-2-use-public-synthea-datasets" title="Permanent link">&para;</a></h2>
-<h3 id="syntheticmass-dataset">SyntheticMass Dataset<a class="headerlink" href="#syntheticmass-dataset" title="Permanent link">&para;</a></h3>
-<p>Large pre-generated Synthea dataset:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Download SyntheticMass (1M+ patients)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>wget<span class="w"> </span>https://synthea.mitre.org/downloads/synthea_sample_data_csv_apr2020.zip
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Extract specific subset</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>unzip<span class="w"> </span>synthea_sample_data_csv_apr2020.zip
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>head<span class="w"> </span>-n<span class="w"> </span><span class="m">1001</span><span class="w"> </span>csv/patients.csv<span class="w"> </span>&gt;<span class="w"> </span>subset_1000/patients.csv
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Filter other files by patient IDs</span>
-</span></code></pre></div>
-<h3 id="mitre-synthea-downloads">MITRE Synthea Downloads<a class="headerlink" href="#mitre-synthea-downloads" title="Permanent link">&para;</a></h3>
+<p><strong>See:</strong> <code>01a_visit_embeddings.md</code> (Section 4)</p>
+<hr />
+<h2 id="implementation-checklist">Implementation Checklist<a class="headerlink" href="#implementation-checklist" title="Permanent link">&para;</a></h2>
+<h3 id="for-new-implementations">For New Implementations<a class="headerlink" href="#for-new-implementations" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Read <code>01_behrt_model_overview.md</code> (understand full pipeline)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Read <code>01b_ehr_tokens_tensors.md</code> (data preprocessing)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Read <code>01a_visit_embeddings.md</code> (aggregation logic)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Review code: <code>src/ehrsequencing/models/behrt_survival.py</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test attention masking correctness</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Validate visit aggregation with small examples</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Monitor both calibration and discrimination metrics</li>
+</ul>
+<h3 id="for-debugging">For Debugging<a class="headerlink" href="#for-debugging" title="Permanent link">&para;</a></h3>
+<p><strong>Padding issues:</strong>
+- [ ] Check attention mask creation
+- [ ] Verify mask passed to transformer
+- [ ] Validate masking before aggregation
+- [ ] Test: padding should not affect outputs</p>
+<p><strong>Aggregation issues:</strong>
+- [ ] Print visit_ids and attention_mask
+- [ ] Check scatter_add index dimensions
+- [ ] Verify division by visit counts
+- [ ] Test: same visit different patients should aggregate differently</p>
+<p><strong>Training issues:</strong>
+- [ ] Check loss computation (masked properly?)
+- [ ] Monitor loss components (NLL vs ranking)
+- [ ] Verify gradient flow (check grad norms)
+- [ ] Validate metrics (C-index, Brier score)</p>
+<hr />
+<h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<h3 id="pre-training-and-fine-tuning">Pre-training and Fine-tuning<a class="headerlink" href="#pre-training-and-fine-tuning" title="Permanent link">&para;</a></h3>
 <ul>
-<li>https://synthea.mitre.org/downloads</li>
-<li>Pre-generated datasets available</li>
-<li>Various sizes and configurations</li>
+<li><strong><code>dev/models/pretrain_finetune/</code></strong> - BEHRT pre-training documentation</li>
+<li><strong><code>dev/models/pretrain_finetune/01_behrt_model_design.md</code></strong> - Architecture details</li>
+<li><strong><code>dev/models/pretrain_finetune/07_lora_deep_dive.md</code></strong> - LoRA comprehensive guide</li>
 </ul>
-<h2 id="option-3-use-real-de-identified-ehr-data">Option 3: Use Real De-identified EHR Data<a class="headerlink" href="#option-3-use-real-de-identified-ehr-data" title="Permanent link">&para;</a></h2>
-<p>If available, use real de-identified data:</p>
+<h3 id="embeddings">Embeddings<a class="headerlink" href="#embeddings" title="Permanent link">&para;</a></h3>
 <ul>
-<li>MIMIC-III/IV (ICU data)</li>
-<li>eICU Collaborative Research Database</li>
-<li>UK Biobank</li>
-<li>All of Us Research Program</li>
+<li><strong><code>dev/models/pretrain_finetune/05_embedding_summation_and_quality_analysis.md</code></strong> - Why sum embeddings</li>
 </ul>
-<p><strong>Advantages</strong>:
-- Real clinical patterns
-- Better generalization
-- Meaningful outcomes</p>
-<p><strong>Requirements</strong>:
-- IRB approval
-- Data use agreements
-- Privacy compliance</p>
-<h2 id="updating-the-training-pipeline">Updating the Training Pipeline<a class="headerlink" href="#updating-the-training-pipeline" title="Permanent link">&para;</a></h2>
-<p>Once you have more data, update the data path:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># In notebook or training script</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;work&#39;</span> <span class="o">/</span> <span class="s1">&#39;loinc-predictor&#39;</span> <span class="o">/</span> <span class="s1">&#39;data&#39;</span> <span class="o">/</span> <span class="s1">&#39;synthea&#39;</span> <span class="o">/</span> <span class="s1">&#39;large_cohort&#39;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or combine multiple cohorts</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">data_dirs</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;work&#39;</span> <span class="o">/</span> <span class="s1">&#39;loinc-predictor&#39;</span> <span class="o">/</span> <span class="s1">&#39;data&#39;</span> <span class="o">/</span> <span class="s1">&#39;synthea&#39;</span> <span class="o">/</span> <span class="s1">&#39;cohort1&#39;</span><span class="p">,</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;work&#39;</span> <span class="o">/</span> <span class="s1">&#39;loinc-predictor&#39;</span> <span class="o">/</span> <span class="s1">&#39;data&#39;</span> <span class="o">/</span> <span class="s1">&#39;synthea&#39;</span> <span class="o">/</span> <span class="s1">&#39;cohort2&#39;</span><span class="p">,</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;work&#39;</span> <span class="o">/</span> <span class="s1">&#39;loinc-predictor&#39;</span> <span class="o">/</span> <span class="s1">&#39;data&#39;</span> <span class="o">/</span> <span class="s1">&#39;synthea&#39;</span> <span class="o">/</span> <span class="s1">&#39;cohort3&#39;</span><span class="p">,</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">]</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">all_events</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="k">for</span> <span class="n">data_dir</span> <span class="ow">in</span> <span class="n">data_dirs</span><span class="p">:</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">adapter</span> <span class="o">=</span> <span class="n">SyntheaAdapter</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">events</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">load_events</span><span class="p">()</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">all_events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
-</span></code></pre></div>
-<h2 id="expected-performance-by-dataset-size">Expected Performance by Dataset Size<a class="headerlink" href="#expected-performance-by-dataset-size" title="Permanent link">&para;</a></h2>
-<p>The relationship between dataset size and model performance for survival analysis:</p>
+<h3 id="benchmarking">Benchmarking<a class="headerlink" href="#benchmarking" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>dev/models/pretrain_finetune/06_benchmarking_updates.md</code></strong> - Evaluation strategies</li>
+</ul>
+<hr />
+<h2 id="code-references">Code References<a class="headerlink" href="#code-references" title="Permanent link">&para;</a></h2>
+<h3 id="core-models">Core Models<a class="headerlink" href="#core-models" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Dataset Size</th>
-<th>Expected C-index</th>
-<th>Training Time</th>
-<th>Use Case</th>
+<th>File</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>100-200 patients</td>
-<td>0.45-0.55</td>
-<td>5-10 min</td>
-<td>Development/debugging</td>
+<td><code>src/ehrsequencing/models/behrt.py</code></td>
+<td>BEHRT base architecture</td>
 </tr>
 <tr>
-<td>500 patients</td>
-<td>0.55-0.65</td>
-<td>20-30 min</td>
-<td>Initial experiments</td>
+<td><code>src/ehrsequencing/models/embeddings.py</code></td>
+<td>Embedding layers</td>
 </tr>
 <tr>
-<td>1,000 patients</td>
-<td>0.60-0.70</td>
-<td>45-60 min</td>
-<td>Baseline models</td>
+<td><code>src/ehrsequencing/models/behrt_survival.py</code></td>
+<td>Survival model implementation</td>
 </tr>
 <tr>
-<td>5,000 patients</td>
-<td>0.65-0.75</td>
-<td>3-4 hours</td>
-<td>Production models</td>
-</tr>
-<tr>
-<td>10,000+ patients</td>
-<td>0.70-0.80</td>
-<td>8-10 hours</td>
-<td>State-of-the-art</td>
+<td><code>src/ehrsequencing/models/losses.py</code></td>
+<td>Survival loss functions</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Notes</strong>:
-- Performance estimates assume well-defined outcomes and sufficient event rates
-- With pretrained embeddings, expect +0.05-0.10 improvement in C-index
-- Training time varies by hardware (estimates for single GPU)</p>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h3 id="training-scripts">Training Scripts<a class="headerlink" href="#training-scripts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>examples/survival_analysis/train_lstm.py</code></td>
+<td>Full training pipeline</td>
+</tr>
+<tr>
+<td><code>examples/survival_analysis/train_lstm_demo.py</code></td>
+<td>Demo/quick start</td>
+</tr>
+</tbody>
+</table>
+<h3 id="utilities">Utilities<a class="headerlink" href="#utilities" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/ehrsequencing/models/lora.py</code></td>
+<td>LoRA implementation</td>
+</tr>
+<tr>
+<td><code>src/ehrsequencing/benchmarks/</code></td>
+<td>Evaluation metrics</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="coming-soon">Coming Soon<a class="headerlink" href="#coming-soon" title="Permanent link">&para;</a></h2>
+<h3 id="planned-documentation">Planned Documentation<a class="headerlink" href="#planned-documentation" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Generate/download more data</strong> (this guide)</li>
-<li><strong>Implement pretrained embeddings</strong> (Phase 2)</li>
-<li><strong>Retrain with larger dataset</strong></li>
-<li><strong>Evaluate performance improvement</strong></li>
+<li><strong>02_survival_losses.md</strong> - Mathematical derivation of survival losses</li>
+<li><strong>03_evaluation_metrics.md</strong> - Comprehensive guide to survival metrics</li>
+<li><strong>04_training_recipes.md</strong> - Practical training configurations</li>
+<li><strong>05_troubleshooting.md</strong> - Common issues and solutions</li>
 </ol>
-<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Synthea GitHub: https://github.com/synthetichealth/synthea</li>
-<li>Synthea Wiki: https://github.com/synthetichealth/synthea/wiki</li>
-<li>SyntheticMass: https://synthea.mitre.org/downloads</li>
-<li>Synthea Module Builder: https://synthetichealth.github.io/module-builder/</li>
-</ul>
+<h3 id="planned-examples">Planned Examples<a class="headerlink" href="#planned-examples" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Minimal working example</strong> - 50-line script demonstrating key concepts</li>
+<li><strong>Complete training pipeline</strong> - Production-ready training script</li>
+<li><strong>Custom loss functions</strong> - How to implement new survival losses</li>
+<li><strong>Multi-task learning</strong> - Pre-training + survival jointly</li>
+</ol>
+<hr />
+<h2 id="mathematical-notation-reference">Mathematical Notation Reference<a class="headerlink" href="#mathematical-notation-reference" title="Permanent link">&para;</a></h2>
+<h3 id="common-symbols">Common Symbols<a class="headerlink" href="#common-symbols" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Typical Dimensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B</td>
+<td>Batch size</td>
+<td>-</td>
+</tr>
+<tr>
+<td>L</td>
+<td>Sequence length (tokens)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>T</td>
+<td>Number of visits</td>
+<td>-</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Embedding dimension</td>
+<td>-</td>
+</tr>
+<tr>
+<td>|V|</td>
+<td>Vocabulary size</td>
+<td>-</td>
+</tr>
+<tr>
+<td>c_i</td>
+<td>Code ID at position i</td>
+<td 0_="0," _124_V_124_-1="|V|-1" class="..,">∈</td>
+</tr>
+<tr>
+<td>v_i</td>
+<td>Visit ID at position i</td>
+<td 0_="0," T-1="T-1" class="..,">∈</td>
+</tr>
+<tr>
+<td>x_i</td>
+<td>Token embedding</td>
+<td>∈ ℝ^d</td>
+</tr>
+<tr>
+<td>H</td>
+<td>Contextual hidden states</td>
+<td>∈ ℝ^(B×L×d)</td>
+</tr>
+<tr>
+<td>V_t</td>
+<td>Visit representation</td>
+<td>∈ ℝ^d</td>
+</tr>
+<tr>
+<td>h_t</td>
+<td>Hazard at visit t</td>
+<td>∈ (0, 1)</td>
+</tr>
+<tr>
+<td>E^code</td>
+<td>Code embedding matrix</td>
+<td>∈ ℝ^(|V|×d)</td>
+</tr>
+<tr>
+<td>E^visit</td>
+<td>Visit ID embedding matrix</td>
+<td>∈ ℝ^(T_max×d)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="set-notation">Set Notation<a class="headerlink" href="#set-notation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Notation</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I_{b,t}</td>
+<td>Set of token indices in visit t for patient b</td>
+</tr>
+<tr>
+<td>𝟙(·)</td>
+<td>Indicator function (1 if true, 0 if false)</td>
+</tr>
+<tr>
+<td>Σ_{i ∈ I}</td>
+<td>Sum over indices in set I</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-02-03</td>
+<td>Initial documentation release</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Published 01_behrt_model_overview.md</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Published 01a_visit_embeddings.md</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Published 01b_ehr_tokens_tensors.md</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Created README with navigation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="feedback">Feedback<a class="headerlink" href="#feedback" title="Permanent link">&para;</a></h2>
+<p>This documentation is actively maintained. If you find:
+- ✅ Errors or inconsistencies
+- ✅ Unclear explanations
+- ✅ Missing topics
+- ✅ Implementation bugs</p>
+<p>Please:
+1. Check the code references to verify current implementation
+2. Review related documentation for additional context
+3. Open an issue with specific questions</p>
+<hr />
+<p><strong>Status:</strong> Active documentation, regularly updated<br />
+<strong>Version:</strong> 1.0<br />
+<strong>Last Updated:</strong> 2026-02-03</p>
 
 
 

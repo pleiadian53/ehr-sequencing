@@ -1,0 +1,2707 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Research framework for longitudinal EHR sequence modeling, exploring temporal representations, learning objectives, and model architectures for disease progression, survival analysis, and temporal phenotyping">
+      
+      
+        <meta name="author" content="EHR Sequencing Research Team">
+      
+      
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/01b_ehr_tokens_tensors/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>From Hierarchical EHR Data to Flat Token Sequences - EHR Sequencing</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#from-hierarchical-ehr-data-to-flat-token-sequences" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EHR Sequencing
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              From Hierarchical EHR Data to Flat Token Sequences
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../INSTALL/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../notebooks/02_survival_analysis/" class="md-tabs__link">
+          
+  
+  
+  Survival Analysis
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  Methods
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../data_generation/" class="md-tabs__link">
+          
+  
+  
+  Data Generation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../pretrained_embeddings_guide/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EHR Sequencing
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pleiadian53/ehr-sequencing" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pleiadian53/ehr-sequencing
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../INSTALL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../notebooks/02_survival_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 1: Prediction Problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 2: Synthetic Data Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 3: Loss Function
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../notebooks/02_survival_analysis/01_discrete_time_survival_lstm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notebook: Discrete-Time Survival LSTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Causal Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Causal Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../causal-survival-analysis-1.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../causal-survival-analysis-2.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modern-code-embeddings.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modern Code Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Generation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data_generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data_generation/data_generation_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthea CSV Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pretrained_embeddings_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretrained Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../runpods_training_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RunPods Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-true-structure-of-ehr-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The True Structure of EHR Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The True Structure of EHR Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#natural-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Natural Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mathematical Representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-flattening-from-tree-to-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Flattening: From Tree to Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Flattening: From Tree to Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-flattening-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Flattening Operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mathematical Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-weve-lost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What We've Lost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preserving-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preserving Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-dual-role-of-visit_ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Dual Role of visit_ids
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The Dual Role of visit_ids">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-1-input-feature-for-behrt-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role 1: Input Feature for BEHRT Embeddings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#role-2-aggregation-boundary-in-survival-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role 2: Aggregation Boundary in Survival Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-duality-is-elegant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Duality is Elegant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-duality-is-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Duality is Dangerous
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-padding-the-silent-killer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Padding: The Silent Killer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Padding: The Silent Killer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-batching-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Batching Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#padded-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Padded Representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-danger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Danger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-1-attention-mask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 1: Attention Mask
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-2-aggregation-mask-discipline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 2: Aggregation Mask Discipline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-3-loss-masking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 3: Loss Masking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-padding-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Padding Bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hierarchical-vs-flattened-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Hierarchical vs Flattened Trade-offs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Hierarchical vs Flattened Trade-offs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flattening-advantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flattening Advantages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flattening-disadvantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flattening Disadvantages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hierarchical-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchical Alternative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-flattening-is-pragmatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Flattening is Pragmatic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-what-the-model-actually-sees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. What the Model Actually Sees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. What the Model Actually Sees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-transformers-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Transformer's View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-structure-is-recovered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Structure is Recovered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geometric-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometric Intuition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-optimization-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Optimization Implications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Optimization Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-structure-is-not-preserved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If Structure is Not Preserved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-pipeline-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Pipeline Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradient-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gradient Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Mental Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Mental Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-forest-analogy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Forest Analogy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-street-analogy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Street Analogy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-implementation-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Implementation Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Implementation Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checklist-for-correct-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist for Correct Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-mask-correctness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Mask Correctness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Advanced Topics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Advanced Topics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#long-sequence-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long Sequence Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efficient-batching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Efficient Batching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mental-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mental Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/discrete_time_survival_analysis/01b_ehr_tokens_tensors.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="from-hierarchical-ehr-data-to-flat-token-sequences">From Hierarchical EHR Data to Flat Token Sequences<a class="headerlink" href="#from-hierarchical-ehr-data-to-flat-token-sequences" title="Permanent link">&para;</a></h1>
+<p><strong>Last Updated:</strong> 2026-02-03<br />
+<strong>Topics:</strong> Data flattening, visit boundaries, attention masking, padding discipline</p>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document explains how hierarchical EHR data (Patient → Visits → Codes) is transformed into the flat tensor format required by transformers, and why careful handling of visit boundaries and padding is critical for correct model behavior.</p>
+<p><strong>Key insight:</strong> We flatten the tree structure into a sequence but preserve visit boundaries through <code>visit_ids</code> and attention masking. This enables efficient transformer computation while maintaining the hierarchical semantics.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#1-the-true-structure-of-ehr-data">The True Structure of EHR Data</a></li>
+<li><a href="#2-flattening-from-tree-to-sequence">Flattening: From Tree to Sequence</a></li>
+<li><a href="#3-the-dual-role-of-visit_ids">The Dual Role of visit_ids</a></li>
+<li><a href="#4-padding-the-silent-killer">Padding: The Silent Killer</a></li>
+<li><a href="#5-hierarchical-vs-flattened-trade-offs">Hierarchical vs Flattened Trade-offs</a></li>
+<li><a href="#6-what-the-model-actually-sees">What the Model Actually Sees</a></li>
+<li><a href="#7-optimization-implications">Optimization Implications</a></li>
+</ol>
+<hr />
+<h2 id="1-the-true-structure-of-ehr-data">1. The True Structure of EHR Data<a class="headerlink" href="#1-the-true-structure-of-ehr-data" title="Permanent link">&para;</a></h2>
+<h3 id="natural-hierarchy">Natural Hierarchy<a class="headerlink" href="#natural-hierarchy" title="Permanent link">&para;</a></h3>
+<p>EHR data is inherently hierarchical:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Patient
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Visit 1
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── Code A
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── Code B
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └── Code C
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── Visit 2
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── Code D
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── Code E
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└── Visit 3
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    ├── Code F
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    ├── Code G
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ├── Code H
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    └── Code I
+</span></code></pre></div>
+<h3 id="mathematical-representation">Mathematical Representation<a class="headerlink" href="#mathematical-representation" title="Permanent link">&para;</a></h3>
+<p>For patient b:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Number of visits: T_b
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Visit t contains: n_{b,t} codes
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Codes in visit t: {c_{b,t,1}, c_{b,t,2}, ..., c_{b,t,n_{b,t}}}
+</span></code></pre></div>
+<p>This is a <strong>ragged 3-level tree</strong>:
+- Level 1: Patient
+- Level 2: Visits (variable count)
+- Level 3: Codes per visit (variable count)</p>
+<h3 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h3>
+<p>Deep learning frameworks (PyTorch, TensorFlow) expect <strong>fixed-size tensors</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Transformer input ∈ ℝ^(B × L)
+</span></code></pre></div>
+<p>Where:
+- B = batch size (fixed)
+- L = sequence length (fixed)</p>
+<p><strong>Ragged trees don't fit into fixed tensors</strong> → We must flatten.</p>
+<hr />
+<h2 id="2-flattening-from-tree-to-sequence">2. Flattening: From Tree to Sequence<a class="headerlink" href="#2-flattening-from-tree-to-sequence" title="Permanent link">&para;</a></h2>
+<h3 id="the-flattening-operation">The Flattening Operation<a class="headerlink" href="#the-flattening-operation" title="Permanent link">&para;</a></h3>
+<p><strong>Before flattening (hierarchical):</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Visit 1: [A, B, C]
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Visit 2: [D, E]
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Visit 3: [F, G, H, I]
+</span></code></pre></div>
+<p><strong>After flattening (sequential):</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Sequence: [A, B, C, D, E, F, G, H, I]
+</span></code></pre></div>
+<h3 id="mathematical-definition">Mathematical Definition<a class="headerlink" href="#mathematical-definition" title="Permanent link">&para;</a></h3>
+<p>The flattened sequence for patient b is:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sequence_b = [c_{b,1,1}, ..., c_{b,1,n_{b,1}},  # Visit 1
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>              c_{b,2,1}, ..., c_{b,2,n_{b,2}},  # Visit 2
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>              ...,
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>              c_{b,T_b,1}, ..., c_{b,T_b,n_{b,T_b}}]  # Visit T_b
+</span></code></pre></div>
+<p>Total sequence length:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>L_b = Σ_{t=1}^{T_b} n_{b,t}
+</span></code></pre></div>
+<h3 id="what-weve-lost">What We've Lost<a class="headerlink" href="#what-weve-lost" title="Permanent link">&para;</a></h3>
+<p>By flattening, we <strong>destroyed the tree structure</strong>:
+- ❌ Don't know where visits start/end
+- ❌ Don't know which codes belong together
+- ❌ Don't know visit ordering explicitly</p>
+<h3 id="preserving-structure">Preserving Structure<a class="headerlink" href="#preserving-structure" title="Permanent link">&para;</a></h3>
+<p>To recover visit boundaries, we keep a <strong>parallel tensor</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>visit_ids ∈ ℤ^L
+</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Codes:      [A, B, C, D, E, F, G, H, I]
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>visit_ids:  [0, 0, 0, 1, 1, 2, 2, 2, 2]
+</span></code></pre></div>
+<p>This vector is the <strong>lifeline</strong> that preserves visit structure in the flat representation.</p>
+<hr />
+<h2 id="3-the-dual-role-of-visit_ids">3. The Dual Role of visit_ids<a class="headerlink" href="#3-the-dual-role-of-visit_ids" title="Permanent link">&para;</a></h2>
+<p>The same tensor <code>visit_ids</code> plays <strong>two conceptually different roles</strong> in the pipeline. Understanding this duality is critical.</p>
+<h3 id="role-1-input-feature-for-behrt-embeddings">Role 1: Input Feature for BEHRT Embeddings<a class="headerlink" href="#role-1-input-feature-for-behrt-embeddings" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Inject temporal grouping information into token representations.</p>
+<p><strong>How it's used:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># In BEHRT embedding layer</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">visit_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit_embedding</span><span class="p">(</span><span class="n">visit_ids</span><span class="p">)</span>  <span class="c1"># Lookup in embedding table</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">x</span> <span class="o">=</span> <span class="n">code_emb</span> <span class="o">+</span> <span class="n">age_emb</span> <span class="o">+</span> <span class="n">visit_emb</span> <span class="o">+</span> <span class="n">pos_emb</span>
+</span></code></pre></div>
+<p><strong>What it does:</strong>
+- Looks up visit index in learnable embedding matrix E^visit ∈ ℝ^(V_max × d)
+- Same embedding vector for all tokens in visit t
+- Says: "This token belongs to visit t" (structural prior)</p>
+<p><strong>Key point:</strong> This is a <strong>feature</strong> that gets embedded and processed by the model.</p>
+<p><strong>Semantics:</strong></p>
+<blockquote>
+<p>"Temporal grouping metadata injected into token representation"</p>
+</blockquote>
+<h3 id="role-2-aggregation-boundary-in-survival-model">Role 2: Aggregation Boundary in Survival Model<a class="headerlink" href="#role-2-aggregation-boundary-in-survival-model" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Define which tokens to group when computing visit-level representations.</p>
+<p><strong>How it's used:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># In survival model</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">V_</span><span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">t</span><span class="p">}</span> <span class="o">=</span> <span class="n">mean</span> <span class="n">of</span> <span class="n">H_</span><span class="p">{</span><span class="n">b</span><span class="p">,</span><span class="n">i</span><span class="p">}</span> <span class="n">where</span> <span class="n">visit_ids</span><span class="p">[</span><span class="n">b</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span>
+</span></code></pre></div>
+<p><strong>What it does:</strong>
+- Acts as grouping index for scatter-add operation
+- Determines which tokens belong to same visit for aggregation
+- Says: "Group these tokens together to form visit representation"</p>
+<p><strong>Key point:</strong> This is an <strong>indexing operation</strong> for aggregation, not an embedding lookup.</p>
+<p><strong>Semantics:</strong></p>
+<blockquote>
+<p>"Boundary marker that defines aggregation groups"</p>
+</blockquote>
+<h3 id="comparison">Comparison<a class="headerlink" href="#comparison" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Role 1: Input Feature</th>
+<th>Role 2: Aggregation Index</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stage</strong></td>
+<td>Before transformer</td>
+<td>After transformer</td>
+</tr>
+<tr>
+<td><strong>Operation</strong></td>
+<td>Embedding lookup</td>
+<td>Grouping/indexing</td>
+</tr>
+<tr>
+<td><strong>Purpose</strong></td>
+<td>Inject structural prior</td>
+<td>Define aggregation boundaries</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Embedding vector</td>
+<td>Visit representation</td>
+</tr>
+<tr>
+<td><strong>Gradients</strong></td>
+<td>Through embedding matrix</td>
+<td>Through aggregated embeddings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-this-duality-is-elegant">Why This Duality is Elegant<a class="headerlink" href="#why-this-duality-is-elegant" title="Permanent link">&para;</a></h3>
+<p><strong>Same numbers, different semantic roles:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>visit_ids = [0, 0, 1, 1, 1, 2, 2]
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a># Role 1: &quot;Token 0 is from visit 0&quot; (lookup)
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a># Role 2: &quot;Tokens 0,1 belong to visit 0&quot; (grouping)
+</span></code></pre></div>
+<p>The same information serves two purposes efficiently!</p>
+<h3 id="why-this-duality-is-dangerous">Why This Duality is Dangerous<a class="headerlink" href="#why-this-duality-is-dangerous" title="Permanent link">&para;</a></h3>
+<p><strong>If misunderstood:</strong>
+- May think visit embedding = aggregated embedding (WRONG!)
+- May forget to mask padding in aggregation (BUGS!)
+- May confuse input signals with output representations (CONFUSION!)</p>
+<p><strong>See also:</strong> <code>01a_visit_embeddings.md</code> for detailed explanation of this distinction.</p>
+<hr />
+<h2 id="4-padding-the-silent-killer">4. Padding: The Silent Killer<a class="headerlink" href="#4-padding-the-silent-killer" title="Permanent link">&para;</a></h2>
+<h3 id="the-batching-problem">The Batching Problem<a class="headerlink" href="#the-batching-problem" title="Permanent link">&para;</a></h3>
+<p>Sequences in a batch have <strong>different lengths</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Patient 1: 10 tokens
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Patient 2: 25 tokens
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Patient 3: 15 tokens
+</span></code></pre></div>
+<p>Tensors require <strong>fixed dimensions</strong> → Must pad to maximum length:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>L_max = max(L_1, L_2, ..., L_B) = 25
+</span></code></pre></div>
+<h3 id="padded-representation">Padded Representation<a class="headerlink" href="#padded-representation" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Patient 1 (10 real tokens, 15 padding)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">codes</span><span class="p">:</span>      <span class="p">[</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">c10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">visit_ids</span><span class="p">:</span>  <span class="p">[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">]</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>            <span class="err">└───</span> <span class="n">real</span> <span class="n">tokens</span> <span class="err">──┘</span> <span class="err">└──────────</span> <span class="n">padding</span> <span class="err">──────────────────┘</span>
+</span></code></pre></div>
+<h3 id="the-danger">The Danger<a class="headerlink" href="#the-danger" title="Permanent link">&para;</a></h3>
+<p><strong>If padding is not handled correctly:</strong></p>
+<ol>
+<li><strong>Transformer contamination:</strong></li>
+<li>Transformer attends to padding tokens</li>
+<li>Padding "information" leaks into representations</li>
+<li>
+<p>Contextual embeddings become corrupted</p>
+</li>
+<li>
+<p><strong>Aggregation errors:</strong></p>
+</li>
+<li>Padding tokens get included in visit sums</li>
+<li>Visit representations become meaningless</li>
+<li>
+<p>Hazard predictions become unstable</p>
+</li>
+<li>
+<p><strong>Loss computation:</strong></p>
+</li>
+<li>Loss computed on padding positions</li>
+<li>Gradients from padding corrupt learning</li>
+<li>Model learns to predict padding (useless!)</li>
+</ol>
+<p><strong>Result:</strong> Model quietly fails without obvious errors.</p>
+<hr />
+<h3 id="solution-1-attention-mask">Solution 1: Attention Mask<a class="headerlink" href="#solution-1-attention-mask" title="Permanent link">&para;</a></h3>
+<p><strong>Create a mask indicating real vs padding tokens:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">attention_mask</span> <span class="err">∈</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span><span class="o">^</span><span class="p">(</span><span class="n">B</span> <span class="err">×</span> <span class="n">L</span><span class="p">)</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">Where</span><span class="p">:</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="mi">1</span> <span class="o">=</span> <span class="n">real</span> <span class="n">token</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="mi">0</span> <span class="o">=</span> <span class="n">padding</span> <span class="n">token</span>
+</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">codes</span><span class="p">:</span>          <span class="p">[</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">attention_mask</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]</span>
+</span></code></pre></div>
+<p><strong>Usage in transformer:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># PyTorch transformer expects boolean mask</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># True = positions to IGNORE</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">src_key_padding_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">attention_mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="p">(</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="n">embeddings</span><span class="p">,</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="n">src_key_padding_mask</span><span class="o">=</span><span class="n">src_key_padding_mask</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Effect:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Attention(i, j) = 0  if token j is padding
+</span></code></pre></div>
+<p>Padding tokens are <strong>completely excluded</strong> from attention computation.</p>
+<hr />
+<h3 id="solution-2-aggregation-mask-discipline">Solution 2: Aggregation Mask Discipline<a class="headerlink" href="#solution-2-aggregation-mask-discipline" title="Permanent link">&para;</a></h3>
+<p><strong>When aggregating to visits, must filter padding:</strong></p>
+<p><strong>Correct aggregation:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>V_{b,t} = (Σ_{i=1}^L 𝟙(visit_ids[b,i]=t) · 𝟙(mask[b,i]=1) · H_{b,i})
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>          / (Σ_{i=1}^L 𝟙(visit_ids[b,i]=t) · 𝟙(mask[b,i]=1))
+</span></code></pre></div>
+<p>Both conditions must be enforced:
+1. Token belongs to visit t
+2. Token is not padding</p>
+<p><strong>Implementation:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">aggregate_to_visits</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">,</span> <span class="n">visit_ids</span><span class="p">,</span> <span class="n">attention_mask</span><span class="p">):</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="sd">    Aggregate token embeddings to visit embeddings.</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="sd">    Correctly handles padding by masking before aggregation.</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">hidden_states</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="n">T_max</span> <span class="o">=</span> <span class="n">visit_ids</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="c1"># Initialize outputs</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="n">visit_sums</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T_max</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="n">visit_counts</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T_max</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>    <span class="c1"># CRITICAL: Mask out padding</span>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>    <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">attention_mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>  <span class="c1"># [B, L]</span>
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>    <span class="c1"># Only aggregate valid (non-padding) tokens</span>
+</span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>    <span class="n">masked_hidden</span> <span class="o">=</span> <span class="n">hidden_states</span> <span class="o">*</span> <span class="n">valid_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-20-19"><a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
+</span><span id="__span-20-20"><a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>    <span class="c1"># Scatter-add to group by visit</span>
+</span><span id="__span-20-21"><a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>    <span class="n">visit_sums</span><span class="o">.</span><span class="n">scatter_add_</span><span class="p">(</span>
+</span><span id="__span-20-22"><a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>        <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-20-23"><a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>        <span class="n">index</span><span class="o">=</span><span class="n">visit_ids</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span>
+</span><span id="__span-20-24"><a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>        <span class="n">src</span><span class="o">=</span><span class="n">masked_hidden</span>
+</span><span id="__span-20-25"><a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>    <span class="p">)</span>
+</span><span id="__span-20-26"><a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>
+</span><span id="__span-20-27"><a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>    <span class="c1"># Count valid tokens per visit</span>
+</span><span id="__span-20-28"><a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>    <span class="n">visit_counts</span><span class="o">.</span><span class="n">scatter_add_</span><span class="p">(</span>
+</span><span id="__span-20-29"><a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>        <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-20-30"><a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>        <span class="n">index</span><span class="o">=</span><span class="n">visit_ids</span><span class="p">,</span>
+</span><span id="__span-20-31"><a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>        <span class="n">src</span><span class="o">=</span><span class="n">valid_mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+</span><span id="__span-20-32"><a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>    <span class="p">)</span>
+</span><span id="__span-20-33"><a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a>
+</span><span id="__span-20-34"><a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a>    <span class="c1"># Mean pooling (safe division)</span>
+</span><span id="__span-20-35"><a id="__codelineno-20-35" name="__codelineno-20-35" href="#__codelineno-20-35"></a>    <span class="n">visit_embeddings</span> <span class="o">=</span> <span class="n">visit_sums</span> <span class="o">/</span> <span class="p">(</span><span class="n">visit_counts</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+</span><span id="__span-20-36"><a id="__codelineno-20-36" name="__codelineno-20-36" href="#__codelineno-20-36"></a>
+</span><span id="__span-20-37"><a id="__codelineno-20-37" name="__codelineno-20-37" href="#__codelineno-20-37"></a>    <span class="k">return</span> <span class="n">visit_embeddings</span>
+</span></code></pre></div>
+<p><strong>Key points:</strong>
+- ✅ Mask hidden states BEFORE scatter-add
+- ✅ Count only valid tokens for mean
+- ✅ Safe division with epsilon to avoid NaN</p>
+<hr />
+<h3 id="solution-3-loss-masking">Solution 3: Loss Masking<a class="headerlink" href="#solution-3-loss-masking" title="Permanent link">&para;</a></h3>
+<p><strong>For token-level losses (MLM), ignore padding positions:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># CrossEntropy automatically ignores index=-100</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">ignore_index</span><span class="o">=-</span><span class="mi">100</span><span class="p">)</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Set padding positions to -100</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">labels</span><span class="p">[</span><span class="n">attention_mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Compute loss (padding ignored)</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">mlm_loss</span> <span class="o">=</span> <span class="n">loss</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</span></code></pre></div>
+<p><strong>For sequence/visit-level losses, mask is handled in aggregation step.</strong></p>
+<hr />
+<h3 id="common-padding-bugs">Common Padding Bugs<a class="headerlink" href="#common-padding-bugs" title="Permanent link">&para;</a></h3>
+<p><strong>Bug 1: Forgetting attention mask</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># WRONG: No masking</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="n">ages</span><span class="p">,</span> <span class="n">visit_ids</span><span class="p">)</span>  <span class="c1"># ❌</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># CORRECT: With attention mask</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">codes</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="n">ages</span><span class="p">,</span> <span class="n">visit_ids</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>  <span class="c1"># ✅</span>
+</span></code></pre></div></p>
+<p><strong>Bug 2: Padding values in visit_ids</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># WRONG: visit_ids has undefined values for padding</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">codes</span><span class="p">:</span>      <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">visit_ids</span><span class="p">:</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="p">]</span>  <span class="c1"># ❌ What should ? be?</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1"># CORRECT: Set padding visit_ids to 0 (will be masked anyway)</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="n">visit_ids</span><span class="p">:</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># ✅ Consistent, masked out later</span>
+</span></code></pre></div></p>
+<p><strong>Bug 3: Including padding in visit counts</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># WRONG: Count all tokens</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="n">visit_ids</span> <span class="o">==</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># ❌ Includes padding!</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># CORRECT: Count only valid tokens</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="n">count</span> <span class="o">=</span> <span class="p">((</span><span class="n">visit_ids</span> <span class="o">==</span> <span class="n">t</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># ✅</span>
+</span></code></pre></div></p>
+<hr />
+<h2 id="5-hierarchical-vs-flattened-trade-offs">5. Hierarchical vs Flattened Trade-offs<a class="headerlink" href="#5-hierarchical-vs-flattened-trade-offs" title="Permanent link">&para;</a></h2>
+<h3 id="design-decision">Design Decision<a class="headerlink" href="#design-decision" title="Permanent link">&para;</a></h3>
+<p><strong>Chosen approach:</strong> Flatten everything + use visit_ids to preserve structure</p>
+<p><strong>Alternative:</strong> Hierarchical transformer (visit encoder → patient encoder)</p>
+<h3 id="flattening-advantages">Flattening Advantages<a class="headerlink" href="#flattening-advantages" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Advantage</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Single transformer</strong></td>
+<td>Simpler architecture, fewer components</td>
+</tr>
+<tr>
+<td><strong>Full cross-visit attention</strong></td>
+<td>Tokens can attend across visit boundaries</td>
+</tr>
+<tr>
+<td><strong>Simpler batching</strong></td>
+<td>Standard tensor operations</td>
+</tr>
+<tr>
+<td><strong>BEHRT compatibility</strong></td>
+<td>Can use pre-trained BEHRT directly</td>
+</tr>
+<tr>
+<td><strong>Computational efficiency</strong></td>
+<td>One forward pass instead of nested</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flattening-disadvantages">Flattening Disadvantages<a class="headerlink" href="#flattening-disadvantages" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Disadvantage</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mask discipline</strong></td>
+<td>Must carefully handle padding everywhere</td>
+</tr>
+<tr>
+<td><strong>Visit boundaries implicit</strong></td>
+<td>Structure only preserved through visit_ids</td>
+</tr>
+<tr>
+<td><strong>Sequence length limits</strong></td>
+<td>Max sequence length = max tokens (not max visits)</td>
+</tr>
+<tr>
+<td><strong>Memory for long histories</strong></td>
+<td>O(total_tokens) vs O(visits) * O(codes_per_visit)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hierarchical-alternative">Hierarchical Alternative<a class="headerlink" href="#hierarchical-alternative" title="Permanent link">&para;</a></h3>
+<p><strong>Architecture:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Visit Encoder: codes → visit representation
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Patient Encoder: visit sequence → patient representation
+</span></code></pre></div></p>
+<p><strong>Pros:</strong>
+- ✅ Explicit visit boundaries
+- ✅ Can use visit-level features naturally
+- ✅ Scales better with many visits</p>
+<p><strong>Cons:</strong>
+- ❌ More complex architecture
+- ❌ No pre-trained models available
+- ❌ Limited cross-visit attention
+- ❌ Slower training (nested loops)</p>
+<h3 id="why-flattening-is-pragmatic">Why Flattening is Pragmatic<a class="headerlink" href="#why-flattening-is-pragmatic" title="Permanent link">&para;</a></h3>
+<p>For BEHRT-based models, flattening is the <strong>pragmatic choice</strong>:
+1. Leverage BEHRT pre-training
+2. Simpler implementation
+3. Full attention across history
+4. Better code reuse</p>
+<p><strong>Trade-off:</strong> Requires rigorous masking discipline (but worth it!).</p>
+<hr />
+<h2 id="6-what-the-model-actually-sees">6. What the Model Actually Sees<a class="headerlink" href="#6-what-the-model-actually-sees" title="Permanent link">&para;</a></h2>
+<h3 id="the-transformers-view">The Transformer's View<a class="headerlink" href="#the-transformers-view" title="Permanent link">&para;</a></h3>
+<p>After flattening, <strong>the transformer sees one long sequence</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>[c_{b,1,1}, c_{b,1,2}, ..., c_{b,T,n_T}]
+</span></code></pre></div>
+<p><strong>It does NOT inherently know:</strong>
+- ❌ Where visits start or end
+- ❌ How many codes in each visit
+- ❌ Visit temporal spacing
+- ❌ Visit boundaries</p>
+<h3 id="how-structure-is-recovered">How Structure is Recovered<a class="headerlink" href="#how-structure-is-recovered" title="Permanent link">&para;</a></h3>
+<p><strong>The model learns visit structure through embeddings:</strong></p>
+<ol>
+<li><strong>Visit embeddings</strong> (E^visit[visit_ids])</li>
+<li>Same vector for tokens in same visit</li>
+<li>Different vectors for different visits</li>
+<li>
+<p>Learned grouping signal</p>
+</li>
+<li>
+<p><strong>Positional embeddings</strong> (E^pos[position])</p>
+</li>
+<li>Different for each token position</li>
+<li>
+<p>Provides fine-grained ordering</p>
+</li>
+<li>
+<p><strong>Age embeddings</strong> (E^age[age_bin])</p>
+</li>
+<li>Changes across visits (patient ages)</li>
+<li>Temporal progression signal</li>
+</ol>
+<p><strong>Together, these embeddings encode:</strong>
+- Visit boundaries (via visit embeddings)
+- Token ordering (via positional embeddings)
+- Temporal progression (via age embeddings)</p>
+<h3 id="geometric-intuition">Geometric Intuition<a class="headerlink" href="#geometric-intuition" title="Permanent link">&para;</a></h3>
+<p><strong>Without embeddings:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>All tokens look the same → Model can&#39;t distinguish visits
+</span></code></pre></div></p>
+<p><strong>With embeddings:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Token embedding = code + age + visit + position
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>Tokens in same visit:
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>    - Share visit embedding (grouping)
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>    - Have different position embeddings (ordering)
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>Tokens in different visits:
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>    - Have different visit embeddings (separation)
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>    - Have different age embeddings (time progression)
+</span></code></pre></div></p>
+<p><strong>Result:</strong> Inductive bias about hierarchical structure is <strong>encoded in the embedding space</strong>.</p>
+<hr />
+<h2 id="7-optimization-implications">7. Optimization Implications<a class="headerlink" href="#7-optimization-implications" title="Permanent link">&para;</a></h2>
+<h3 id="if-structure-is-not-preserved">If Structure is Not Preserved<a class="headerlink" href="#if-structure-is-not-preserved" title="Permanent link">&para;</a></h3>
+<p><strong>Without proper visit encoding:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Model treats:
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>    [A, B, C] from visit 1
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>The same as:
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>    [A], [B], [C] from visits 1, 2, 3
+</span></code></pre></div>
+<p><strong>Consequences:</strong>
+- Model confuses codes within visit vs across visits
+- Survival aggregation smears information incorrectly
+- Hazard estimates become unstable and meaningless</p>
+<h3 id="why-the-pipeline-works">Why the Pipeline Works<a class="headerlink" href="#why-the-pipeline-works" title="Permanent link">&para;</a></h3>
+<p><strong>The pipeline preserves structure through:</strong></p>
+<ol>
+<li><strong>Flattening</strong></li>
+<li>
+<p>Converts tree to sequence</p>
+</li>
+<li>
+<p><strong>Visit embeddings</strong></p>
+</li>
+<li>
+<p>Inject visit grouping as learned prior</p>
+</li>
+<li>
+<p><strong>Attention masking</strong></p>
+</li>
+<li>
+<p>Prevents padding contamination</p>
+</li>
+<li>
+<p><strong>Correct aggregation</strong></p>
+</li>
+<li>Recovers visit-level representations using visit_ids</li>
+</ol>
+<p><strong>Together, these restore hierarchical structure in differentiable form.</strong></p>
+<h3 id="gradient-flow">Gradient Flow<a class="headerlink" href="#gradient-flow" title="Permanent link">&para;</a></h3>
+<p><strong>Structure preservation is critical for gradients:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Loss → Hazard → Visit embedding → scatter_add → Token embeddings → Transformer
+</span></code></pre></div>
+<p>If visit boundaries are wrong:
+- Gradients flow to wrong tokens
+- Model learns spurious patterns
+- Optimization diverges or gets stuck</p>
+<p><strong>With correct structure:</strong>
+- Gradients flow to correct token groups
+- Model learns visit-level patterns
+- Optimization converges smoothly</p>
+<hr />
+<h2 id="8-mental-model">8. Mental Model<a class="headerlink" href="#8-mental-model" title="Permanent link">&para;</a></h2>
+<h3 id="the-forest-analogy">The Forest Analogy<a class="headerlink" href="#the-forest-analogy" title="Permanent link">&para;</a></h3>
+<p><strong>Think of EHR data as:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Raw EHR = Forest of trees
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>    Each patient = Tree
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>    Each visit = Branch
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>    Each code = Leaf
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>Flattening = Cut forest into long vine
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>    Lay all leaves in sequence
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>    Lose branch structure
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>visit_ids = Colored tape marking branches
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>    Each color = Original branch
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>    Preserves grouping information
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>scatter_add = Regrouping leaves into branches
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>    Group by tape color
+</span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>    Reconstruct branch-level information
+</span></code></pre></div>
+<p><strong>It works — but only if you keep the colored tape intact!</strong></p>
+<h3 id="the-street-analogy">The Street Analogy<a class="headerlink" href="#the-street-analogy" title="Permanent link">&para;</a></h3>
+<p><strong>From <code>01a_visit_embeddings.md</code>:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Visit ID embedding = Street number
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>    &quot;This is building #3&quot;
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>Aggregated visit embedding = What happened inside
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>    &quot;Meeting, presentation, coffee, discussion&quot;
+</span></code></pre></div>
+<p>Flattening destroys buildings, but visit_ids preserve addresses so we can rebuild.</p>
+<hr />
+<h2 id="9-implementation-best-practices">9. Implementation Best Practices<a class="headerlink" href="#9-implementation-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="checklist-for-correct-implementation">Checklist for Correct Implementation<a class="headerlink" href="#checklist-for-correct-implementation" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Always create attention mask:</strong>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="n">attention_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">codes</span> <span class="o">!=</span> <span class="n">pad_token_id</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+</span></code></pre></div></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Pass mask to transformer:</strong>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="n">ages</span><span class="p">,</span> <span class="n">visit_ids</span><span class="p">,</span> <span class="n">attention_mask</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Mask before aggregation:</strong>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="n">masked_hidden</span> <span class="o">=</span> <span class="n">hidden</span> <span class="o">*</span> <span class="n">attention_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Count only valid tokens:</strong>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="n">counts</span> <span class="o">=</span> <span class="n">attention_mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">scatter_add</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Safe division:</strong>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="n">mean</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">/</span> <span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>  <span class="c1"># Avoid division by zero</span>
+</span></code></pre></div></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Validate visit_ids:</strong>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="k">assert</span> <span class="p">(</span><span class="n">visit_ids</span><span class="p">[</span><span class="n">attention_mask</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>  <span class="c1"># Padding has visit_id=0</span>
+</span></code></pre></div></p>
+</li>
+</ul>
+<h3 id="testing-mask-correctness">Testing Mask Correctness<a class="headerlink" href="#testing-mask-correctness" title="Permanent link">&para;</a></h3>
+<p><strong>Test 1: Padding should not affect outputs</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Create sequence with and without padding</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="n">seq1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="n">seq2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Same but padded</span>
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="n">output1</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">seq1</span><span class="p">)</span>
+</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="n">output2</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">seq2</span><span class="p">)</span>
+</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>
+</span><span id="__span-39-8"><a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="c1"># Outputs should be identical for non-padding positions</span>
+</span><span id="__span-39-9"><a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a><span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">output1</span><span class="p">,</span> <span class="n">output2</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">seq1</span><span class="p">)])</span>
+</span></code></pre></div>
+<p><strong>Test 2: Aggregation should ignore padding</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Visit with padding</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="n">codes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="n">visit_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a><span class="c1"># Aggregate</span>
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="n">visit_emb</span> <span class="o">=</span> <span class="n">aggregate_to_visits</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">visit_ids</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+</span><span id="__span-40-8"><a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>
+</span><span id="__span-40-9"><a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="c1"># Visit 0 should only include first 2 tokens</span>
+</span><span id="__span-40-10"><a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="c1"># Visit 1 should only include token 2</span>
+</span><span id="__span-40-11"><a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a><span class="c1"># Padding tokens (3, 4) should not affect results</span>
+</span></code></pre></div>
+<hr />
+<h2 id="10-advanced-topics">10. Advanced Topics<a class="headerlink" href="#10-advanced-topics" title="Permanent link">&para;</a></h2>
+<h3 id="long-sequence-handling">Long Sequence Handling<a class="headerlink" href="#long-sequence-handling" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Patients with many visits → very long sequences</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Truncation:</strong>
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Keep most recent L_max tokens</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="n">codes</span> <span class="o">=</span> <span class="n">codes</span><span class="p">[:,</span> <span class="o">-</span><span class="n">L_max</span><span class="p">:]</span>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="n">visit_ids</span> <span class="o">=</span> <span class="n">visit_ids</span><span class="p">[:,</span> <span class="o">-</span><span class="n">L_max</span><span class="p">:]</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Visit-level sampling:</strong>
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Sample K most important visits</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="n">selected_visits</span> <span class="o">=</span> <span class="n">select_important_visits</span><span class="p">(</span><span class="n">visits</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Hierarchical modeling:</strong>
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># Use visit encoder → patient encoder</span>
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="c1"># (But requires new architecture)</span>
+</span></code></pre></div></p>
+</li>
+</ol>
+<h3 id="efficient-batching">Efficient Batching<a class="headerlink" href="#efficient-batching" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Variable-length sequences waste computation on padding</p>
+<p><strong>Solution:</strong> Pack sequences to minimize padding</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.utils.rnn</span><span class="w"> </span><span class="kn">import</span> <span class="n">pack_padded_sequence</span><span class="p">,</span> <span class="n">pad_packed_sequence</span>
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="c1"># Sort by length (descending)</span>
+</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="n">lengths</span> <span class="o">=</span> <span class="p">(</span><span class="n">attention_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+</span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a><span class="n">sorted_lengths</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">lengths</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>
+</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="c1"># Pack (removes padding)</span>
+</span><span id="__span-44-8"><a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a><span class="n">packed</span> <span class="o">=</span> <span class="n">pack_padded_sequence</span><span class="p">(</span><span class="n">embeddings</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="n">sorted_lengths</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-44-9"><a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a>
+</span><span id="__span-44-10"><a id="__codelineno-44-10" name="__codelineno-44-10" href="#__codelineno-44-10"></a><span class="c1"># Process</span>
+</span><span id="__span-44-11"><a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a><span class="n">packed_output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">packed</span><span class="p">)</span>
+</span><span id="__span-44-12"><a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a>
+</span><span id="__span-44-13"><a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a><span class="c1"># Unpack</span>
+</span><span id="__span-44-14"><a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a><span class="n">output</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pad_packed_sequence</span><span class="p">(</span><span class="n">packed_output</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-44-15"><a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a>
+</span><span id="__span-44-16"><a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="c1"># Restore original order</span>
+</span><span id="__span-44-17"><a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a><span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="n">indices</span><span class="o">.</span><span class="n">argsort</span><span class="p">()]</span>
+</span></code></pre></div>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<h3 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Hierarchical → Flat transformation:</strong></li>
+<li>EHR data is naturally hierarchical (patient → visits → codes)</li>
+<li>Transformers require flat sequences</li>
+<li>
+<p>Flattening loses structure unless carefully preserved</p>
+</li>
+<li>
+<p><strong>visit_ids dual role:</strong></p>
+</li>
+<li>Input feature: Embedding lookup for temporal grouping</li>
+<li>
+<p>Aggregation index: Boundary marker for grouping tokens</p>
+</li>
+<li>
+<p><strong>Padding is dangerous:</strong></p>
+</li>
+<li>Must mask in attention</li>
+<li>Must mask in aggregation</li>
+<li>Must mask in loss</li>
+<li>
+<p>Silent bugs if missed!</p>
+</li>
+<li>
+<p><strong>Structure preservation:</strong></p>
+</li>
+<li>Visit embeddings encode grouping</li>
+<li>Attention masking prevents contamination</li>
+<li>
+<p>scatter_add recovers visit-level representations</p>
+</li>
+<li>
+<p><strong>Design trade-off:</strong></p>
+</li>
+<li>Flattening is pragmatic for BEHRT</li>
+<li>Requires rigorous masking discipline</li>
+<li>Enables pre-training and full attention</li>
+</ol>
+<h3 id="mental-checklist">Mental Checklist<a class="headerlink" href="#mental-checklist" title="Permanent link">&para;</a></h3>
+<p><strong>Every time you process EHR sequences:</strong></p>
+<ol>
+<li>✅ Create attention mask</li>
+<li>✅ Pass mask to transformer</li>
+<li>✅ Mask before aggregation</li>
+<li>✅ Count only valid tokens</li>
+<li>✅ Test padding correctness</li>
+</ol>
+<p><strong>If you follow this discipline, flattening works beautifully!</strong></p>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<p><strong>Code:</strong>
+- <code>src/ehrsequencing/models/embeddings.py</code> - Embedding layer with visit IDs
+- <code>src/ehrsequencing/models/behrt.py</code> - Transformer with attention masking
+- <code>src/ehrsequencing/models/behrt_survival.py</code> - Visit aggregation implementation</p>
+<p><strong>Related Documentation:</strong>
+- <code>01_behrt_model_overview.md</code> - Complete model pipeline
+- <code>01a_visit_embeddings.md</code> - Visit ID vs aggregated embeddings
+- <code>dev/models/pretrain_finetune/01_behrt_model_design.md</code> - BEHRT architecture details</p>
+<hr />
+<p><strong>Last Updated:</strong> 2026-02-03<br />
+<strong>Status:</strong> Complete and ready for use</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 EHR Sequencing Research Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pleiadian53/ehr-sequencing" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -12,31 +12,27 @@
         <meta name="author" content="EHR Sequencing Research Team">
       
       
-        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/modern-code-embeddings/">
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/representation_learning/modern-code-embeddings/">
       
       
-        <link rel="prev" href="../causal-survival-analysis-2/">
-      
-      
-        <link rel="next" href="../../data_generation/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
-        <title>Modern Code Embeddings - EHR Sequencing</title>
+        <title>Modern Medical Code Embeddings for EHR Sequencing - EHR Sequencing</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +51,9 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -102,7 +98,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+    <a href="../../.." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -122,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Modern Code Embeddings
+              Modern Medical Code Embeddings for EHR Sequencing
             
           </span>
         </div>
@@ -229,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -250,7 +246,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../INSTALL/" class="md-tabs__link">
+        <a href="../../../INSTALL/" class="md-tabs__link">
           
   
   
@@ -270,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../notebooks/02_survival_analysis/" class="md-tabs__link">
+        <a href="../../../notebooks/02_survival_analysis/" class="md-tabs__link">
           
   
   
@@ -286,13 +282,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../" class="md-tabs__link">
           
   
   
@@ -312,7 +306,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../data_generation/" class="md-tabs__link">
+        <a href="../../../data_generation/" class="md-tabs__link">
           
   
   
@@ -332,7 +326,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../pretrained_embeddings_guide/" class="md-tabs__link">
+        <a href="../../../pretrained_embeddings_guide/" class="md-tabs__link">
           
   
   
@@ -372,7 +366,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+    <a href="../../.." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -402,7 +396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -483,7 +477,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../INSTALL/" class="md-nav__link">
+      <a href="../../../INSTALL/" class="md-nav__link">
         
   
   
@@ -572,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/02_survival_analysis/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/" class="md-nav__link">
         
   
   
@@ -600,7 +594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
         
   
   
@@ -628,7 +622,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
         
   
   
@@ -656,7 +650,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/02_survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
         
   
   
@@ -684,7 +678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/02_survival_analysis/01_discrete_time_survival_lstm/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/01_discrete_time_survival_lstm/" class="md-nav__link">
         
   
   
@@ -716,31 +710,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -758,7 +749,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -776,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         
   
   
@@ -810,13 +801,10 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
@@ -825,7 +813,7 @@
         <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
         
           
-          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
             
   
   
@@ -861,7 +849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../causal-survival-analysis-1/" class="md-nav__link">
+      <a href="../../causal-survival-analysis-1.md" class="md-nav__link">
         
   
   
@@ -889,7 +877,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../causal-survival-analysis-2/" class="md-nav__link">
+      <a href="../../causal-survival-analysis-2.md" class="md-nav__link">
         
   
   
@@ -922,37 +910,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Modern Code Embeddings
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../modern-code-embeddings.md" class="md-nav__link">
         
   
   
@@ -968,337 +929,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-1-problem-formulation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 1: Problem Formulation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Part 1: Problem Formulation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#input-patient-medical-history" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Input: Patient Medical History
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#goal-learn-embedding-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goal: Learn Embedding Function
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-2-modern-embedding-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 2: Modern Embedding Approaches
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Part 2: Modern Embedding Approaches">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#approach-1-temporal-skip-gram-med2vec" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Approach 1: Temporal Skip-gram (Med2Vec++)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#approach-2-hierarchical-temporal-embeddings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Approach 2: Hierarchical Temporal Embeddings
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#approach-3-transformer-based-contextualized-embeddings-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Approach 3: Transformer-based Contextualized Embeddings (RECOMMENDED)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#approach-4-graph-enhanced-embeddings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Approach 4: Graph-Enhanced Embeddings
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-3-recommendations-for-your-use-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 3: Recommendations for Your Use Case
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Part 3: Recommendations for Your Use Case">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#for-icd-code-e119-type-2-diabetes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        For ICD Code E11.9 (Type 2 Diabetes)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#for-loinc-code-4548-4-hemoglobin-a1c" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        For LOINC Code 4548-4 (Hemoglobin A1c)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-4-implementation-roadmap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 4: Implementation Roadmap
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Part 4: Implementation Roadmap">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-data-preparation-week-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1: Data Preparation (Week 1)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-2-baseline-embeddings-week-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2: Baseline Embeddings (Week 2)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-3-medcodebert-implementation-week-3-4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3: MedCodeBERT Implementation (Week 3-4)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-4-evaluation-week-5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 4: Evaluation (Week 5)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-5-fine-tuning-for-applications-week-6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 5: Fine-tuning for Applications (Week 6+)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-5-comparison-table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 5: Comparison Table
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-6-practical-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 6: Practical Recommendations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Part 6: Practical Recommendations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#start-simple-iterate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Start Simple, Iterate
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#handling-different-sequence-representations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Handling Different Sequence Representations
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-7-code-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 7: Code Examples
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Part 7: Code Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#complete-training-script" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Complete Training Script
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1372,7 +1002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data_generation/" class="md-nav__link">
+      <a href="../../../data_generation/" class="md-nav__link">
         
   
   
@@ -1400,7 +1030,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data_generation/data_generation_guide/" class="md-nav__link">
+      <a href="../../../data_generation/data_generation_guide/" class="md-nav__link">
         
   
   
@@ -1428,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
+      <a href="../../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
         
   
   
@@ -1517,7 +1147,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pretrained_embeddings_guide/" class="md-nav__link">
+      <a href="../../../pretrained_embeddings_guide/" class="md-nav__link">
         
   
   
@@ -1545,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../runpods_training_guide/" class="md-nav__link">
+      <a href="../../../runpods_training_guide/" class="md-nav__link">
         
   
   
@@ -1927,7 +1557,7 @@
 
 
   
-    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/modern-code-embeddings.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/representation_learning/modern-code-embeddings.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -2785,12 +2415,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../javascripts/mathjax.js"></script>
+        <script src="../../../javascripts/mathjax.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       

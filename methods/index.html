@@ -18,14 +18,14 @@
         <link rel="prev" href="../notebooks/02_survival_analysis/01_discrete_time_survival_lstm/">
       
       
-        <link rel="next" href="causal-survival-analysis-1/">
+        <link rel="next" href="../data_generation/">
       
       
         
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -1136,7 +1136,7 @@
   
   
     <li class="md-nav__item">
-      <a href="causal-survival-analysis-1/" class="md-nav__link">
+      <a href="causal-survival-analysis-1.md" class="md-nav__link">
         
   
   
@@ -1164,7 +1164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="causal-survival-analysis-2/" class="md-nav__link">
+      <a href="causal-survival-analysis-2.md" class="md-nav__link">
         
   
   
@@ -1200,7 +1200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="modern-code-embeddings/" class="md-nav__link">
+      <a href="modern-code-embeddings.md" class="md-nav__link">
         
   
   
@@ -1774,7 +1774,7 @@
 <h2 id="disease-progression-modeling">Disease Progression Modeling<a class="headerlink" href="#disease-progression-modeling" title="Permanent link">&para;</a></h2>
 <h3 id="causal-survival-analysis-2-part-tutorial">Causal Survival Analysis (2-Part Tutorial)<a class="headerlink" href="#causal-survival-analysis-2-part-tutorial" title="Permanent link">&para;</a></h3>
 <p><strong>Why this matters:</strong> Simple classification tasks like "does this patient have diabetes?" can often be solved with rule-based methods. The real power of sequence modeling emerges when predicting <strong>disease progression</strong> over time.</p>
-<h4 id="part-1-causal-progression-labels"><a href="causal-survival-analysis-1/">Part 1: Causal Progression Labels</a><a class="headerlink" href="#part-1-causal-progression-labels" title="Permanent link">&para;</a></h4>
+<h4 id="part-1-causal-progression-labels"><a href="causal-survival-analysis-1.md">Part 1: Causal Progression Labels</a><a class="headerlink" href="#part-1-causal-progression-labels" title="Permanent link">&para;</a></h4>
 <p><strong>Topics covered:</strong>
 - The most dangerous data leakage pattern in temporal prediction
 - Why patient-level labels + visit-level inputs = temporal leakage
@@ -1782,7 +1782,7 @@
 - Designing progression labels that respect causality
 - Three approaches: fixed-horizon, discrete-time survival, continuous-time survival</p>
 <p><strong>Key insight:</strong> If a model can "predict" an outcome before clinical evidence exists, you have leakage. High AUC is not a virtue—causality is.</p>
-<h4 id="part-2-discrete-time-survival-modeling"><a href="causal-survival-analysis-2/">Part 2: Discrete-Time Survival Modeling</a><a class="headerlink" href="#part-2-discrete-time-survival-modeling" title="Permanent link">&para;</a></h4>
+<h4 id="part-2-discrete-time-survival-modeling"><a href="causal-survival-analysis-2.md">Part 2: Discrete-Time Survival Modeling</a><a class="headerlink" href="#part-2-discrete-time-survival-modeling" title="Permanent link">&para;</a></h4>
 <p><strong>Topics covered:</strong>
 - What discrete-time survival modeling actually means
 - Understanding censoring (conceptually and operationally)
@@ -1796,7 +1796,7 @@
 - Training script: <code>examples/train_survival_lstm.py</code></p>
 <hr />
 <h2 id="other-methodological-topics">Other Methodological Topics<a class="headerlink" href="#other-methodological-topics" title="Permanent link">&para;</a></h2>
-<h3 id="within-visit-structure"><a href="within-visit-structure/">Within-Visit Structure</a><a class="headerlink" href="#within-visit-structure" title="Permanent link">&para;</a></h3>
+<h3 id="within-visit-structure"><a href="within-visit-structure.md">Within-Visit Structure</a><a class="headerlink" href="#within-visit-structure" title="Permanent link">&para;</a></h3>
 <p>How to handle multiple medical codes within a single visit:
 - Bag-of-codes (mean pooling)
 - Attention mechanisms
@@ -1865,8 +1865,8 @@
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <h3 id="for-researchers">For Researchers<a class="headerlink" href="#for-researchers" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Read <a href="causal-survival-analysis-1/">Part 1</a> to understand the leakage problem</li>
-<li>Read <a href="causal-survival-analysis-2/">Part 2</a> for implementation details</li>
+<li>Read <a href="causal-survival-analysis-1.md">Part 1</a> to understand the leakage problem</li>
+<li>Read <a href="causal-survival-analysis-2.md">Part 2</a> for implementation details</li>
 <li>Review the training script: <code>examples/train_survival_lstm.py</code></li>
 <li>Adapt to your specific outcome and dataset</li>
 </ol>
