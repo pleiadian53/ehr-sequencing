@@ -320,6 +320,18 @@ Then divide by visit size (mean pooling)
 
 ---
 
+## New: 6-session tutorial track (2026-02-21)
+
+If you want a workshop-style progression, start here:
+
+- `tutorial_sessions_index.md`
+- Session 1: `session_01_ehr_to_tokens_to_tensors.md`
+- Session 2: `session_02_behrt_embeddings_and_inductive_bias.md`
+- Session 3: `session_03_pretraining_objectives.md`
+- Session 4: `session_04_survival_head_and_visit_aggregation.md`
+- Session 5: `session_05_losses_as_value_systems.md`
+- Session 6: `session_06_optimization_strategies.md`
+
 ## Changelog
 
 | Date | Changes |
