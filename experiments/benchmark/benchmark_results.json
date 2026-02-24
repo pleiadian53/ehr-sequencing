@@ -1,0 +1,30 @@
+{
+  "config": {
+    "num_patients": 200,
+    "vocab_size": 1000,
+    "max_visits": 20,
+    "max_codes_per_visit": 15,
+    "model_size": "small",
+    "epochs": 3,
+    "batch_size": 16,
+    "lr": 0.001,
+    "weight_decay": 1e-05,
+    "patience": 5,
+    "output_dir": "experiments/benchmark",
+    "seed": 42
+  },
+  "hierarchical": {
+    "test_c_index": 0.5287009063444109,
+    "test_nll": 2.094591438770294,
+    "parameters": 128257,
+    "training_time": 2.1001062393188477,
+    "best_val_c_index": 0.3979591836734694
+  },
+  "flat": {
+    "test_c_index": 0.595166163141994,
+    "test_nll": 1.6068735718727112,
+    "parameters": 553089,
+    "training_time": 14.776005983352661,
+    "best_val_c_index": 0.5782312925170068
+  }
+}

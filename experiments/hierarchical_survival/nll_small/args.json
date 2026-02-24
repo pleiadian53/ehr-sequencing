@@ -1,0 +1,17 @@
+{
+  "num_patients": 200,
+  "vocab_size": 1000,
+  "max_visits": 20,
+  "max_codes_per_visit": 15,
+  "model_size": "small",
+  "loss": "nll",
+  "lambda_rank": 0.05,
+  "margin": 0.1,
+  "epochs": 3,
+  "batch_size": 16,
+  "lr": 0.0001,
+  "weight_decay": 1e-05,
+  "patience": 10,
+  "output_dir": "experiments/hierarchical_survival",
+  "seed": 42
+}

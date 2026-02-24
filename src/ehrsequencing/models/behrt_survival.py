@@ -251,27 +251,30 @@ class BEHRTForSurvival(nn.Module):
     def compute_risk_score(
         self,
         hazards: torch.Tensor,
-        time_horizon: Optional[int] = None
+        time_horizon: Optional[int] = None,
+        visit_mask: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
         """
         Compute risk score from hazards for ranking/evaluation.
         
         Args:
             hazards: (batch, max_visits) - Predicted hazards
-            time_horizon: Optional time point for risk (None = cumulative)
+            time_horizon: Optional time point for risk (None = mean hazard over real visits)
+            visit_mask: (batch, max_visits) bool/float — real visits for normalization.
+                        If None, mean over all positions.
         
         Returns:
             risk_scores: (batch,) - Risk scores for ranking
         """
         if time_horizon is not None:
-            # Risk at specific time horizon: 1 - S(t)
             survival = torch.cumprod(1 - hazards, dim=1)
-            risk_scores = 1 - survival[:, time_horizon]
-        else:
-            # Cumulative risk (sum of hazards)
-            risk_scores = hazards.sum(dim=1)
-        
-        return risk_scores
+            return 1 - survival[:, time_horizon]
+
+        if visit_mask is not None:
+            mask = visit_mask.float()
+            n_real = mask.sum(dim=1).clamp(min=1.0)
+            return (hazards * mask).sum(dim=1) / n_real
+        return hazards.mean(dim=1)
     
     @classmethod
     def from_pretrained(

@@ -1,80 +1,62 @@
 # BEHRT for Discrete-Time Survival Analysis: Documentation
 
-**Last Updated:** 2026-02-03  
-**Purpose:** Comprehensive guide to BEHRT-based survival modeling
+**Last Updated:** 2026-02-21
+**Purpose:** Comprehensive guide to BEHRT-based survival modeling on EHR data
 
 ---
 
 ## Overview
 
-This documentation series explains how BEHRT (Bidirectional Encoder Representations from Transformers) is adapted for discrete-time survival analysis on EHR data. The documents progress from high-level architecture to low-level implementation details.
+This documentation series explains how BEHRT (Bidirectional Encoder Representations from Transformers for EHRs) is adapted for discrete-time survival analysis. Documents are organized into two tracks:
+
+- **Tutorial track (`01`–`08`):** Concise, concept-focused documents in logical reading order — from survival math foundations through architecture decisions.
+- **Deep-reference track (`00_`, `00a_`, `00b_`):** Comprehensive treatments of the core architecture, visit embedding design, and data representation. Read these for full mathematical detail and implementation depth.
 
 **Target audience:** Researchers, ML engineers, and data scientists working with EHR survival models.
 
 ---
 
-## Document Series
+## Tutorial Track (Recommended Reading Order)
 
-### [01_behrt_model_overview.md](./01_behrt_model_overview.md)
+### [01_survival_framework.md](./01_survival_framework.md)
+Survival math foundations: hazard function, survival function, censoring, label preparation, synthetic data generation, evaluation metrics (C-index, Brier score).
 
-**What:** Complete optimization pipeline from tokens to gradients
+### [02_ehr_to_tokens.md](./02_ehr_to_tokens.md)
+How hierarchical EHR data becomes BEHRT-ready tensors: flattening, dual role of `visit_ids`, tensor contract, padding discipline, flat vs hierarchical tradeoff.
 
-**Topics covered:**
-- Learning hierarchy (embeddings → transformer → task heads)
-- Training objectives (MLM, next-visit, survival)
-- Loss functions (NLL, ranking, hybrid)
-- Training strategies (frozen, LoRA, full fine-tune)
-- Optimization loop and gradient flow
+### [03_behrt_embeddings.md](./03_behrt_embeddings.md)
+BEHRT embedding design as structured inductive bias: age binning, visit vs positional embedding, sinusoidal vs learned, visit ID embedding vs aggregated visit embedding.
 
-**Read this if:**
-- New to BEHRT survival models
-- Want end-to-end pipeline understanding
-- Need to choose training strategy
-- Deciding which loss function to use
+### [04_pretraining_objectives.md](./04_pretraining_objectives.md)
+What MLM and Next-Visit Prediction each teach the encoder, joint vs sequential training, recommended pretraining strategy.
 
-**Key takeaway:** BEHRT learns contextual representations through pre-training, then adapts to survival prediction via task-specific heads and losses.
+### [05_survival_head_and_aggregation.md](./05_survival_head_and_aggregation.md)
+The bridge from token-level transformer output to visit-level hazards: `scatter_add` mechanics, hazard head, discrete-time interpretation, visit mask.
 
----
+### [06_loss_functions.md](./06_loss_functions.md)
+Loss choice as a value system: NLL vs C-index disconnect, pairwise ranking loss, hybrid loss, tuning `lambda_rank`, practical recommendations.
 
-### [01a_visit_embeddings.md](./01a_visit_embeddings.md)
+### [07_optimization_strategies.md](./07_optimization_strategies.md)
+Frozen encoder vs LoRA vs full fine-tuning: parameter tradeoffs, practical recipes by data regime, operational notes.
 
-**What:** Deep dive into two conceptually different "visit embeddings"
+### [08_architecture_decisions.md](./08_architecture_decisions.md)
+LSTM baseline architecture, BEHRT vs LSTM comparison, flat vs hierarchical transformer tradeoffs, benchmark framework and expected performance.
 
-**Topics covered:**
-- Visit ID embeddings (input-side lookup)
-- Aggregated visit embeddings (output-side representation)
-- Direct comparison and key differences
-- scatter_add mechanics and implementation
-- Gradient flow and optimization implications
-
-**Read this if:**
-- Confused about "visit embedding" terminology
-- Need to understand aggregation process
-- Implementing visit-level models
-- Debugging aggregation issues
-
-**Key takeaway:** Visit ID embedding = "this token is from visit 3" (input metadata). Aggregated visit embedding = "visit 3 contains these conditions" (output representation).
+### [09_hierarchical_architecture.md](./09_hierarchical_architecture.md)
+Deep dive into hierarchical BEHRT: two-stage encoder design (within-visit + across-visit), attention pooling mechanics, Δt embedding, implementation blueprint, and flat vs hierarchical comparison.
 
 ---
 
-### [01b_ehr_tokens_tensors.md](./01b_ehr_tokens_tensors.md)
+## Deep-Reference Track
 
-**What:** How hierarchical EHR data becomes flat token sequences
+### [00_behrt_model_overview.md](./00_behrt_model_overview.md)
+Complete end-to-end pipeline: learning hierarchy (5 levels), all training objectives, loss function comparison tables, training strategy decision matrix, optimization loop, gradient flow, common pitfalls.
 
-**Topics covered:**
-- Flattening hierarchical data (patient → visits → codes)
-- Preserving structure through visit_ids
-- Dual role of visit_ids (feature + index)
-- Attention masking and padding discipline
-- Implementation best practices
+### [00a_visit_embeddings.md](./00a_visit_embeddings.md)
+Deep dive into the two "visit embeddings": visit ID embedding (input-side lookup) vs aggregated visit embedding (output-side representation). Includes step-by-step `scatter_add` explanation, gradient flow analysis, and common misconceptions.
 
-**Read this if:**
-- Want to understand data preprocessing
-- Need to implement flattening logic
-- Debugging padding/masking issues
-- Comparing hierarchical vs flat architectures
-
-**Key takeaway:** Flattening is pragmatic and enables BEHRT pre-training, but requires rigorous attention masking to preserve hierarchical structure.
+### [00b_ehr_tokens_tensors.md](./00b_ehr_tokens_tensors.md)
+Deep dive into flattening hierarchical EHR data: forest/vine analogy, attention mask implementation, padding bug examples, testing correctness, design tradeoff analysis.
 
 ---
 
@@ -82,283 +64,112 @@ This documentation series explains how BEHRT (Bidirectional Encoder Representati
 
 ### By Topic
 
-**Architecture:**
-- Model components → `01_behrt_model_overview.md` (Section 1)
-- Embedding layers → `01_behrt_model_overview.md` (Section 1.1-1.2)
-- Visit aggregation → `01a_visit_embeddings.md` (Section 2)
+**Survival math:**
+- Framework and notation → `01_survival_framework.md`
+- Label preparation → `01_survival_framework.md` §4
+- Evaluation metrics → `01_survival_framework.md` §6
 
-**Data Processing:**
-- Flattening hierarchy → `01b_ehr_tokens_tensors.md` (Section 2)
-- Attention masking → `01b_ehr_tokens_tensors.md` (Section 4)
-- Padding handling → `01b_ehr_tokens_tensors.md` (Section 4)
+**Data processing:**
+- Flattening overview → `02_ehr_to_tokens.md`
+- Flattening deep dive → `00b_ehr_tokens_tensors.md`
+- Padding discipline → `02_ehr_to_tokens.md` §5, `00b_ehr_tokens_tensors.md` §4
 
-**Training:**
-- Pre-training objectives → `01_behrt_model_overview.md` (Section 2.1-2.2)
-- Survival losses → `01_behrt_model_overview.md` (Section 2.3)
-- Training strategies → `01_behrt_model_overview.md` (Section 3)
+**Embeddings:**
+- Embedding design overview → `03_behrt_embeddings.md`
+- Visit ID vs aggregated visit embedding → `03_behrt_embeddings.md` §5, `00a_visit_embeddings.md`
+- scatter_add mechanics → `05_survival_head_and_aggregation.md` §2, `00a_visit_embeddings.md` §4
 
-**Implementation:**
-- scatter_add mechanics → `01a_visit_embeddings.md` (Section 4)
-- Masking best practices → `01b_ehr_tokens_tensors.md` (Section 9)
-- Common pitfalls → `01_behrt_model_overview.md` (Section 8)
+**Pretraining:**
+- MLM and NVP objectives → `04_pretraining_objectives.md`
+- Full pipeline overview → `00_behrt_model_overview.md` §2
 
-### By Use Case
+**Survival head:**
+- Aggregation + hazard head → `05_survival_head_and_aggregation.md`
+- Full architecture detail → `00_behrt_model_overview.md` §1.4–1.5
 
-**"I want to..."**
+**Loss functions:**
+- Overview and tuning → `06_loss_functions.md`
+- Full mathematical treatment → `06_loss_functions.md`
 
-- **Understand the full pipeline** → Read `01_behrt_model_overview.md`
-- **Implement visit aggregation** → Read `01a_visit_embeddings.md`
-- **Preprocess EHR data** → Read `01b_ehr_tokens_tensors.md`
-- **Choose a loss function** → `01_behrt_model_overview.md` (Section 2.3)
-- **Choose training strategy** → `01_behrt_model_overview.md` (Section 3)
-- **Debug padding issues** → `01b_ehr_tokens_tensors.md` (Section 4)
-- **Understand gradient flow** → `01a_visit_embeddings.md` (Section 6)
+**Training strategy:**
+- Frozen / LoRA / full → `07_optimization_strategies.md`
+- Decision matrix → `00_behrt_model_overview.md` §3
+
+**Architecture decisions:**
+- BEHRT vs LSTM → `08_architecture_decisions.md` §3
+- Flat vs hierarchical (overview) → `08_architecture_decisions.md` §4, `02_ehr_to_tokens.md` §6
+- Hierarchical BEHRT (deep dive) → `09_hierarchical_architecture.md`
 
 ### By Experience Level
 
-**Beginner (new to project):**
-1. Start with `01_behrt_model_overview.md` (skip math details first pass)
-2. Read `01b_ehr_tokens_tensors.md` (understand data processing)
-3. Skim `01a_visit_embeddings.md` (come back when confused about embeddings)
+**New to BEHRT survival:**
+1. `01_survival_framework.md` — understand the task
+2. `02_ehr_to_tokens.md` — understand the data
+3. `03_behrt_embeddings.md` — understand the model inputs
+4. `05_survival_head_and_aggregation.md` — understand the model outputs
+5. `07_optimization_strategies.md` — understand how to train
 
-**Intermediate (familiar with basics):**
-1. Deep dive into `01_behrt_model_overview.md` (all sections)
-2. Study `01a_visit_embeddings.md` (understand visit representations)
-3. Review `01b_ehr_tokens_tensors.md` (implementation details)
+**Implementing or debugging:**
+1. `00b_ehr_tokens_tensors.md` — data pipeline deep dive
+2. `00a_visit_embeddings.md` — aggregation deep dive
+3. `00_behrt_model_overview.md` — full pipeline reference
 
-**Advanced (modifying codebase):**
-1. Use as reference for implementation decisions
-2. Consult gradient flow sections for optimization debugging
-3. Review best practices sections before major changes
+**Choosing architecture or loss:**
+1. `06_loss_functions.md` — loss function tradeoffs
+2. `07_optimization_strategies.md` — training strategy
+3. `08_architecture_decisions.md` — BEHRT vs LSTM, flat vs hierarchical
+4. `09_hierarchical_architecture.md` — hierarchical BEHRT design and implementation
 
 ---
 
 ## Common Questions
 
-### Q: What's the difference between visit ID embedding and aggregated visit embedding?
+**Q: What is the difference between visit ID embedding and aggregated visit embedding?**
+A: See `03_behrt_embeddings.md` §5 for a concise answer, or `00a_visit_embeddings.md` for the full treatment.
 
-**A:** Visit ID embedding is an **input feature** (learned lookup table added to tokens before transformer). Aggregated visit embedding is an **output representation** (computed from transformer outputs by grouping tokens).
+**Q: Why flatten instead of using a hierarchical transformer?**
+A: See `02_ehr_to_tokens.md` §6 and `08_architecture_decisions.md` §4.
 
-**See:** `01a_visit_embeddings.md` (complete explanation)
 
-### Q: Why flatten hierarchical EHR data instead of using a hierarchical model?
+**Q: Which loss function should I use?**
+A: Start with hybrid loss (`lambda_rank=0.05`). See `06_loss_functions.md` §7 for decision guidance.
 
-**A:** Flattening enables:
-- Use of pre-trained BEHRT
-- Full cross-visit attention
-- Simpler architecture
-- Better code reuse
+**Q: Which training strategy should I use?**
+A: LoRA by default for medium cohorts. See `07_optimization_strategies.md` §5.
 
-**Trade-off:** Requires careful attention masking.
+**Q: Why does NLL not directly optimize C-index?**
+A: See `06_loss_functions.md` §3.
 
-**See:** `01b_ehr_tokens_tensors.md` (Section 5)
-
-### Q: Which survival loss should I use?
-
-**A:** Depends on your evaluation metric:
-- **NLL:** Best for calibration (Brier score)
-- **Ranking:** Best for discrimination (C-index)
-- **Hybrid:** Balances both (recommended starting point)
-
-**See:** `01_behrt_model_overview.md` (Section 2.3)
-
-### Q: Should I use frozen BEHRT, LoRA, or full fine-tuning?
-
-**A:** Depends on dataset size and resources:
-- **Frozen:** Small data (< 1K patients), fast prototyping
-- **LoRA:** Standard scenario (1K-10K patients), best efficiency/performance
-- **Full:** Large data (> 10K patients), maximum flexibility
-
-**See:** `01_behrt_model_overview.md` (Section 3)
-
-### Q: How do I handle padding correctly?
-
-**A:** Three critical steps:
-1. Create attention mask: `mask = (codes != 0).long()`
-2. Pass to transformer: `model(..., attention_mask=mask)`
-3. Mask before aggregation: `hidden * mask.unsqueeze(-1)`
-
-**See:** `01b_ehr_tokens_tensors.md` (Section 4)
-
-### Q: What is scatter_add doing?
-
-**A:** Vectorized group-by-sum operation that aggregates tokens into visits:
-
-```
-For each token i: add hidden_states[i] to visit_embedding[visit_ids[i]]
-Then divide by visit size (mean pooling)
-```
-
-**See:** `01a_visit_embeddings.md` (Section 4)
-
----
-
-## Implementation Checklist
-
-### For New Implementations
-
-- [ ] Read `01_behrt_model_overview.md` (understand full pipeline)
-- [ ] Read `01b_ehr_tokens_tensors.md` (data preprocessing)
-- [ ] Read `01a_visit_embeddings.md` (aggregation logic)
-- [ ] Review code: `src/ehrsequencing/models/behrt_survival.py`
-- [ ] Test attention masking correctness
-- [ ] Validate visit aggregation with small examples
-- [ ] Monitor both calibration and discrimination metrics
-
-### For Debugging
-
-**Padding issues:**
-- [ ] Check attention mask creation
-- [ ] Verify mask passed to transformer
-- [ ] Validate masking before aggregation
-- [ ] Test: padding should not affect outputs
-
-**Aggregation issues:**
-- [ ] Print visit_ids and attention_mask
-- [ ] Check scatter_add index dimensions
-- [ ] Verify division by visit counts
-- [ ] Test: same visit different patients should aggregate differently
-
-**Training issues:**
-- [ ] Check loss computation (masked properly?)
-- [ ] Monitor loss components (NLL vs ranking)
-- [ ] Verify gradient flow (check grad norms)
-- [ ] Validate metrics (C-index, Brier score)
-
----
-
-## Related Documentation
-
-### Pre-training and Fine-tuning
-
-- **`dev/models/pretrain_finetune/`** - BEHRT pre-training documentation
-- **`dev/models/pretrain_finetune/01_behrt_model_design.md`** - Architecture details
-- **`dev/models/pretrain_finetune/07_lora_deep_dive.md`** - LoRA comprehensive guide
-
-### Embeddings
-
-- **`dev/models/pretrain_finetune/05_embedding_summation_and_quality_analysis.md`** - Why sum embeddings
-
-### Benchmarking
-
-- **`dev/models/pretrain_finetune/06_benchmarking_updates.md`** - Evaluation strategies
+**Q: How do I verify my data pipeline is correct?**
+A: See `02_ehr_to_tokens.md` §7 for practical checks.
 
 ---
 
 ## Code References
 
-### Core Models
-
-| File | Description |
-|------|-------------|
-| `src/ehrsequencing/models/behrt.py` | BEHRT base architecture |
-| `src/ehrsequencing/models/embeddings.py` | Embedding layers |
-| `src/ehrsequencing/models/behrt_survival.py` | Survival model implementation |
-| `src/ehrsequencing/models/losses.py` | Survival loss functions |
-
-### Training Scripts
-
-| File | Description |
-|------|-------------|
-| `examples/survival_analysis/train_lstm.py` | Full training pipeline |
-| `examples/survival_analysis/train_lstm_demo.py` | Demo/quick start |
-
-### Utilities
-
-| File | Description |
-|------|-------------|
-| `src/ehrsequencing/models/lora.py` | LoRA implementation |
-| `src/ehrsequencing/benchmarks/` | Evaluation metrics |
+| Component | File |
+|-----------|------|
+| Dataset and flattening | `src/ehrsequencing/data/behrt_survival_dataset.py` |
+| Embeddings | `src/ehrsequencing/models/embeddings.py` |
+| BEHRT encoder | `src/ehrsequencing/models/behrt.py` |
+| Survival model | `src/ehrsequencing/models/behrt_survival.py` |
+| Loss functions | `src/ehrsequencing/models/losses.py` |
+| LoRA | `src/ehrsequencing/models/lora.py` |
+| Training script | `examples/survival_analysis/train_behrt_survival.py` |
+| Validation script | `examples/survival_analysis/validate_behrt_survival.py` |
 
 ---
 
-## Coming Soon
+## Related Documentation
 
-### Planned Documentation
-
-1. **02_survival_losses.md** - Mathematical derivation of survival losses
-2. **03_evaluation_metrics.md** - Comprehensive guide to survival metrics
-3. **04_training_recipes.md** - Practical training configurations
-4. **05_troubleshooting.md** - Common issues and solutions
-
-### Planned Examples
-
-1. **Minimal working example** - 50-line script demonstrating key concepts
-2. **Complete training pipeline** - Production-ready training script
-3. **Custom loss functions** - How to implement new survival losses
-4. **Multi-task learning** - Pre-training + survival jointly
-
----
-
-## Mathematical Notation Reference
-
-### Common Symbols
-
-| Symbol | Meaning | Typical Dimensions |
-|--------|---------|-------------------|
-| B | Batch size | - |
-| L | Sequence length (tokens) | - |
-| T | Number of visits | - |
-| d | Embedding dimension | - |
-| \|V\| | Vocabulary size | - |
-| c_i | Code ID at position i | ∈ {0, ..., \|V\|-1} |
-| v_i | Visit ID at position i | ∈ {0, ..., T-1} |
-| x_i | Token embedding | ∈ ℝ^d |
-| H | Contextual hidden states | ∈ ℝ^(B×L×d) |
-| V_t | Visit representation | ∈ ℝ^d |
-| h_t | Hazard at visit t | ∈ (0, 1) |
-| E^code | Code embedding matrix | ∈ ℝ^(\|V\|×d) |
-| E^visit | Visit ID embedding matrix | ∈ ℝ^(T_max×d) |
-
-### Set Notation
-
-| Notation | Meaning |
-|----------|---------|
-| I_{b,t} | Set of token indices in visit t for patient b |
-| 𝟙(·) | Indicator function (1 if true, 0 if false) |
-| Σ_{i ∈ I} | Sum over indices in set I |
-
----
-
-## New: 6-session tutorial track (2026-02-21)
-
-If you want a workshop-style progression, start here:
-
-- `tutorial_sessions_index.md`
-- Session 1: `session_01_ehr_to_tokens_to_tensors.md`
-- Session 2: `session_02_behrt_embeddings_and_inductive_bias.md`
-- Session 3: `session_03_pretraining_objectives.md`
-- Session 4: `session_04_survival_head_and_visit_aggregation.md`
-- Session 5: `session_05_losses_as_value_systems.md`
-- Session 6: `session_06_optimization_strategies.md`
+- `dev/workflow/BEHRT_SURVIVAL_ANALYSIS_DESIGN.md` — original design specification
+- `dev/workflow/ROADMAP.md` — project roadmap and phase status
+- `dev/models/pretrain_finetune/` — BEHRT pre-training documentation
+- `dev/methods/discrete_time_survival_analysis/` — internal design notes and session logs
 
 ## Changelog
 
 | Date | Changes |
 |------|---------|
-| 2026-02-03 | Initial documentation release |
-| - | Published 01_behrt_model_overview.md |
-| - | Published 01a_visit_embeddings.md |
-| - | Published 01b_ehr_tokens_tensors.md |
-| - | Created README with navigation |
-
----
-
-## Feedback
-
-This documentation is actively maintained. If you find:
-- ✅ Errors or inconsistencies
-- ✅ Unclear explanations
-- ✅ Missing topics
-- ✅ Implementation bugs
-
-Please:
-1. Check the code references to verify current implementation
-2. Review related documentation for additional context
-3. Open an issue with specific questions
-
----
-
-**Status:** Active documentation, regularly updated  
-**Version:** 1.0  
-**Last Updated:** 2026-02-03
+| 2026-02-21 | Added 09_hierarchical_architecture.md; consolidated into unified 01–08 tutorial track; retired session_0X files; moved POLISHING_SUMMARY.md to dev/ |
+| 2026-02-03 | Initial documentation release: 01_behrt_model_overview.md, 01a_visit_embeddings.md, 01b_ehr_tokens_tensors.md, README |

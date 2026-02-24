@@ -4,6 +4,7 @@ Models for EHR sequence analysis.
 
 from .lstm_baseline import LSTMBaseline, VisitEncoder, create_lstm_baseline
 from .behrt_survival import BEHRTForSurvival, BEHRTSurvivalConfig
+from .hierarchical_survival import HierarchicalBEHRTForSurvival, HierarchicalSurvivalConfig
 from .losses import (
     DiscreteTimeSurvivalLoss,
     PairwiseRankingLoss,
@@ -17,6 +18,8 @@ __all__ = [
     'create_lstm_baseline',
     'BEHRTForSurvival',
     'BEHRTSurvivalConfig',
+    'HierarchicalBEHRTForSurvival',
+    'HierarchicalSurvivalConfig',
     'DiscreteTimeSurvivalLoss',
     'PairwiseRankingLoss',
     'HybridSurvivalLoss',

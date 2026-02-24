@@ -27,6 +27,7 @@ from .survival import (
     DiscreteTimeSurvivalGenerator,
     ContinuousTimeSurvivalGenerator,
     CompetingRisksGenerator,
+    generate_survival_patient_sequences,
 )
 from .realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
 from .domain_shift import generate_domain_shifted_datasets, list_scenarios, DOMAIN_SCENARIOS
@@ -38,6 +39,7 @@ __all__ = [
     'DiscreteTimeSurvivalGenerator',
     'ContinuousTimeSurvivalGenerator',
     'CompetingRisksGenerator',
+    'generate_survival_patient_sequences',
     # Medical LLM / Sequence modeling
     'generate_realistic_dataset',
     'print_dataset_statistics',

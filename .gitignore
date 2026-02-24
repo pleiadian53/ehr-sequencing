@@ -144,3 +144,6 @@ site/
 docs/_build/
 
 legacy/demo/word_rnn/
+.cursor/
+.windsurf/
+tasks/

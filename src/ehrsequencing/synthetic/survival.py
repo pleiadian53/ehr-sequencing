@@ -3,6 +3,11 @@ Synthetic survival outcome generators.
 
 This module provides classes for generating realistic synthetic survival
 outcomes from patient sequences for training and evaluation.
+
+Functions:
+    generate_survival_patient_sequences: High-level API — generates visit-grouped
+        patient sequences with disease-code-driven survival outcomes. Suitable
+        for hierarchical and flat survival models.
 """
 
 from typing import List, Tuple, Optional, Dict, Any
@@ -11,6 +16,117 @@ import torch
 from dataclasses import dataclass
 
 from ..data.sequence_builder import PatientSequence
+
+
+# ---------------------------------------------------------------------------
+# High-risk disease codes used to drive the survival signal.
+# Patients whose visit histories contain more of these codes receive an
+# earlier event time, creating a strong learnable signal.
+# ---------------------------------------------------------------------------
+_HIGH_RISK_DISEASE_NAMES = ('heart_failure', 'copd', 'ckd')
+
+
+def _build_high_risk_codes() -> frozenset:
+    from .realistic_synthetic import DISEASE_PATTERNS
+    codes: set = set()
+    for name in _HIGH_RISK_DISEASE_NAMES:
+        p = DISEASE_PATTERNS[name]
+        codes.update(p.diagnosis_codes)
+        codes.update(p.treatment_codes)
+    return frozenset(codes)
+
+
+def generate_survival_patient_sequences(
+    num_patients: int = 1000,
+    vocab_size: int = 1000,
+    max_visits: int = 50,
+    max_codes_per_visit: int = 30,
+    censoring_rate: float = 0.3,
+    seed: Optional[int] = 42,
+) -> List[Dict]:
+    """
+    Generate visit-grouped patient sequences with survival outcomes.
+
+    Wraps :func:`generate_realistic_dataset` to produce sequences in the
+    ``List[Dict]`` format consumed by
+    :class:`~ehrsequencing.data.hierarchical_survival_dataset.HierarchicalSurvivalDataset`
+    and
+    :class:`~ehrsequencing.data.behrt_survival_dataset.BEHRTSurvivalDataset`.
+
+    Survival signal is driven by the presence of high-risk disease codes
+    (heart failure, COPD, CKD): patients with more such codes receive an
+    earlier event time. This creates a strong, learnable signal that both
+    hierarchical and flat models can exploit.
+
+    Args:
+        num_patients: Number of synthetic patients to generate.
+        vocab_size: Medical code vocabulary size.
+        max_visits: Maximum visits per patient (V dimension).
+        max_codes_per_visit: Maximum codes per visit (C dimension).
+        censoring_rate: Fraction of patients to censor (default: 0.3).
+        seed: Random seed for reproducibility.
+
+    Returns:
+        List of patient dicts, each with:
+            ``visits``: list of ``{'codes': [...], 'age': float, 'time': float}``
+            ``outcome``: ``{'event_time': int, 'event_indicator': int}``
+
+    Example:
+        >>> from ehrsequencing.synthetic.survival import generate_survival_patient_sequences
+        >>> sequences = generate_survival_patient_sequences(num_patients=500, seed=42)
+        >>> sequences[0].keys()
+        dict_keys(['visits', 'outcome'])
+        >>> sequences[0]['outcome']
+        {'event_time': 3, 'event_indicator': 1}
+    """
+    from .realistic_synthetic import generate_realistic_dataset
+
+    max_seq_length = max_visits * max_codes_per_visit
+    codes, ages, visit_ids, attention_mask, _, _ = generate_realistic_dataset(
+        num_patients=num_patients,
+        vocab_size=vocab_size,
+        max_seq_length=max_seq_length,
+        seed=seed,
+    )
+
+    # --- Build visit-grouped sequences ---
+    patient_sequences: List[Dict] = []
+    for i in range(num_patients):
+        p_codes = codes[i].tolist()
+        p_ages = ages[i].tolist()
+        p_vids = visit_ids[i].tolist()
+        p_mask = attention_mask[i].tolist()
+
+        visits = []
+        for v in range(max(p_vids) + 1):
+            vc = [c for c, vid, m in zip(p_codes, p_vids, p_mask) if vid == v and m == 1]
+            va = [a for a, vid, m in zip(p_ages, p_vids, p_mask) if vid == v and m == 1]
+            if vc:
+                visits.append({'codes': vc, 'age': va[0], 'time': float(v)})
+
+        patient_sequences.append({'visits': visits})
+
+    # --- Attach disease-code-driven survival outcomes ---
+    high_risk_codes = _build_high_risk_codes()
+    rng = np.random.default_rng(seed)
+
+    for seq in patient_sequences:
+        n_visits = len(seq['visits'])
+        all_codes_flat = [c for v in seq['visits'] for c in v['codes']]
+        n_high_risk = sum(1 for c in all_codes_flat if c in high_risk_codes)
+        risk = float(np.clip(
+            n_high_risk / max(len(all_codes_flat), 1) * 3.0, 0.05, 0.95
+        ))
+        event_time = int(np.clip((1.0 - risk) * (n_visits - 1), 0, n_visits - 1))
+        is_censored = rng.random() < censoring_rate
+        if is_censored:
+            event_time = int(rng.integers(max(event_time, 1), max(n_visits, 2)))
+        seq['outcome'] = {
+            'event_time': event_time,
+            'event_indicator': 0 if is_censored else 1,
+        }
+
+    return patient_sequences
 
 
 @dataclass
