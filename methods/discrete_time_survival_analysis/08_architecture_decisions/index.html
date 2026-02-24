@@ -12,25 +12,27 @@
         <meta name="author" content="EHR Sequencing Research Team">
       
       
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/08_architecture_decisions/">
+      
       
       
       
         
       
       
-      <link rel="icon" href="/ehr-sequencing/assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
-        <title>EHR Sequencing</title>
+        <title>Architecture Decisions: BEHRT vs LSTM and Flat vs Hierarchical - EHR Sequencing</title>
       
     
     
-      <link rel="stylesheet" href="/ehr-sequencing/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/ehr-sequencing/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,9 +51,9 @@
       
     
     
-      <link rel="stylesheet" href="/ehr-sequencing/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("/ehr-sequencing/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -75,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#architecture-decisions-behrt-vs-lstm-and-flat-vs-hierarchical" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -91,7 +98,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/ehr-sequencing/." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+    <a href="../../.." title="EHR Sequencing" class="md-header__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -111,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Architecture Decisions: BEHRT vs LSTM and Flat vs Hierarchical
             
           </span>
         </div>
@@ -218,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/ehr-sequencing/." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -239,7 +246,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/ehr-sequencing/INSTALL/" class="md-tabs__link">
+        <a href="../../../INSTALL/" class="md-tabs__link">
           
   
   
@@ -259,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/ehr-sequencing/notebooks/02_survival_analysis/" class="md-tabs__link">
+        <a href="../../../notebooks/02_survival_analysis/" class="md-tabs__link">
           
   
   
@@ -279,7 +286,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/ehr-sequencing/methods/" class="md-tabs__link">
+        <a href="../../" class="md-tabs__link">
           
   
   
@@ -299,7 +306,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/ehr-sequencing/data_generation/" class="md-tabs__link">
+        <a href="../../../data_generation/" class="md-tabs__link">
           
   
   
@@ -319,7 +326,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/ehr-sequencing/pretrained_embeddings_guide/" class="md-tabs__link">
+        <a href="../../../pretrained_embeddings_guide/" class="md-tabs__link">
           
   
   
@@ -359,7 +366,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/ehr-sequencing/." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
+    <a href="../../.." title="EHR Sequencing" class="md-nav__button md-logo" aria-label="EHR Sequencing" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -389,7 +396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -470,7 +477,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/INSTALL/" class="md-nav__link">
+      <a href="../../../INSTALL/" class="md-nav__link">
         
   
   
@@ -559,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/notebooks/02_survival_analysis/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/" class="md-nav__link">
         
   
   
@@ -587,7 +594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
         
   
   
@@ -615,7 +622,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
         
   
   
@@ -643,7 +650,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
         
   
   
@@ -671,7 +678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/notebooks/02_survival_analysis/01_discrete_time_survival_lstm/" class="md-nav__link">
+      <a href="../../../notebooks/02_survival_analysis/01_discrete_time_survival_lstm/" class="md-nav__link">
         
   
   
@@ -760,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/methods/" class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         
   
   
@@ -842,7 +849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/methods/causal-survival-analysis-1.md" class="md-nav__link">
+      <a href="../../causal-survival-analysis-1.md" class="md-nav__link">
         
   
   
@@ -870,7 +877,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/methods/causal-survival-analysis-2.md" class="md-nav__link">
+      <a href="../../causal-survival-analysis-2.md" class="md-nav__link">
         
   
   
@@ -906,7 +913,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/methods/modern-code-embeddings.md" class="md-nav__link">
+      <a href="../../modern-code-embeddings.md" class="md-nav__link">
         
   
   
@@ -995,7 +1002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/data_generation/" class="md-nav__link">
+      <a href="../../../data_generation/" class="md-nav__link">
         
   
   
@@ -1023,7 +1030,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/data_generation/data_generation_guide/" class="md-nav__link">
+      <a href="../../../data_generation/data_generation_guide/" class="md-nav__link">
         
   
   
@@ -1051,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
+      <a href="../../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
         
   
   
@@ -1140,7 +1147,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/pretrained_embeddings_guide/" class="md-nav__link">
+      <a href="../../../pretrained_embeddings_guide/" class="md-nav__link">
         
   
   
@@ -1168,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ehr-sequencing/runpods_training_guide/" class="md-nav__link">
+      <a href="../../../runpods_training_guide/" class="md-nav__link">
         
   
   
@@ -1213,6 +1220,93 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lstm-baseline-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LSTM Baseline Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behrt-for-survival-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BEHRT for Survival Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behrt-vs-lstm-key-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BEHRT vs LSTM: Key Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flat-vs-hierarchical-transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flat vs Hierarchical Transformer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benchmark-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark Framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1225,8 +1319,304 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/discrete_time_survival_analysis/08_architecture_decisions.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="architecture-decisions-behrt-vs-lstm-and-flat-vs-hierarchical">Architecture Decisions: BEHRT vs LSTM and Flat vs Hierarchical<a class="headerlink" href="#architecture-decisions-behrt-vs-lstm-and-flat-vs-hierarchical" title="Permanent link">&para;</a></h1>
+<p><strong>Topics:</strong> LSTM baseline architecture, BEHRT vs LSTM comparison, flat vs hierarchical design tradeoffs, benchmark framework</p>
+<p><strong>Reference code:</strong> <code>src/ehrsequencing/models/survival_lstm.py</code>, <code>src/ehrsequencing/models/behrt_survival.py</code>, <code>examples/survival_analysis/</code></p>
+<hr />
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#lstm-baseline-architecture">LSTM Baseline Architecture</a></li>
+<li><a href="#behrt-for-survival-architecture">BEHRT for Survival Architecture</a></li>
+<li><a href="#behrt-vs-lstm-key-differences">BEHRT vs LSTM: Key Differences</a></li>
+<li><a href="#flat-vs-hierarchical-transformer">Flat vs Hierarchical Transformer</a></li>
+<li><a href="#benchmark-framework">Benchmark Framework</a></li>
+<li><a href="#expected-performance">Expected Performance</a></li>
+</ol>
+<hr />
+<h2 id="lstm-baseline-architecture">LSTM Baseline Architecture<a class="headerlink" href="#lstm-baseline-architecture" title="Permanent link">&para;</a></h2>
+<p>The LSTM baseline provides a strong sequential model without pretraining:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Input Codes → Embedding Layer → Mean Pool per Visit → LSTM → Hazard Head
+</span></code></pre></div>
+<p><strong>Components:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="bp">self</span><span class="o">.</span><span class="n">embedding</span>   <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="bp">self</span><span class="o">.</span><span class="n">lstm</span>        <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">num_layers</span><span class="o">=</span><span class="n">num_layers</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                           <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="bp">self</span><span class="o">.</span><span class="n">hazard_head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">),</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Forward pass:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="n">visit_mask</span><span class="p">,</span> <span class="n">sequence_mask</span><span class="p">):</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="c1"># codes: (B, max_visits, max_codes_per_visit)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">embedded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span>                          <span class="c1"># (B, V, C, d)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">visit_emb</span> <span class="o">=</span> <span class="p">(</span><span class="n">embedded</span> <span class="o">*</span> <span class="n">sequence_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">visit_emb</span> <span class="o">/=</span> <span class="n">sequence_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span>  <span class="c1"># mean pool codes</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">lstm_out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span><span class="p">(</span><span class="n">visit_emb</span><span class="p">)</span>                        <span class="c1"># (B, V, H)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">hazards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hazard_head</span><span class="p">(</span><span class="n">lstm_out</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>          <span class="c1"># (B, V)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="k">return</span> <span class="n">hazards</span> <span class="o">*</span> <span class="n">visit_mask</span>
+</span></code></pre></div>
+<p><strong>Key characteristics:</strong>
+- Operates at visit level natively (no flattening needed)
+- Unidirectional — each visit only sees prior history
+- No pretraining — learns from survival labels only
+- Simpler data pipeline (hierarchical input format)</p>
+<hr />
+<h2 id="behrt-for-survival-architecture">BEHRT for Survival Architecture<a class="headerlink" href="#behrt-for-survival-architecture" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Input Codes → BEHRT Encoder (pre-trained) → scatter_add Aggregation → Hazard Head
+</span></code></pre></div>
+<p><strong>Key characteristics:</strong>
+- Operates at token level, then aggregates to visit level
+- Bidirectional — each code attends to all other codes in the sequence
+- Pretrained on MLM (and optionally NVP) before survival fine-tuning
+- Requires flattened input format with <code>visit_ids</code></p>
+<hr />
+<h2 id="behrt-vs-lstm-key-differences">BEHRT vs LSTM: Key Differences<a class="headerlink" href="#behrt-vs-lstm-key-differences" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>LSTM Baseline</th>
+<th>BEHRT for Survival</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Context</td>
+<td>Unidirectional (past only)</td>
+<td>Bidirectional (full sequence)</td>
+</tr>
+<tr>
+<td>Pretraining</td>
+<td>None</td>
+<td>MLM + optional NVP</td>
+</tr>
+<tr>
+<td>Input format</td>
+<td>Hierarchical <code>(B, V, C)</code></td>
+<td>Flat <code>(B, L)</code> with <code>visit_ids</code></td>
+</tr>
+<tr>
+<td>Visit aggregation</td>
+<td>Mean pool before LSTM</td>
+<td>scatter_add after transformer</td>
+</tr>
+<tr>
+<td>Parameter count</td>
+<td>~5M</td>
+<td>~495K (small config)</td>
+</tr>
+<tr>
+<td>Trainable (frozen)</td>
+<td>All</td>
+<td>Head only (~17K)</td>
+</tr>
+<tr>
+<td>Trainable (LoRA)</td>
+<td>All</td>
+<td>~50–100K</td>
+</tr>
+<tr>
+<td>Convergence speed</td>
+<td>50–100 epochs</td>
+<td>20–50 epochs (pretrained)</td>
+</tr>
+<tr>
+<td>Overfitting risk</td>
+<td>Moderate</td>
+<td>Lower (pretrained representations)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When LSTM may be preferred:</strong>
+- No pretrained BEHRT available for the target domain
+- Very small cohort where bidirectional attention overfits
+- Interpretability requirements favor sequential hidden states
+- Simpler deployment pipeline</p>
+<p><strong>When BEHRT is preferred:</strong>
+- Pretrained BEHRT available on similar EHR data
+- Medium to large cohort
+- Cross-visit context is clinically meaningful (e.g., comorbidity interactions)
+- Parameter efficiency matters (frozen or LoRA)</p>
+<hr />
+<h2 id="flat-vs-hierarchical-transformer">Flat vs Hierarchical Transformer<a class="headerlink" href="#flat-vs-hierarchical-transformer" title="Permanent link">&para;</a></h2>
+<p>The current BEHRT survival implementation uses a <strong>flat</strong> architecture. An alternative is a <strong>hierarchical transformer</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Hierarchical:
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Visit 1 codes → [Code Encoder] → visit_1_repr
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Visit 2 codes → [Code Encoder] → visit_2_repr   (shared weights)
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  [visit_1_repr, visit_2_repr, ...] → [Visit Encoder] → hazards
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Flat (current):
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  [code_1_v1, code_2_v1, code_1_v2, ...] → [BEHRT] → scatter_add → hazards
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Flat (current)</th>
+<th>Hierarchical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cross-visit attention</td>
+<td>Full (all tokens attend to all)</td>
+<td>None at code level</td>
+</tr>
+<tr>
+<td>Pre-training compatibility</td>
+<td>Direct BEHRT transfer</td>
+<td>Requires separate pretraining</td>
+</tr>
+<tr>
+<td>Attention complexity</td>
+<td>O(L²) over all tokens</td>
+<td>O(V²) over visits + O(C²) per visit</td>
+</tr>
+<tr>
+<td>Batching</td>
+<td>Simple</td>
+<td>Ragged tensors or double padding</td>
+</tr>
+<tr>
+<td>Mask discipline</td>
+<td>Load-bearing (single mask)</td>
+<td>Structurally isolated per visit</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>Bottleneck at long sequences</td>
+<td>Better for dense visits</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Current choice rationale:</strong> Flat is pragmatic for the current data scale (7–10 visits avg, moderate codes/visit). The flat design enables direct BEHRT pretraining transfer and full cross-visit attention with a single transformer.</p>
+<p><strong>When hierarchical becomes worth considering:</strong>
+- Visits are long (&gt; 20 codes/visit) AND sequences are long (&gt; 30 visits)
+- You want to pretrain a visit-level encoder separately on claim-level data
+- Interpretability at the visit level during attention is required
+- Sequence length hits transformer memory limits</p>
+<hr />
+<h2 id="benchmark-framework">Benchmark Framework<a class="headerlink" href="#benchmark-framework" title="Permanent link">&para;</a></h2>
+<p>To compare BEHRT variants against the LSTM baseline fairly:</p>
+<p><strong>Experimental controls:</strong>
+- Identical train/val/test splits
+- Same synthetic data generation (controlled risk correlation)
+- Same evaluation metrics (C-index, Brier score)
+- Same loss function (hybrid, <code>lambda_rank=0.05</code>)</p>
+<p><strong>BEHRT variants to compare:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># A: Frozen encoder</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">model_frozen</span> <span class="o">=</span> <span class="n">BEHRTForSurvival</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">freeze_behrt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># B: LoRA fine-tuning</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">model_lora</span> <span class="o">=</span> <span class="n">BEHRTForSurvival</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">use_lora</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lora_rank</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># C: Full fine-tuning</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">model_full</span> <span class="o">=</span> <span class="n">BEHRTForSurvival</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Benchmark script:</strong> <code>examples/survival_analysis/benchmark_loss_functions.py</code></p>
+<p><strong>Research hypotheses:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Hypothesis</th>
+<th>Test</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1: Pretraining helps</td>
+<td>BEHRT pretrained vs from scratch</td>
+<td>Pretrained → higher C-index</td>
+</tr>
+<tr>
+<td>H2: BEHRT &gt; LSTM</td>
+<td>Best BEHRT vs LSTM</td>
+<td>BEHRT → 5–10% higher C-index</td>
+</tr>
+<tr>
+<td>H3: LoRA is efficient</td>
+<td>LoRA vs Full fine-tune</td>
+<td>Similar C-index, 80–90% fewer params</td>
+</tr>
+<tr>
+<td>H4: BEHRT generalizes</td>
+<td>Train-val gap comparison</td>
+<td>BEHRT → smaller gap</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="expected-performance">Expected Performance<a class="headerlink" href="#expected-performance" title="Permanent link">&para;</a></h2>
+<p>Based on design analysis (to be validated empirically):</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>C-index</th>
+<th>Convergence</th>
+<th>Trainable Params</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LSTM Baseline</td>
+<td>0.67–0.72</td>
+<td>50–100 epochs</td>
+<td>~5M</td>
+</tr>
+<tr>
+<td>BEHRT (Frozen)</td>
+<td>0.70–0.75</td>
+<td>20–30 epochs</td>
+<td>~17K</td>
+</tr>
+<tr>
+<td>BEHRT (LoRA r=16)</td>
+<td>0.73–0.78</td>
+<td>30–50 epochs</td>
+<td>~100K</td>
+</tr>
+<tr>
+<td>BEHRT (Full)</td>
+<td>0.74–0.80</td>
+<td>40–80 epochs</td>
+<td>~495K</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> These are projections based on architecture properties. Actual results depend on data quality, cohort size, and pretraining quality. Run <code>validate_behrt_survival.py</code> and <code>train_behrt_survival.py</code> to obtain empirical numbers.</p>
+<hr />
+<p><strong>See also:</strong> <code>dev/workflow/BEHRT_SURVIVAL_ANALYSIS_DESIGN.md</code> for the original design specification and <code>examples/survival_analysis/README.md</code> for training script usage.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -1289,12 +1679,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/ehr-sequencing/", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "/ehr-sequencing/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="/ehr-sequencing/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="/ehr-sequencing/javascripts/mathjax.js"></script>
+        <script src="../../../javascripts/mathjax.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       

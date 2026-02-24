@@ -12,7 +12,7 @@
         <meta name="author" content="EHR Sequencing Research Team">
       
       
-        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/representation_learning/segment_id_use_cases/">
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/01_survival_framework/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Segment id use cases - EHR Sequencing</title>
+        <title>Discrete-Time Survival Analysis: Framework and Foundations - EHR Sequencing</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#1-what-segment-ids-mean-in-bert" class="md-skip">
+        <a href="#discrete-time-survival-analysis-framework-and-foundations" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Segment id use cases
+              Discrete-Time Survival Analysis: Framework and Foundations
             
           </span>
         </div>
@@ -1220,6 +1220,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1228,10 +1230,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-what-segment-ids-mean-in-bert" class="md-nav__link">
+  <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. What segment IDs mean in BERT
+        Table of Contents
       
     </span>
   </a>
@@ -1239,10 +1241,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-what-behrt-already-does" class="md-nav__link">
+  <a href="#why-discrete-time-survival" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. What BEHRT already does
+        Why Discrete-Time Survival?
       
     </span>
   </a>
@@ -1250,10 +1252,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-so-does-segment-id-add-anything" class="md-nav__link">
+  <a href="#core-quantities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. So… does segment ID add anything?
+        Core Quantities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Quantities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hazard-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hazard Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#survival-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Survival Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cumulative-incidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cumulative Incidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#censoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Censoring
       
     </span>
   </a>
@@ -1261,10 +1313,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#case-1-pre-event-vs-post-event-segmentation" class="md-nav__link">
+  <a href="#label-preparation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 1: Pre-event vs post-event segmentation
+        Label Preparation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Label Preparation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-30-day-readmission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: 30-Day Readmission
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#label-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Label Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthetic-data-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthetic Data Generation
       
     </span>
   </a>
@@ -1272,101 +1363,52 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#case-2-baseline-period-vs-follow-up-period" class="md-nav__link">
+  <a href="#evaluation-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 2: Baseline period vs follow-up period
+        Evaluation Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c-index-concordance-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C-index (Concordance Index)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#case-3-treatment-exposure-regimes" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#brier-score" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 3: Treatment exposure regimes
+        Brier Score
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#case-4-multimodal-fusion" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#relationship-between-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 4: Multimodal fusion
+        Relationship Between Metrics
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#case-5-competing-risk-modeling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Case 5: Competing risk modeling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-does-it-mean-mechanistically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Does It Mean Mechanistically?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#philosophical-question-do-you-need-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Philosophical Question: Do You Need It?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#for-your-current-discrete-time-survival-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        For Your Current Discrete-Time Survival Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-i-would-add-them" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When I Would Add Them
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#a-deeper-insight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A Deeper Insight
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1387,7 +1429,7 @@
 
 
   
-    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/representation_learning/segment_id_use_cases.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/discrete_time_survival_analysis/01_survival_framework.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1395,205 +1437,174 @@
   
 
 
-<blockquote>
-<p>Q: Do you think segment ID and the notion of segments have their potential use cases for this BEHRT based discrete time survival prediction?</p>
-</blockquote>
-<p>This is a very good question. Not “should I use this API field,” but: does the <strong>concept</strong> of segments actually encode something meaningful for EHR survival?</p>
-<p>Let’s slow down and separate three things:</p>
+<h1 id="discrete-time-survival-analysis-framework-and-foundations">Discrete-Time Survival Analysis: Framework and Foundations<a class="headerlink" href="#discrete-time-survival-analysis-framework-and-foundations" title="Permanent link">&para;</a></h1>
+<p><strong>Topics:</strong> Survival math, hazard function, censoring, label preparation, synthetic data</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
 <ol>
-<li>What “segment IDs” mean in vanilla BERT</li>
-<li>What BEHRT already encodes</li>
-<li>Whether an additional segment notion adds signal or just redundancy</li>
+<li><a href="#why-discrete-time-survival">Why Discrete-Time Survival?</a></li>
+<li><a href="#core-quantities">Core Quantities</a></li>
+<li><a href="#censoring">Censoring</a></li>
+<li><a href="#label-preparation">Label Preparation</a></li>
+<li><a href="#synthetic-data-generation">Synthetic Data Generation</a></li>
+<li><a href="#evaluation-metrics">Evaluation Metrics</a></li>
 </ol>
 <hr />
-<h2 id="1-what-segment-ids-mean-in-bert">1. What segment IDs mean in BERT<a class="headerlink" href="#1-what-segment-ids-mean-in-bert" title="Permanent link">&para;</a></h2>
-<p>In original BERT, each token embedding is:</p>
-<p>[
-\mathbf{e}_t
-============</p>
-<p>\mathbf{e}^{token}_{c_t}
-+
-\mathbf{e}^{position}<em s_t="s_t">t
-+
-\mathbf{e}^{segment}</em>
-]</p>
-<p>where:</p>
-<p>[
-s_t \in {0,1}
-]</p>
-<p>Segment IDs distinguish <strong>sentence A</strong> from <strong>sentence B</strong> in next-sentence prediction tasks.</p>
-<p>It is a binary “this token belongs to block A vs block B.”</p>
-<p>There is no deeper time meaning.</p>
-<p>It’s just a learned bias vector added to all tokens in one group.</p>
-<hr />
-<h2 id="2-what-behrt-already-does">2. What BEHRT already does<a class="headerlink" href="#2-what-behrt-already-does" title="Permanent link">&para;</a></h2>
-<p>Your BEHRT embedding already includes:</p>
-<p>[
-\mathbf{e}_t
-============</p>
-<p>\mathbf{e}^{code}<em a_t="a_t">{c_t}
-+
-\mathbf{e}^{age}</em>
-+
-\mathbf{e}^{visit}_{v_t}
-+
-\mathbf{e}^{position}_t
-]</p>
-<p>So you already encode:</p>
+<h2 id="why-discrete-time-survival">Why Discrete-Time Survival?<a class="headerlink" href="#why-discrete-time-survival" title="Permanent link">&para;</a></h2>
+<p>Survival analysis models the time until an event occurs, accounting for patients who have not experienced the event by the end of observation (censored observations). In EHR data, typical outcomes include:</p>
 <ul>
-<li>which visit a token belongs to</li>
-<li>temporal progression via position</li>
-<li>biological progression via age</li>
+<li><strong>Hospital readmission</strong> (30-day, 90-day)</li>
+<li><strong>Mortality</strong> (in-hospital, 30-day, 1-year)</li>
+<li><strong>Disease onset</strong> (diabetes, heart failure, stroke)</li>
+<li><strong>Treatment failure</strong> (time to efficacy loss or adverse event)</li>
 </ul>
-<p>So “visit structure” is already explicitly encoded.</p>
-<p>That is important.</p>
-<hr />
-<h2 id="3-so-does-segment-id-add-anything">3. So… does segment ID add anything?<a class="headerlink" href="#3-so-does-segment-id-add-anything" title="Permanent link">&para;</a></h2>
-<p>Only if it encodes something <strong>not already represented</strong>.</p>
-<p>Segment embeddings are useful if you want to distinguish:</p>
-<p>[
-\text{Block A tokens} \neq \text{Block B tokens}
-]</p>
-<p>in a way that position and visit IDs cannot capture.</p>
-<p>Now we examine potential use cases.</p>
-<hr />
-<h1 id="case-1-pre-event-vs-post-event-segmentation">Case 1: Pre-event vs post-event segmentation<a class="headerlink" href="#case-1-pre-event-vs-post-event-segmentation" title="Permanent link">&para;</a></h1>
-<p>For discrete survival modeling, you only use visits up to event time.</p>
-<p>There is no post-event region in training.</p>
-<p>So segments for “before vs after event” are meaningless.</p>
-<p>Verdict: no value.</p>
-<hr />
-<h1 id="case-2-baseline-period-vs-follow-up-period">Case 2: Baseline period vs follow-up period<a class="headerlink" href="#case-2-baseline-period-vs-follow-up-period" title="Permanent link">&para;</a></h1>
-<p>Suppose you define:</p>
+<p>EHR data arrives in discrete time intervals (visits), making discrete-time survival a natural fit:</p>
 <ul>
-<li>Segment 0 = baseline observation window</li>
-<li>Segment 1 = risk prediction window</li>
+<li>Visits are discrete events — patients are observed at specific time points</li>
+<li>Events occur between visits (interval censoring is the norm)</li>
+<li>Computational simplicity — no need for continuous-time hazard estimation</li>
+<li>Flexible hazard modeling — non-parametric per-visit hazard captures complex patterns</li>
 </ul>
-<p>Then segment embedding lets the model know:</p>
-<p>“Everything before index K is context, everything after is prediction horizon.”</p>
-<p>But in your setup, the model is predicting hazard per visit sequentially.</p>
-<p>You’re not splitting into two logical sequences.</p>
-<p>Verdict: maybe useful if you restructure task.</p>
 <hr />
-<h1 id="case-3-treatment-exposure-regimes">Case 3: Treatment exposure regimes<a class="headerlink" href="#case-3-treatment-exposure-regimes" title="Permanent link">&para;</a></h1>
-<p>Now this gets interesting.</p>
-<p>Suppose:</p>
-<p>[
-s_t =
-\begin{cases}
-0 &amp; \text{before treatment initiation} \
-1 &amp; \text{after treatment initiation}
-\end{cases}
-]</p>
-<p>Now segment embedding encodes:</p>
-<p>“biological regime shift.”</p>
-<p>That could help the transformer separate two dynamics.</p>
-<p>However:</p>
-<p>You already have treatment tokens in your code vocabulary.</p>
-<p>So treatment exposure can already be learned as part of sequence context.</p>
-<p>Segment embedding would only provide a coarse binary marker.</p>
-<p>Verdict: possibly useful if treatment initiation marks a structural shift.</p>
+<h2 id="core-quantities">Core Quantities<a class="headerlink" href="#core-quantities" title="Permanent link">&para;</a></h2>
+<h3 id="hazard-function">Hazard Function<a class="headerlink" href="#hazard-function" title="Permanent link">&para;</a></h3>
+<p>At each visit <span class="arithmatex">\(t\)</span>, the model predicts a <strong>hazard</strong> <span class="arithmatex">\(h_t\)</span>:</p>
+<div class="arithmatex">\[h_t = P(T = t \mid T \geq t,\, X_t)\]</div>
+<p>where:
+- <span class="arithmatex">\(T\)</span> is the event time (visit index when event occurs)
+- <span class="arithmatex">\(X_t\)</span> is the patient history up to visit <span class="arithmatex">\(t\)</span>
+- <span class="arithmatex">\(h_t \in [0, 1]\)</span> is the probability of event at visit <span class="arithmatex">\(t\)</span>, given survival to <span class="arithmatex">\(t\)</span></p>
+<p><strong>Interpretation:</strong> <span class="arithmatex">\(h_t = 0.2\)</span> means a 20% chance the event occurs at visit <span class="arithmatex">\(t\)</span>, given the patient survived to visit <span class="arithmatex">\(t\)</span>.</p>
+<h3 id="survival-function">Survival Function<a class="headerlink" href="#survival-function" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[S(t) = P(T &gt; t) = \prod_{i=1}^{t} (1 - h_i)\]</div>
+<p><strong>Example:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Visit 1: h₁ = 0.10  →  S(1) = 0.90
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Visit 2: h₂ = 0.15  →  S(2) = 0.90 × 0.85 = 0.765
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Visit 3: h₃ = 0.20  →  S(3) = 0.765 × 0.80 = 0.612
+</span></code></pre></div></p>
+<h3 id="cumulative-incidence">Cumulative Incidence<a class="headerlink" href="#cumulative-incidence" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[F(t) = 1 - S(t) = 1 - \prod_{i=1}^{t} (1 - h_i)\]</div>
 <hr />
-<h1 id="case-4-multimodal-fusion">Case 4: Multimodal fusion<a class="headerlink" href="#case-4-multimodal-fusion" title="Permanent link">&para;</a></h1>
-<p>If you later combine:</p>
-<ul>
-<li>structured EHR codes</li>
-<li>free text embeddings</li>
-<li>imaging tokens</li>
-<li>genomic tokens</li>
-</ul>
-<p>Segments become powerful.</p>
-<p>You could define:</p>
-<p>[
-s_t =
-\begin{cases}
-0 &amp; \text{structured codes} \
-1 &amp; \text{clinical notes} \
-2 &amp; \text{omics tokens}
-\end{cases}
-]</p>
-<p>Now segment embedding acts like a modality identifier.</p>
-<p>That is clean and elegant.</p>
-<p>Verdict: strong use case.</p>
+<h2 id="censoring">Censoring<a class="headerlink" href="#censoring" title="Permanent link">&para;</a></h2>
+<p>A patient is <strong>censored</strong> at time <span class="arithmatex">\(c\)</span> if the event has not occurred by the end of observation. The patient's true event time <span class="arithmatex">\(T\)</span> is unknown, but we know <span class="arithmatex">\(T &gt; c\)</span>.</p>
+<p><strong>Right censoring</strong> is the standard case in EHR:
+- Patient leaves the health system
+- Study ends before event occurs
+- Patient dies from an unrelated cause</p>
+<p><strong>Key assumption:</strong> Censoring is non-informative — the reason for censoring is independent of the event risk. This assumption should be verified in real data.</p>
 <hr />
-<h1 id="case-5-competing-risk-modeling">Case 5: Competing risk modeling<a class="headerlink" href="#case-5-competing-risk-modeling" title="Permanent link">&para;</a></h1>
-<p>Suppose you model multiple hazard types:</p>
-<ul>
-<li>death</li>
-<li>ICU admission</li>
-<li>readmission</li>
-</ul>
-<p>You could mark segments corresponding to different event heads or prediction horizons.</p>
-<p>But this is better handled via multi-head output rather than segment embedding.</p>
-<p>Verdict: not ideal.</p>
-<hr />
-<h1 id="what-does-it-mean-mechanistically">What Does It Mean Mechanistically?<a class="headerlink" href="#what-does-it-mean-mechanistically" title="Permanent link">&para;</a></h1>
-<p>Segment embedding is just:</p>
-<p>[
-\mathbf{e}^{segment}_{s_t}
-]</p>
-<p>a learned vector added to token embedding.</p>
-<p>It shifts all tokens in that segment in embedding space.</p>
-<p>So it creates a linear bias.</p>
-<p>It does NOT:</p>
-<ul>
-<li>alter attention structure directly</li>
-<li>create time gating</li>
-<li>impose ordering constraints</li>
-</ul>
-<p>It’s simply a feature tag.</p>
-<hr />
-<h1 id="philosophical-question-do-you-need-it">Philosophical Question: Do You Need It?<a class="headerlink" href="#philosophical-question-do-you-need-it" title="Permanent link">&para;</a></h1>
-<p>Ask yourself:</p>
-<p>Does the sequence contain qualitatively distinct blocks
-that the model cannot infer from content + visit ID?</p>
-<p>If yes → segment embeddings help.</p>
-<p>If no → redundant complexity.</p>
-<hr />
-<h1 id="for-your-current-discrete-time-survival-model">For Your Current Discrete-Time Survival Model<a class="headerlink" href="#for-your-current-discrete-time-survival-model" title="Permanent link">&para;</a></h1>
-<p>Right now:</p>
-<ul>
-<li>You flatten tokens across visits</li>
-<li>Visit IDs already encode grouping</li>
-<li>Hazard is predicted at visit level</li>
-</ul>
-<p>Segment IDs would likely be redundant.</p>
-<p>Worse: they might encourage the model to rely on a shortcut signal rather than learning temporal dynamics.</p>
-<p>My honest assessment:</p>
-<p>For your current architecture, segment IDs do not meaningfully enhance discrete-time survival modeling.</p>
-<hr />
-<h1 id="when-i-would-add-them">When I <em>Would</em> Add Them<a class="headerlink" href="#when-i-would-add-them" title="Permanent link">&para;</a></h1>
-<p>If you evolve EHR-seq into:</p>
+<h2 id="label-preparation">Label Preparation<a class="headerlink" href="#label-preparation" title="Permanent link">&para;</a></h2>
+<p>For each patient, survival labels consist of:</p>
 <ol>
-<li>Causal modeling where regime changes matter</li>
-<li>Pre/post intervention modeling</li>
-<li>Multimodal fusion</li>
-<li>Counterfactual generation tasks</li>
-<li>Contrastive sequence blocks</li>
+<li><strong>Visit sequence</strong> — medical codes at each visit</li>
+<li><strong>Event time</strong> — visit index when event occurred (or last observed visit if censored)</li>
+<li><strong>Event indicator</strong> — 1 if event occurred, 0 if censored</li>
 </ol>
-<p>Then segments become structurally meaningful.</p>
+<h3 id="example-30-day-readmission">Example: 30-Day Readmission<a class="headerlink" href="#example-30-day-readmission" title="Permanent link">&para;</a></h3>
+<p><strong>Patient A (event occurred):</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s1">&#39;patient_id&#39;</span><span class="p">:</span> <span class="s1">&#39;A001&#39;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s1">&#39;visits&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;codes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">65</span><span class="p">},</span>  <span class="c1"># Visit 0</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-01-05&#39;</span><span class="p">,</span> <span class="s1">&#39;codes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">501</span><span class="p">],</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">65</span><span class="p">},</span>       <span class="c1"># Visit 1</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-01-20&#39;</span><span class="p">,</span> <span class="s1">&#39;codes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">428</span><span class="p">],</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">65</span><span class="p">},</span>       <span class="c1"># Visit 2: readmission</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">],</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="s1">&#39;event_time&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>        <span class="c1"># Event at visit 2</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="s1">&#39;event_indicator&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>   <span class="c1"># Event occurred</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<p><strong>Patient B (censored):</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s1">&#39;patient_id&#39;</span><span class="p">:</span> <span class="s1">&#39;B002&#39;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s1">&#39;visits&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-02-01&#39;</span><span class="p">,</span> <span class="s1">&#39;codes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">493</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">},</span>  <span class="c1"># Visit 0</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-02-03&#39;</span><span class="p">,</span> <span class="s1">&#39;codes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">501</span><span class="p">],</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">},</span>  <span class="c1"># Visit 1</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-03-15&#39;</span><span class="p">,</span> <span class="s1">&#39;codes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">},</span>       <span class="c1"># Visit 2: no event</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="p">],</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="s1">&#39;event_time&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>        <span class="c1"># Last observed visit</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="s1">&#39;event_indicator&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>   <span class="c1"># Censored</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<h3 id="label-generation">Label Generation<a class="headerlink" href="#label-generation" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_event_time</span><span class="p">(</span><span class="n">visits</span><span class="p">):</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Find first visit where event occurs, else return censoring time.&quot;&quot;&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">visit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">visits</span><span class="p">):</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="k">if</span> <span class="n">is_readmission</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">visits</span><span class="p">[:</span><span class="n">t</span><span class="p">]):</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># (event_time, event_indicator)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">visits</span><span class="p">),</span> <span class="mi">0</span>  <span class="c1"># censored</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Batch labels</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">event_times</span>      <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>      <span class="c1"># visit index</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">event_indicators</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>      <span class="c1"># 1=event, 0=censored</span>
+</span></code></pre></div>
 <hr />
-<h1 id="a-deeper-insight">A Deeper Insight<a class="headerlink" href="#a-deeper-insight" title="Permanent link">&para;</a></h1>
-<p>In survival modeling, what truly matters is not segmentation.</p>
-<p>It is <strong>risk set structure</strong>.</p>
-<p>The model must implicitly learn:</p>
-<p>[
-P(T = t \mid T \ge t, \text{history})
-]</p>
-<p>Segment embeddings do not encode risk-set information.</p>
-<p>Masks and hazard construction do.</p>
-<p>That’s where the mathematical structure lives.</p>
+<h2 id="synthetic-data-generation">Synthetic Data Generation<a class="headerlink" href="#synthetic-data-generation" title="Permanent link">&para;</a></h2>
+<p>For development and testing, <code>DiscreteTimeSurvivalGenerator</code> creates outcomes with realistic risk-time correlation.</p>
+<p><strong>Risk factors used:</strong>
+- Comorbidity burden (number of unique diagnosis codes)
+- Visit frequency (healthcare utilization)
+- Code diversity (condition complexity)</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ehrsequencing.synthetic.survival</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteTimeSurvivalGenerator</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">generator</span> <span class="o">=</span> <span class="n">DiscreteTimeSurvivalGenerator</span><span class="p">(</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">censoring_rate</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>   <span class="c1"># 30% of patients censored</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">time_scale</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>       <span class="c1"># Controls average event timing</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">)</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">outcome</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">patient_sequences</span><span class="p">)</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># outcome.event_times:      (N,) visit indices</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># outcome.event_indicators: (N,) 1=event, 0=censored</span>
+</span></code></pre></div>
+<p><strong>Important:</strong> Synthetic outcomes should have negative risk-time correlation (higher-risk patients experience events earlier). Verify with:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">spearmanr</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">r</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">spearmanr</span><span class="p">(</span><span class="n">risk_scores</span><span class="p">,</span> <span class="n">event_times</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expect r ≈ -0.4 to -0.6</span>
+</span></code></pre></div></p>
 <hr />
-<p>If you want, we can now explore something much more interesting:</p>
-<p>Instead of segment embeddings, should BEHRT use:</p>
+<h2 id="evaluation-metrics">Evaluation Metrics<a class="headerlink" href="#evaluation-metrics" title="Permanent link">&para;</a></h2>
+<h3 id="c-index-concordance-index">C-index (Concordance Index)<a class="headerlink" href="#c-index-concordance-index" title="Permanent link">&para;</a></h3>
+<p>Measures discrimination — how well the model ranks patients by risk:</p>
+<div class="arithmatex">\[C = \frac{\text{concordant pairs}}{\text{comparable pairs}}\]</div>
+<p>A pair <span class="arithmatex">\((i, j)\)</span> is <strong>comparable</strong> if patient <span class="arithmatex">\(i\)</span> had an event before patient <span class="arithmatex">\(j\)</span> (and <span class="arithmatex">\(i\)</span>'s event is observed). It is <strong>concordant</strong> if the model assigns higher risk to <span class="arithmatex">\(i\)</span>.</p>
 <ul>
-<li>visit-level positional encoding</li>
-<li>time-delta encoding</li>
-<li>continuous time embeddings</li>
-<li>learned risk-set embeddings</li>
+<li><span class="arithmatex">\(C = 1.0\)</span>: perfect discrimination</li>
+<li><span class="arithmatex">\(C = 0.5\)</span>: random (no discrimination)</li>
+<li><span class="arithmatex">\(C &lt; 0.5\)</span>: worse than random</li>
 </ul>
-<p>Those will affect survival modeling far more profoundly than segments ever could.</p>
-<p>And that’s where the real modeling decisions live.</p>
+<p><strong>Practical note:</strong> Use a fixed-horizon C-index to avoid length bias in variable-length sequences.</p>
+<h3 id="brier-score">Brier Score<a class="headerlink" href="#brier-score" title="Permanent link">&para;</a></h3>
+<p>Measures calibration — how close predicted probabilities are to observed outcomes:</p>
+<div class="arithmatex">\[\text{BS}(t) = \frac{1}{N} \sum_{i=1}^{N} \left( S_i(t) - \mathbb{1}[T_i &gt; t] \right)^2\]</div>
+<ul>
+<li><span class="arithmatex">\(\text{BS} = 0\)</span>: perfect calibration</li>
+<li><span class="arithmatex">\(\text{BS} = 0.25\)</span>: uninformative model (predicts 0.5 everywhere)</li>
+</ul>
+<h3 id="relationship-between-metrics">Relationship Between Metrics<a class="headerlink" href="#relationship-between-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Measures</th>
+<th>Optimized by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C-index</td>
+<td>Discrimination (ranking)</td>
+<td>Ranking loss</td>
+</tr>
+<tr>
+<td>Brier Score</td>
+<td>Calibration (probability accuracy)</td>
+<td>NLL loss</td>
+</tr>
+</tbody>
+</table>
+<p>A model can be well-calibrated but poorly discriminative, or vice versa. See <code>06_loss_functions.md</code> for how to optimize for each.</p>
+<hr />
+<p><strong>Next:</strong> <code>02_ehr_to_tokens.md</code> — how patient visit sequences become BEHRT-ready tensors.</p>
 
 
 

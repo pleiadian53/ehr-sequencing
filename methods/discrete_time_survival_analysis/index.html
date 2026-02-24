@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1241,22 +1241,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#document-series" class="md-nav__link">
+  <a href="#tutorial-track-recommended-reading-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Document Series
+        Tutorial Track (Recommended Reading Order)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Document Series">
+    <nav class="md-nav" aria-label="Tutorial Track (Recommended Reading Order)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#01_behrt_model_overviewmd" class="md-nav__link">
+  <a href="#01_survival_frameworkmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        01_behrt_model_overview.md
+        01_survival_framework.md
       
     </span>
   </a>
@@ -1264,10 +1264,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#01a_visit_embeddingsmd" class="md-nav__link">
+  <a href="#02_ehr_to_tokensmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        01a_visit_embeddings.md
+        02_ehr_to_tokens.md
       
     </span>
   </a>
@@ -1275,10 +1275,126 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#01b_ehr_tokens_tensorsmd" class="md-nav__link">
+  <a href="#03_behrt_embeddingsmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        01b_ehr_tokens_tensors.md
+        03_behrt_embeddings.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04_pretraining_objectivesmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04_pretraining_objectives.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05_survival_head_and_aggregationmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05_survival_head_and_aggregation.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06_loss_functionsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06_loss_functions.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07_optimization_strategiesmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07_optimization_strategies.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08_architecture_decisionsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08_architecture_decisions.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09_hierarchical_architecturemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09_hierarchical_architecture.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deep-reference-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep-Reference Track
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deep-Reference Track">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#00_behrt_model_overviewmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        00_behrt_model_overview.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#00a_visit_embeddingsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        00a_visit_embeddings.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#00b_ehr_tokens_tensorsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        00b_ehr_tokens_tensors.md
       
     </span>
   </a>
@@ -1314,17 +1430,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#by-use-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        By Use Case
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#by-experience-level" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1349,116 +1454,16 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Common Questions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#q-whats-the-difference-between-visit-id-embedding-and-aggregated-visit-embedding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: What's the difference between visit ID embedding and aggregated visit embedding?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-why-flatten-hierarchical-ehr-data-instead-of-using-a-hierarchical-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: Why flatten hierarchical EHR data instead of using a hierarchical model?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-which-survival-loss-should-i-use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: Which survival loss should I use?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-should-i-use-frozen-behrt-lora-or-full-fine-tuning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: Should I use frozen BEHRT, LoRA, or full fine-tuning?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-how-do-i-handle-padding-correctly" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: How do I handle padding correctly?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-what-is-scatter_add-doing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: What is scatter_add doing?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
-  <a href="#implementation-checklist" class="md-nav__link">
+  <a href="#code-references" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementation Checklist
+        Code References
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Implementation Checklist">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#for-new-implementations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        For New Implementations
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#for-debugging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        For Debugging
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1471,173 +1476,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Related Documentation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pre-training-and-fine-tuning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-training and Fine-tuning
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#embeddings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Embeddings
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#benchmarking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Benchmarking
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#code-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code References
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Code References">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#core-models" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core Models
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#training-scripts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Training Scripts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#utilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Utilities
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coming-soon" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coming Soon
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Coming Soon">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#planned-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planned Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#planned-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planned Examples
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mathematical-notation-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mathematical Notation Reference
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Mathematical Notation Reference">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-symbols" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Symbols
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#set-notation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Set Notation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1645,17 +1483,6 @@
     <span class="md-ellipsis">
       
         Changelog
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#feedback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Feedback
       
     </span>
   </a>
@@ -1688,368 +1515,157 @@
 
 
 <h1 id="behrt-for-discrete-time-survival-analysis-documentation">BEHRT for Discrete-Time Survival Analysis: Documentation<a class="headerlink" href="#behrt-for-discrete-time-survival-analysis-documentation" title="Permanent link">&para;</a></h1>
-<p><strong>Last Updated:</strong> 2026-02-03<br />
-<strong>Purpose:</strong> Comprehensive guide to BEHRT-based survival modeling</p>
+<p><strong>Last Updated:</strong> 2026-02-21
+<strong>Purpose:</strong> Comprehensive guide to BEHRT-based survival modeling on EHR data</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This documentation series explains how BEHRT (Bidirectional Encoder Representations from Transformers) is adapted for discrete-time survival analysis on EHR data. The documents progress from high-level architecture to low-level implementation details.</p>
+<p>This documentation series explains how BEHRT (Bidirectional Encoder Representations from Transformers for EHRs) is adapted for discrete-time survival analysis. Documents are organized into two tracks:</p>
+<ul>
+<li><strong>Tutorial track (<code>01</code>–<code>08</code>):</strong> Concise, concept-focused documents in logical reading order — from survival math foundations through architecture decisions.</li>
+<li><strong>Deep-reference track (<code>00_</code>, <code>00a_</code>, <code>00b_</code>):</strong> Comprehensive treatments of the core architecture, visit embedding design, and data representation. Read these for full mathematical detail and implementation depth.</li>
+</ul>
 <p><strong>Target audience:</strong> Researchers, ML engineers, and data scientists working with EHR survival models.</p>
 <hr />
-<h2 id="document-series">Document Series<a class="headerlink" href="#document-series" title="Permanent link">&para;</a></h2>
-<h3 id="01_behrt_model_overviewmd"><a href="01_behrt_model_overview/">01_behrt_model_overview.md</a><a class="headerlink" href="#01_behrt_model_overviewmd" title="Permanent link">&para;</a></h3>
-<p><strong>What:</strong> Complete optimization pipeline from tokens to gradients</p>
-<p><strong>Topics covered:</strong>
-- Learning hierarchy (embeddings → transformer → task heads)
-- Training objectives (MLM, next-visit, survival)
-- Loss functions (NLL, ranking, hybrid)
-- Training strategies (frozen, LoRA, full fine-tune)
-- Optimization loop and gradient flow</p>
-<p><strong>Read this if:</strong>
-- New to BEHRT survival models
-- Want end-to-end pipeline understanding
-- Need to choose training strategy
-- Deciding which loss function to use</p>
-<p><strong>Key takeaway:</strong> BEHRT learns contextual representations through pre-training, then adapts to survival prediction via task-specific heads and losses.</p>
+<h2 id="tutorial-track-recommended-reading-order">Tutorial Track (Recommended Reading Order)<a class="headerlink" href="#tutorial-track-recommended-reading-order" title="Permanent link">&para;</a></h2>
+<h3 id="01_survival_frameworkmd"><a href="01_survival_framework/">01_survival_framework.md</a><a class="headerlink" href="#01_survival_frameworkmd" title="Permanent link">&para;</a></h3>
+<p>Survival math foundations: hazard function, survival function, censoring, label preparation, synthetic data generation, evaluation metrics (C-index, Brier score).</p>
+<h3 id="02_ehr_to_tokensmd"><a href="02_ehr_to_tokens/">02_ehr_to_tokens.md</a><a class="headerlink" href="#02_ehr_to_tokensmd" title="Permanent link">&para;</a></h3>
+<p>How hierarchical EHR data becomes BEHRT-ready tensors: flattening, dual role of <code>visit_ids</code>, tensor contract, padding discipline, flat vs hierarchical tradeoff.</p>
+<h3 id="03_behrt_embeddingsmd"><a href="03_behrt_embeddings/">03_behrt_embeddings.md</a><a class="headerlink" href="#03_behrt_embeddingsmd" title="Permanent link">&para;</a></h3>
+<p>BEHRT embedding design as structured inductive bias: age binning, visit vs positional embedding, sinusoidal vs learned, visit ID embedding vs aggregated visit embedding.</p>
+<h3 id="04_pretraining_objectivesmd"><a href="04_pretraining_objectives/">04_pretraining_objectives.md</a><a class="headerlink" href="#04_pretraining_objectivesmd" title="Permanent link">&para;</a></h3>
+<p>What MLM and Next-Visit Prediction each teach the encoder, joint vs sequential training, recommended pretraining strategy.</p>
+<h3 id="05_survival_head_and_aggregationmd"><a href="05_survival_head_and_aggregation/">05_survival_head_and_aggregation.md</a><a class="headerlink" href="#05_survival_head_and_aggregationmd" title="Permanent link">&para;</a></h3>
+<p>The bridge from token-level transformer output to visit-level hazards: <code>scatter_add</code> mechanics, hazard head, discrete-time interpretation, visit mask.</p>
+<h3 id="06_loss_functionsmd"><a href="06_loss_functions/">06_loss_functions.md</a><a class="headerlink" href="#06_loss_functionsmd" title="Permanent link">&para;</a></h3>
+<p>Loss choice as a value system: NLL vs C-index disconnect, pairwise ranking loss, hybrid loss, tuning <code>lambda_rank</code>, practical recommendations.</p>
+<h3 id="07_optimization_strategiesmd"><a href="07_optimization_strategies/">07_optimization_strategies.md</a><a class="headerlink" href="#07_optimization_strategiesmd" title="Permanent link">&para;</a></h3>
+<p>Frozen encoder vs LoRA vs full fine-tuning: parameter tradeoffs, practical recipes by data regime, operational notes.</p>
+<h3 id="08_architecture_decisionsmd"><a href="08_architecture_decisions/">08_architecture_decisions.md</a><a class="headerlink" href="#08_architecture_decisionsmd" title="Permanent link">&para;</a></h3>
+<p>LSTM baseline architecture, BEHRT vs LSTM comparison, flat vs hierarchical transformer tradeoffs, benchmark framework and expected performance.</p>
+<h3 id="09_hierarchical_architecturemd"><a href="09_hierarchical_architecture/">09_hierarchical_architecture.md</a><a class="headerlink" href="#09_hierarchical_architecturemd" title="Permanent link">&para;</a></h3>
+<p>Deep dive into hierarchical BEHRT: two-stage encoder design (within-visit + across-visit), attention pooling mechanics, Δt embedding, implementation blueprint, and flat vs hierarchical comparison.</p>
 <hr />
-<h3 id="01a_visit_embeddingsmd"><a href="01a_visit_embeddings/">01a_visit_embeddings.md</a><a class="headerlink" href="#01a_visit_embeddingsmd" title="Permanent link">&para;</a></h3>
-<p><strong>What:</strong> Deep dive into two conceptually different "visit embeddings"</p>
-<p><strong>Topics covered:</strong>
-- Visit ID embeddings (input-side lookup)
-- Aggregated visit embeddings (output-side representation)
-- Direct comparison and key differences
-- scatter_add mechanics and implementation
-- Gradient flow and optimization implications</p>
-<p><strong>Read this if:</strong>
-- Confused about "visit embedding" terminology
-- Need to understand aggregation process
-- Implementing visit-level models
-- Debugging aggregation issues</p>
-<p><strong>Key takeaway:</strong> Visit ID embedding = "this token is from visit 3" (input metadata). Aggregated visit embedding = "visit 3 contains these conditions" (output representation).</p>
-<hr />
-<h3 id="01b_ehr_tokens_tensorsmd"><a href="01b_ehr_tokens_tensors/">01b_ehr_tokens_tensors.md</a><a class="headerlink" href="#01b_ehr_tokens_tensorsmd" title="Permanent link">&para;</a></h3>
-<p><strong>What:</strong> How hierarchical EHR data becomes flat token sequences</p>
-<p><strong>Topics covered:</strong>
-- Flattening hierarchical data (patient → visits → codes)
-- Preserving structure through visit_ids
-- Dual role of visit_ids (feature + index)
-- Attention masking and padding discipline
-- Implementation best practices</p>
-<p><strong>Read this if:</strong>
-- Want to understand data preprocessing
-- Need to implement flattening logic
-- Debugging padding/masking issues
-- Comparing hierarchical vs flat architectures</p>
-<p><strong>Key takeaway:</strong> Flattening is pragmatic and enables BEHRT pre-training, but requires rigorous attention masking to preserve hierarchical structure.</p>
+<h2 id="deep-reference-track">Deep-Reference Track<a class="headerlink" href="#deep-reference-track" title="Permanent link">&para;</a></h2>
+<h3 id="00_behrt_model_overviewmd"><a href="00_behrt_model_overview/">00_behrt_model_overview.md</a><a class="headerlink" href="#00_behrt_model_overviewmd" title="Permanent link">&para;</a></h3>
+<p>Complete end-to-end pipeline: learning hierarchy (5 levels), all training objectives, loss function comparison tables, training strategy decision matrix, optimization loop, gradient flow, common pitfalls.</p>
+<h3 id="00a_visit_embeddingsmd"><a href="00a_visit_embeddings/">00a_visit_embeddings.md</a><a class="headerlink" href="#00a_visit_embeddingsmd" title="Permanent link">&para;</a></h3>
+<p>Deep dive into the two "visit embeddings": visit ID embedding (input-side lookup) vs aggregated visit embedding (output-side representation). Includes step-by-step <code>scatter_add</code> explanation, gradient flow analysis, and common misconceptions.</p>
+<h3 id="00b_ehr_tokens_tensorsmd"><a href="00b_ehr_tokens_tensors/">00b_ehr_tokens_tensors.md</a><a class="headerlink" href="#00b_ehr_tokens_tensorsmd" title="Permanent link">&para;</a></h3>
+<p>Deep dive into flattening hierarchical EHR data: forest/vine analogy, attention mask implementation, padding bug examples, testing correctness, design tradeoff analysis.</p>
 <hr />
 <h2 id="quick-navigation">Quick Navigation<a class="headerlink" href="#quick-navigation" title="Permanent link">&para;</a></h2>
 <h3 id="by-topic">By Topic<a class="headerlink" href="#by-topic" title="Permanent link">&para;</a></h3>
-<p><strong>Architecture:</strong>
-- Model components → <code>01_behrt_model_overview.md</code> (Section 1)
-- Embedding layers → <code>01_behrt_model_overview.md</code> (Section 1.1-1.2)
-- Visit aggregation → <code>01a_visit_embeddings.md</code> (Section 2)</p>
-<p><strong>Data Processing:</strong>
-- Flattening hierarchy → <code>01b_ehr_tokens_tensors.md</code> (Section 2)
-- Attention masking → <code>01b_ehr_tokens_tensors.md</code> (Section 4)
-- Padding handling → <code>01b_ehr_tokens_tensors.md</code> (Section 4)</p>
-<p><strong>Training:</strong>
-- Pre-training objectives → <code>01_behrt_model_overview.md</code> (Section 2.1-2.2)
-- Survival losses → <code>01_behrt_model_overview.md</code> (Section 2.3)
-- Training strategies → <code>01_behrt_model_overview.md</code> (Section 3)</p>
-<p><strong>Implementation:</strong>
-- scatter_add mechanics → <code>01a_visit_embeddings.md</code> (Section 4)
-- Masking best practices → <code>01b_ehr_tokens_tensors.md</code> (Section 9)
-- Common pitfalls → <code>01_behrt_model_overview.md</code> (Section 8)</p>
-<h3 id="by-use-case">By Use Case<a class="headerlink" href="#by-use-case" title="Permanent link">&para;</a></h3>
-<p><strong>"I want to..."</strong></p>
-<ul>
-<li><strong>Understand the full pipeline</strong> → Read <code>01_behrt_model_overview.md</code></li>
-<li><strong>Implement visit aggregation</strong> → Read <code>01a_visit_embeddings.md</code></li>
-<li><strong>Preprocess EHR data</strong> → Read <code>01b_ehr_tokens_tensors.md</code></li>
-<li><strong>Choose a loss function</strong> → <code>01_behrt_model_overview.md</code> (Section 2.3)</li>
-<li><strong>Choose training strategy</strong> → <code>01_behrt_model_overview.md</code> (Section 3)</li>
-<li><strong>Debug padding issues</strong> → <code>01b_ehr_tokens_tensors.md</code> (Section 4)</li>
-<li><strong>Understand gradient flow</strong> → <code>01a_visit_embeddings.md</code> (Section 6)</li>
-</ul>
+<p><strong>Survival math:</strong>
+- Framework and notation → <code>01_survival_framework.md</code>
+- Label preparation → <code>01_survival_framework.md</code> §4
+- Evaluation metrics → <code>01_survival_framework.md</code> §6</p>
+<p><strong>Data processing:</strong>
+- Flattening overview → <code>02_ehr_to_tokens.md</code>
+- Flattening deep dive → <code>00b_ehr_tokens_tensors.md</code>
+- Padding discipline → <code>02_ehr_to_tokens.md</code> §5, <code>00b_ehr_tokens_tensors.md</code> §4</p>
+<p><strong>Embeddings:</strong>
+- Embedding design overview → <code>03_behrt_embeddings.md</code>
+- Visit ID vs aggregated visit embedding → <code>03_behrt_embeddings.md</code> §5, <code>00a_visit_embeddings.md</code>
+- scatter_add mechanics → <code>05_survival_head_and_aggregation.md</code> §2, <code>00a_visit_embeddings.md</code> §4</p>
+<p><strong>Pretraining:</strong>
+- MLM and NVP objectives → <code>04_pretraining_objectives.md</code>
+- Full pipeline overview → <code>00_behrt_model_overview.md</code> §2</p>
+<p><strong>Survival head:</strong>
+- Aggregation + hazard head → <code>05_survival_head_and_aggregation.md</code>
+- Full architecture detail → <code>00_behrt_model_overview.md</code> §1.4–1.5</p>
+<p><strong>Loss functions:</strong>
+- Overview and tuning → <code>06_loss_functions.md</code>
+- Full mathematical treatment → <code>06_loss_functions.md</code></p>
+<p><strong>Training strategy:</strong>
+- Frozen / LoRA / full → <code>07_optimization_strategies.md</code>
+- Decision matrix → <code>00_behrt_model_overview.md</code> §3</p>
+<p><strong>Architecture decisions:</strong>
+- BEHRT vs LSTM → <code>08_architecture_decisions.md</code> §3
+- Flat vs hierarchical (overview) → <code>08_architecture_decisions.md</code> §4, <code>02_ehr_to_tokens.md</code> §6
+- Hierarchical BEHRT (deep dive) → <code>09_hierarchical_architecture.md</code></p>
 <h3 id="by-experience-level">By Experience Level<a class="headerlink" href="#by-experience-level" title="Permanent link">&para;</a></h3>
-<p><strong>Beginner (new to project):</strong>
-1. Start with <code>01_behrt_model_overview.md</code> (skip math details first pass)
-2. Read <code>01b_ehr_tokens_tensors.md</code> (understand data processing)
-3. Skim <code>01a_visit_embeddings.md</code> (come back when confused about embeddings)</p>
-<p><strong>Intermediate (familiar with basics):</strong>
-1. Deep dive into <code>01_behrt_model_overview.md</code> (all sections)
-2. Study <code>01a_visit_embeddings.md</code> (understand visit representations)
-3. Review <code>01b_ehr_tokens_tensors.md</code> (implementation details)</p>
-<p><strong>Advanced (modifying codebase):</strong>
-1. Use as reference for implementation decisions
-2. Consult gradient flow sections for optimization debugging
-3. Review best practices sections before major changes</p>
+<p><strong>New to BEHRT survival:</strong>
+1. <code>01_survival_framework.md</code> — understand the task
+2. <code>02_ehr_to_tokens.md</code> — understand the data
+3. <code>03_behrt_embeddings.md</code> — understand the model inputs
+4. <code>05_survival_head_and_aggregation.md</code> — understand the model outputs
+5. <code>07_optimization_strategies.md</code> — understand how to train</p>
+<p><strong>Implementing or debugging:</strong>
+1. <code>00b_ehr_tokens_tensors.md</code> — data pipeline deep dive
+2. <code>00a_visit_embeddings.md</code> — aggregation deep dive
+3. <code>00_behrt_model_overview.md</code> — full pipeline reference</p>
+<p><strong>Choosing architecture or loss:</strong>
+1. <code>06_loss_functions.md</code> — loss function tradeoffs
+2. <code>07_optimization_strategies.md</code> — training strategy
+3. <code>08_architecture_decisions.md</code> — BEHRT vs LSTM, flat vs hierarchical
+4. <code>09_hierarchical_architecture.md</code> — hierarchical BEHRT design and implementation</p>
 <hr />
 <h2 id="common-questions">Common Questions<a class="headerlink" href="#common-questions" title="Permanent link">&para;</a></h2>
-<h3 id="q-whats-the-difference-between-visit-id-embedding-and-aggregated-visit-embedding">Q: What's the difference between visit ID embedding and aggregated visit embedding?<a class="headerlink" href="#q-whats-the-difference-between-visit-id-embedding-and-aggregated-visit-embedding" title="Permanent link">&para;</a></h3>
-<p><strong>A:</strong> Visit ID embedding is an <strong>input feature</strong> (learned lookup table added to tokens before transformer). Aggregated visit embedding is an <strong>output representation</strong> (computed from transformer outputs by grouping tokens).</p>
-<p><strong>See:</strong> <code>01a_visit_embeddings.md</code> (complete explanation)</p>
-<h3 id="q-why-flatten-hierarchical-ehr-data-instead-of-using-a-hierarchical-model">Q: Why flatten hierarchical EHR data instead of using a hierarchical model?<a class="headerlink" href="#q-why-flatten-hierarchical-ehr-data-instead-of-using-a-hierarchical-model" title="Permanent link">&para;</a></h3>
-<p><strong>A:</strong> Flattening enables:
-- Use of pre-trained BEHRT
-- Full cross-visit attention
-- Simpler architecture
-- Better code reuse</p>
-<p><strong>Trade-off:</strong> Requires careful attention masking.</p>
-<p><strong>See:</strong> <code>01b_ehr_tokens_tensors.md</code> (Section 5)</p>
-<h3 id="q-which-survival-loss-should-i-use">Q: Which survival loss should I use?<a class="headerlink" href="#q-which-survival-loss-should-i-use" title="Permanent link">&para;</a></h3>
-<p><strong>A:</strong> Depends on your evaluation metric:
-- <strong>NLL:</strong> Best for calibration (Brier score)
-- <strong>Ranking:</strong> Best for discrimination (C-index)
-- <strong>Hybrid:</strong> Balances both (recommended starting point)</p>
-<p><strong>See:</strong> <code>01_behrt_model_overview.md</code> (Section 2.3)</p>
-<h3 id="q-should-i-use-frozen-behrt-lora-or-full-fine-tuning">Q: Should I use frozen BEHRT, LoRA, or full fine-tuning?<a class="headerlink" href="#q-should-i-use-frozen-behrt-lora-or-full-fine-tuning" title="Permanent link">&para;</a></h3>
-<p><strong>A:</strong> Depends on dataset size and resources:
-- <strong>Frozen:</strong> Small data (&lt; 1K patients), fast prototyping
-- <strong>LoRA:</strong> Standard scenario (1K-10K patients), best efficiency/performance
-- <strong>Full:</strong> Large data (&gt; 10K patients), maximum flexibility</p>
-<p><strong>See:</strong> <code>01_behrt_model_overview.md</code> (Section 3)</p>
-<h3 id="q-how-do-i-handle-padding-correctly">Q: How do I handle padding correctly?<a class="headerlink" href="#q-how-do-i-handle-padding-correctly" title="Permanent link">&para;</a></h3>
-<p><strong>A:</strong> Three critical steps:
-1. Create attention mask: <code>mask = (codes != 0).long()</code>
-2. Pass to transformer: <code>model(..., attention_mask=mask)</code>
-3. Mask before aggregation: <code>hidden * mask.unsqueeze(-1)</code></p>
-<p><strong>See:</strong> <code>01b_ehr_tokens_tensors.md</code> (Section 4)</p>
-<h3 id="q-what-is-scatter_add-doing">Q: What is scatter_add doing?<a class="headerlink" href="#q-what-is-scatter_add-doing" title="Permanent link">&para;</a></h3>
-<p><strong>A:</strong> Vectorized group-by-sum operation that aggregates tokens into visits:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>For each token i: add hidden_states[i] to visit_embedding[visit_ids[i]]
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Then divide by visit size (mean pooling)
-</span></code></pre></div>
-<p><strong>See:</strong> <code>01a_visit_embeddings.md</code> (Section 4)</p>
-<hr />
-<h2 id="implementation-checklist">Implementation Checklist<a class="headerlink" href="#implementation-checklist" title="Permanent link">&para;</a></h2>
-<h3 id="for-new-implementations">For New Implementations<a class="headerlink" href="#for-new-implementations" title="Permanent link">&para;</a></h3>
-<ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Read <code>01_behrt_model_overview.md</code> (understand full pipeline)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Read <code>01b_ehr_tokens_tensors.md</code> (data preprocessing)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Read <code>01a_visit_embeddings.md</code> (aggregation logic)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Review code: <code>src/ehrsequencing/models/behrt_survival.py</code></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test attention masking correctness</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Validate visit aggregation with small examples</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Monitor both calibration and discrimination metrics</li>
-</ul>
-<h3 id="for-debugging">For Debugging<a class="headerlink" href="#for-debugging" title="Permanent link">&para;</a></h3>
-<p><strong>Padding issues:</strong>
-- [ ] Check attention mask creation
-- [ ] Verify mask passed to transformer
-- [ ] Validate masking before aggregation
-- [ ] Test: padding should not affect outputs</p>
-<p><strong>Aggregation issues:</strong>
-- [ ] Print visit_ids and attention_mask
-- [ ] Check scatter_add index dimensions
-- [ ] Verify division by visit counts
-- [ ] Test: same visit different patients should aggregate differently</p>
-<p><strong>Training issues:</strong>
-- [ ] Check loss computation (masked properly?)
-- [ ] Monitor loss components (NLL vs ranking)
-- [ ] Verify gradient flow (check grad norms)
-- [ ] Validate metrics (C-index, Brier score)</p>
-<hr />
-<h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
-<h3 id="pre-training-and-fine-tuning">Pre-training and Fine-tuning<a class="headerlink" href="#pre-training-and-fine-tuning" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><code>dev/models/pretrain_finetune/</code></strong> - BEHRT pre-training documentation</li>
-<li><strong><code>dev/models/pretrain_finetune/01_behrt_model_design.md</code></strong> - Architecture details</li>
-<li><strong><code>dev/models/pretrain_finetune/07_lora_deep_dive.md</code></strong> - LoRA comprehensive guide</li>
-</ul>
-<h3 id="embeddings">Embeddings<a class="headerlink" href="#embeddings" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><code>dev/models/pretrain_finetune/05_embedding_summation_and_quality_analysis.md</code></strong> - Why sum embeddings</li>
-</ul>
-<h3 id="benchmarking">Benchmarking<a class="headerlink" href="#benchmarking" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><code>dev/models/pretrain_finetune/06_benchmarking_updates.md</code></strong> - Evaluation strategies</li>
-</ul>
+<p><strong>Q: What is the difference between visit ID embedding and aggregated visit embedding?</strong>
+A: See <code>03_behrt_embeddings.md</code> §5 for a concise answer, or <code>00a_visit_embeddings.md</code> for the full treatment.</p>
+<p><strong>Q: Why flatten instead of using a hierarchical transformer?</strong>
+A: See <code>02_ehr_to_tokens.md</code> §6 and <code>08_architecture_decisions.md</code> §4.</p>
+<p><strong>Q: Which loss function should I use?</strong>
+A: Start with hybrid loss (<code>lambda_rank=0.05</code>). See <code>06_loss_functions.md</code> §7 for decision guidance.</p>
+<p><strong>Q: Which training strategy should I use?</strong>
+A: LoRA by default for medium cohorts. See <code>07_optimization_strategies.md</code> §5.</p>
+<p><strong>Q: Why does NLL not directly optimize C-index?</strong>
+A: See <code>06_loss_functions.md</code> §3.</p>
+<p><strong>Q: How do I verify my data pipeline is correct?</strong>
+A: See <code>02_ehr_to_tokens.md</code> §7 for practical checks.</p>
 <hr />
 <h2 id="code-references">Code References<a class="headerlink" href="#code-references" title="Permanent link">&para;</a></h2>
-<h3 id="core-models">Core Models<a class="headerlink" href="#core-models" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
+<th>Component</th>
 <th>File</th>
-<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>src/ehrsequencing/models/behrt.py</code></td>
-<td>BEHRT base architecture</td>
+<td>Dataset and flattening</td>
+<td><code>src/ehrsequencing/data/behrt_survival_dataset.py</code></td>
 </tr>
 <tr>
+<td>Embeddings</td>
 <td><code>src/ehrsequencing/models/embeddings.py</code></td>
-<td>Embedding layers</td>
 </tr>
 <tr>
+<td>BEHRT encoder</td>
+<td><code>src/ehrsequencing/models/behrt.py</code></td>
+</tr>
+<tr>
+<td>Survival model</td>
 <td><code>src/ehrsequencing/models/behrt_survival.py</code></td>
-<td>Survival model implementation</td>
 </tr>
 <tr>
+<td>Loss functions</td>
 <td><code>src/ehrsequencing/models/losses.py</code></td>
-<td>Survival loss functions</td>
-</tr>
-</tbody>
-</table>
-<h3 id="training-scripts">Training Scripts<a class="headerlink" href="#training-scripts" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>examples/survival_analysis/train_lstm.py</code></td>
-<td>Full training pipeline</td>
 </tr>
 <tr>
-<td><code>examples/survival_analysis/train_lstm_demo.py</code></td>
-<td>Demo/quick start</td>
-</tr>
-</tbody>
-</table>
-<h3 id="utilities">Utilities<a class="headerlink" href="#utilities" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
+<td>LoRA</td>
 <td><code>src/ehrsequencing/models/lora.py</code></td>
-<td>LoRA implementation</td>
 </tr>
 <tr>
-<td><code>src/ehrsequencing/benchmarks/</code></td>
-<td>Evaluation metrics</td>
+<td>Training script</td>
+<td><code>examples/survival_analysis/train_behrt_survival.py</code></td>
+</tr>
+<tr>
+<td>Validation script</td>
+<td><code>examples/survival_analysis/validate_behrt_survival.py</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="coming-soon">Coming Soon<a class="headerlink" href="#coming-soon" title="Permanent link">&para;</a></h2>
-<h3 id="planned-documentation">Planned Documentation<a class="headerlink" href="#planned-documentation" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>02_survival_losses.md</strong> - Mathematical derivation of survival losses</li>
-<li><strong>03_evaluation_metrics.md</strong> - Comprehensive guide to survival metrics</li>
-<li><strong>04_training_recipes.md</strong> - Practical training configurations</li>
-<li><strong>05_troubleshooting.md</strong> - Common issues and solutions</li>
-</ol>
-<h3 id="planned-examples">Planned Examples<a class="headerlink" href="#planned-examples" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Minimal working example</strong> - 50-line script demonstrating key concepts</li>
-<li><strong>Complete training pipeline</strong> - Production-ready training script</li>
-<li><strong>Custom loss functions</strong> - How to implement new survival losses</li>
-<li><strong>Multi-task learning</strong> - Pre-training + survival jointly</li>
-</ol>
-<hr />
-<h2 id="mathematical-notation-reference">Mathematical Notation Reference<a class="headerlink" href="#mathematical-notation-reference" title="Permanent link">&para;</a></h2>
-<h3 id="common-symbols">Common Symbols<a class="headerlink" href="#common-symbols" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Symbol</th>
-<th>Meaning</th>
-<th>Typical Dimensions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>B</td>
-<td>Batch size</td>
-<td>-</td>
-</tr>
-<tr>
-<td>L</td>
-<td>Sequence length (tokens)</td>
-<td>-</td>
-</tr>
-<tr>
-<td>T</td>
-<td>Number of visits</td>
-<td>-</td>
-</tr>
-<tr>
-<td>d</td>
-<td>Embedding dimension</td>
-<td>-</td>
-</tr>
-<tr>
-<td>|V|</td>
-<td>Vocabulary size</td>
-<td>-</td>
-</tr>
-<tr>
-<td>c_i</td>
-<td>Code ID at position i</td>
-<td 0_="0," _124_V_124_-1="|V|-1" class="..,">∈</td>
-</tr>
-<tr>
-<td>v_i</td>
-<td>Visit ID at position i</td>
-<td 0_="0," T-1="T-1" class="..,">∈</td>
-</tr>
-<tr>
-<td>x_i</td>
-<td>Token embedding</td>
-<td>∈ ℝ^d</td>
-</tr>
-<tr>
-<td>H</td>
-<td>Contextual hidden states</td>
-<td>∈ ℝ^(B×L×d)</td>
-</tr>
-<tr>
-<td>V_t</td>
-<td>Visit representation</td>
-<td>∈ ℝ^d</td>
-</tr>
-<tr>
-<td>h_t</td>
-<td>Hazard at visit t</td>
-<td>∈ (0, 1)</td>
-</tr>
-<tr>
-<td>E^code</td>
-<td>Code embedding matrix</td>
-<td>∈ ℝ^(|V|×d)</td>
-</tr>
-<tr>
-<td>E^visit</td>
-<td>Visit ID embedding matrix</td>
-<td>∈ ℝ^(T_max×d)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="set-notation">Set Notation<a class="headerlink" href="#set-notation" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Notation</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>I_{b,t}</td>
-<td>Set of token indices in visit t for patient b</td>
-</tr>
-<tr>
-<td>𝟙(·)</td>
-<td>Indicator function (1 if true, 0 if false)</td>
-</tr>
-<tr>
-<td>Σ_{i ∈ I}</td>
-<td>Sum over indices in set I</td>
-</tr>
-</tbody>
-</table>
-<hr />
+<h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>dev/workflow/BEHRT_SURVIVAL_ANALYSIS_DESIGN.md</code> — original design specification</li>
+<li><code>dev/workflow/ROADMAP.md</code> — project roadmap and phase status</li>
+<li><code>dev/models/pretrain_finetune/</code> — BEHRT pre-training documentation</li>
+<li><code>dev/methods/discrete_time_survival_analysis/</code> — internal design notes and session logs</li>
+</ul>
 <h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2060,42 +1676,15 @@
 </thead>
 <tbody>
 <tr>
+<td>2026-02-21</td>
+<td>Added 09_hierarchical_architecture.md; consolidated into unified 01–08 tutorial track; retired session_0X files; moved POLISHING_SUMMARY.md to dev/</td>
+</tr>
+<tr>
 <td>2026-02-03</td>
-<td>Initial documentation release</td>
-</tr>
-<tr>
-<td>-</td>
-<td>Published 01_behrt_model_overview.md</td>
-</tr>
-<tr>
-<td>-</td>
-<td>Published 01a_visit_embeddings.md</td>
-</tr>
-<tr>
-<td>-</td>
-<td>Published 01b_ehr_tokens_tensors.md</td>
-</tr>
-<tr>
-<td>-</td>
-<td>Created README with navigation</td>
+<td>Initial documentation release: 01_behrt_model_overview.md, 01a_visit_embeddings.md, 01b_ehr_tokens_tensors.md, README</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="feedback">Feedback<a class="headerlink" href="#feedback" title="Permanent link">&para;</a></h2>
-<p>This documentation is actively maintained. If you find:
-- ✅ Errors or inconsistencies
-- ✅ Unclear explanations
-- ✅ Missing topics
-- ✅ Implementation bugs</p>
-<p>Please:
-1. Check the code references to verify current implementation
-2. Review related documentation for additional context
-3. Open an issue with specific questions</p>
-<hr />
-<p><strong>Status:</strong> Active documentation, regularly updated<br />
-<strong>Version:</strong> 1.0<br />
-<strong>Last Updated:</strong> 2026-02-03</p>
 
 
 

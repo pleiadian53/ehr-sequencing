@@ -12,7 +12,7 @@
         <meta name="author" content="EHR Sequencing Research Team">
       
       
-        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/POLISHING_SUMMARY/">
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/07_optimization_strategies/">
       
       
       
@@ -21,11 +21,11 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
-        <title>Documentation Polishing Summary - EHR Sequencing</title>
+        <title>Optimization Strategies: Frozen vs LoRA vs Full Fine-Tuning - EHR Sequencing</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#documentation-polishing-summary" class="md-skip">
+        <a href="#optimization-strategies-frozen-vs-lora-vs-full-fine-tuning" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Documentation Polishing Summary
+              Optimization Strategies: Frozen vs LoRA vs Full Fine-Tuning
             
           </span>
         </div>
@@ -1230,22 +1230,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-was-done" class="md-nav__link">
+  <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Was Done
+        Table of Contents
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What Was Done">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-three-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Three Strategies">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#documents-polished" class="md-nav__link">
+  <a href="#a-frozen-encoder-freeze_behrttrue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documents Polished
+        A) Frozen Encoder (freeze_behrt=True)
       
     </span>
   </a>
@@ -1253,10 +1264,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#total-output" class="md-nav__link">
+  <a href="#b-lora-use_loratrue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Total Output
+        B) LoRA (use_lora=True)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-full-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C) Full Fine-Tuning
       
     </span>
   </a>
@@ -1269,22 +1291,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#major-transformations" class="md-nav__link">
+  <a href="#parameter-tradeoff-intuition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Major Transformations
+        Parameter Tradeoff Intuition
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Major Transformations">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-recipe-by-data-regime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical Recipe by Data Regime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Recipe by Data Regime">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#from-qa-to-tutorial-format" class="md-nav__link">
+  <a href="#small-cohort-2k-patients" class="md-nav__link">
     <span class="md-ellipsis">
       
-        From Q&amp;A to Tutorial Format
+        Small cohort (&lt; 2K patients)
       
     </span>
   </a>
@@ -1292,10 +1325,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#key-improvements" class="md-nav__link">
+  <a href="#medium-cohort-2k20k-patients" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Improvements
+        Medium cohort (2K–20K patients)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#large-cohort-20k-patients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Large cohort (&gt; 20K patients)
       
     </span>
   </a>
@@ -1308,510 +1352,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#document-structure" class="md-nav__link">
+  <a href="#operational-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Document Structure
+        Operational Notes
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Document Structure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#01_behrt_model_overviewmd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        01_behrt_model_overview.md
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#01a_visit_embeddingsmd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        01a_visit_embeddings.md
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#01b_ehr_tokens_tensorsmd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        01b_ehr_tokens_tensors.md
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#readmemd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        README.md
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#fixes-applied" class="md-nav__link">
+  <a href="#decision-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fixes Applied
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Fixes Applied">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#typos-fixed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Typos Fixed
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#structural-issues-resolved" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Structural Issues Resolved
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#content-enhancements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Content Enhancements
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tutorial-principles-applied" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tutorial Principles Applied
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Tutorial Principles Applied">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-progressive-disclosure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Progressive Disclosure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-multiple-entry-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Multiple Entry Points
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-consistent-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Consistent Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-accessibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Accessibility
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quality-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quality Metrics
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quality Metrics">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#completeness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Completeness
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usability
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#technical-accuracy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Technical Accuracy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maintainability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintainability
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#file-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        File Organization
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="File Organization">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#before" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#after" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        After
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cross-references-created" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cross-References Created
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code References
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps (Recommended)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Next Steps (Recommended)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-update-cross-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Update Cross-References
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-create-additional-docs-planned" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Create Additional Docs (Planned)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-add-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Add Examples
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-create-diagrams" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Create Diagrams
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#user-feedback-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        User Feedback Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="User Feedback Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#original-request" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Original Request
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delivered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delivered
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#statistics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Statistics
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Statistics">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#document-sizes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Sizes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quality-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quality Indicators
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#final-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Final Status
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Final Status">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#completion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Completion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quality
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Readiness
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
+        Decision Summary
       
     </span>
   </a>
@@ -1835,7 +1390,7 @@
 
 
   
-    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/discrete_time_survival_analysis/POLISHING_SUMMARY.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/discrete_time_survival_analysis/07_optimization_strategies.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1843,422 +1398,142 @@
   
 
 
-<h1 id="documentation-polishing-summary">Documentation Polishing Summary<a class="headerlink" href="#documentation-polishing-summary" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-02-03<br />
-<strong>Task:</strong> Convert Q&amp;A draft documents to polished tutorials</p>
+<h1 id="optimization-strategies-frozen-vs-lora-vs-full-fine-tuning">Optimization Strategies: Frozen vs LoRA vs Full Fine-Tuning<a class="headerlink" href="#optimization-strategies-frozen-vs-lora-vs-full-fine-tuning" title="Permanent link">&para;</a></h1>
+<p><strong>Topics:</strong> Training strategy comparison, parameter tradeoffs, practical recipes by data regime</p>
+<p><strong>Reference code:</strong> <code>src/ehrsequencing/models/behrt_survival.py</code>, <code>src/ehrsequencing/models/lora.py</code>, <code>examples/survival_analysis/train_behrt_survival.py</code></p>
 <hr />
-<h2 id="what-was-done">What Was Done<a class="headerlink" href="#what-was-done" title="Permanent link">&para;</a></h2>
-<h3 id="documents-polished">Documents Polished<a class="headerlink" href="#documents-polished" title="Permanent link">&para;</a></h3>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong><code>01_behrt_model_overview.md</code></strong> (10,800+ lines) ✅</li>
-<li><strong><code>01a_visit_embeddings.md</code></strong> (10,500+ lines) ✅</li>
-<li><strong><code>01b_ehr_tokens_tensors.md</code></strong> (10,400+ lines) ✅</li>
-<li><strong><code>README.md</code></strong> (New comprehensive guide) ✅</li>
+<li><a href="#the-three-strategies">The Three Strategies</a></li>
+<li><a href="#parameter-tradeoff-intuition">Parameter Tradeoff Intuition</a></li>
+<li><a href="#practical-recipe-by-data-regime">Practical Recipe by Data Regime</a></li>
+<li><a href="#operational-notes">Operational Notes</a></li>
+<li><a href="#decision-summary">Decision Summary</a></li>
 </ol>
-<h3 id="total-output">Total Output<a class="headerlink" href="#total-output" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="the-three-strategies">The Three Strategies<a class="headerlink" href="#the-three-strategies" title="Permanent link">&para;</a></h2>
+<h3 id="a-frozen-encoder-freeze_behrttrue">A) Frozen Encoder (<code>freeze_behrt=True</code>)<a class="headerlink" href="#a-frozen-encoder-freeze_behrttrue" title="Permanent link">&para;</a></h3>
+<p>Train only the survival head. All BEHRT encoder weights are fixed.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">behrt</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Only hazard_head parameters are updated</span>
+</span></code></pre></div>
+<p><strong>Use when:</strong>
+- Very small cohorts (&lt; 2K patients)
+- Fast baselines and ablations
+- Verifying the pipeline before committing to longer training</p>
+<p><strong>Characteristics:</strong>
+- Fastest training, most stable
+- Lowest adaptation capacity — relies entirely on pretrained representations
+- Best when pretrained BEHRT was trained on similar EHR data</p>
+<h3 id="b-lora-use_loratrue">B) LoRA (<code>use_lora=True</code>)<a class="headerlink" href="#b-lora-use_loratrue" title="Permanent link">&para;</a></h3>
+<p>Freeze base BEHRT weights; inject trainable low-rank adapter matrices into attention layers. Optionally also train embeddings and the hazard head.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ehrsequencing.models.lora</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_lora_to_behrt</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">model</span><span class="o">.</span><span class="n">behrt</span> <span class="o">=</span> <span class="n">apply_lora_to_behrt</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">behrt</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Use when:</strong>
+- Medium data scale (2K–20K patients)
+- Limited GPU memory
+- Need better adaptation than frozen but want to avoid full fine-tuning risk</p>
+<p><strong>Characteristics:</strong>
+- Strong efficiency/performance tradeoff
+- Typically 10–20% of full fine-tuning parameter count
+- Usually the best default for practical transfer learning</p>
+<h3 id="c-full-fine-tuning">C) Full Fine-Tuning<a class="headerlink" href="#c-full-fine-tuning" title="Permanent link">&para;</a></h3>
+<p>All BEHRT parameters are trainable.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All parameters trainable by default — no special setup needed</span>
+</span></code></pre></div>
+<p><strong>Use when:</strong>
+- Large cohorts (&gt; 20K patients) with strong regularization
+- Sufficient compute and tuning budget
+- LoRA has saturated and you need more adaptation capacity</p>
+<p><strong>Characteristics:</strong>
+- Highest capacity, highest compute, highest overfitting risk
+- Requires careful early stopping and validation monitoring</p>
+<hr />
+<h2 id="parameter-tradeoff-intuition">Parameter Tradeoff Intuition<a class="headerlink" href="#parameter-tradeoff-intuition" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Trainable parameters:  Frozen &lt;&lt; LoRA &lt;&lt; Full
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>As trainable count rises:
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  ↑ adaptation flexibility
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  ↑ compute and memory
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  ↑ overfitting risk
+</span></code></pre></div>
+<p>Use <code>model.get_trainable_parameters()</code> to verify the actual training footprint before starting a run:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_trainable_parameters</span><span class="p">()</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trainable: </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="practical-recipe-by-data-regime">Practical Recipe by Data Regime<a class="headerlink" href="#practical-recipe-by-data-regime" title="Permanent link">&para;</a></h2>
+<h3 id="small-cohort-2k-patients">Small cohort (&lt; 2K patients)<a class="headerlink" href="#small-cohort-2k-patients" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Strategy:   Frozen encoder
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Loss:       Hybrid (lambda_rank=0.05)
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Epochs:     50–100 with strong early stopping (patience=10)
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Batch size: 16–32
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>If underfitting: move to LoRA rank 8–16
+</span></code></pre></div>
+<h3 id="medium-cohort-2k20k-patients">Medium cohort (2K–20K patients)<a class="headerlink" href="#medium-cohort-2k20k-patients" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Strategy:   LoRA rank 16
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Loss:       Hybrid (lambda_rank=0.1 as initial)
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Epochs:     100 with early stopping (patience=15)
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Batch size: 32–64
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Regularization: gradient clipping (max_norm=1.0) + weight decay (1e-5)
+</span></code></pre></div>
+<h3 id="large-cohort-20k-patients">Large cohort (&gt; 20K patients)<a class="headerlink" href="#large-cohort-20k-patients" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Strategy:   Compare LoRA vs full fine-tune
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Loss:       Hybrid (lambda_rank=0.1–0.2)
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Epochs:     100–200 with checkpoint selection by C-index + calibration
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Batch size: 64–128
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>If LoRA saturates: escalate to full fine-tune
+</span></code></pre></div>
+<hr />
+<h2 id="operational-notes">Operational Notes<a class="headerlink" href="#operational-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>4 complete documents</strong></li>
-<li><strong>~32,000 lines</strong> of polished technical documentation</li>
-<li><strong>0 → 100% tutorial coverage</strong> for BEHRT survival models</li>
+<li><strong>Verify training footprint</strong> before each run with <code>get_trainable_parameters()</code></li>
+<li><strong>Keep preprocessing consistent</strong> across train/val/test — never compare strategies with different truncation or masking pipelines</li>
+<li><strong>Monitor both metrics</strong> — C-index (discrimination) and calibration proxy (Brier score or risk curve sanity)</li>
+<li><strong>Early stopping criterion</strong> — use validation C-index, not validation loss, as the primary stopping signal</li>
+<li><strong>Checkpoint selection</strong> — save the checkpoint with best val C-index, not the final epoch</li>
 </ul>
 <hr />
-<h2 id="major-transformations">Major Transformations<a class="headerlink" href="#major-transformations" title="Permanent link">&para;</a></h2>
-<h3 id="from-qa-to-tutorial-format">From Q&amp;A to Tutorial Format<a class="headerlink" href="#from-qa-to-tutorial-format" title="Permanent link">&para;</a></h3>
-<p><strong>Before:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Q: So this aggregated per visit embedding is obviously not the same as visit ID embeddings...
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Yes. Good. This is exactly the kind of conceptual seam...
-</span></code></pre></div></p>
-<p><strong>After:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Visit Embeddings: Two Conceptually Different Representations
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 1. Visit ID Embedding (Input-Side Signal)
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>[Structured explanation with clear sections, examples, code...]
-</span></code></pre></div></p>
-<h3 id="key-improvements">Key Improvements<a class="headerlink" href="#key-improvements" title="Permanent link">&para;</a></h3>
+<h2 id="decision-summary">Decision Summary<a class="headerlink" href="#decision-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Aspect</th>
-<th>Before</th>
-<th>After</th>
+<th>Strategy</th>
+<th>Data Scale</th>
+<th>Trainable Params</th>
+<th>Risk</th>
+<th>Recommended When</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Format</strong></td>
-<td>Conversational Q&amp;A</td>
-<td>Structured tutorial</td>
+<td>Frozen</td>
+<td>&lt; 2K</td>
+<td>Head only (~17K)</td>
+<td>Low</td>
+<td>Fast baseline, tiny data</td>
 </tr>
 <tr>
-<td><strong>Organization</strong></td>
-<td>Stream-of-consciousness</td>
-<td>Logical sections with ToC</td>
+<td>LoRA rank 16</td>
+<td>2K–20K</td>
+<td>~10–20% of full</td>
+<td>Medium</td>
+<td><strong>Default choice</strong></td>
 </tr>
 <tr>
-<td><strong>Code examples</strong></td>
-<td>Inline snippets</td>
-<td>Complete, runnable examples</td>
-</tr>
-<tr>
-<td><strong>Math notation</strong></td>
-<td>Inconsistent</td>
-<td>Standardized with notation table</td>
-</tr>
-<tr>
-<td><strong>Navigation</strong></td>
-<td>None</td>
-<td>Cross-references + README</td>
-</tr>
-<tr>
-<td><strong>Accessibility</strong></td>
-<td>Expert-only</td>
-<td>Beginner to advanced</td>
+<td>Full fine-tune</td>
+<td>&gt; 20K</td>
+<td>All (~495K+)</td>
+<td>High</td>
+<td>Large data, LoRA saturated</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Default recommendation for this project: LoRA-first.</strong> Escalate to full fine-tune only when data scale and validation evidence justify it.</p>
 <hr />
-<h2 id="document-structure">Document Structure<a class="headerlink" href="#document-structure" title="Permanent link">&para;</a></h2>
-<h3 id="01_behrt_model_overviewmd">01_behrt_model_overview.md<a class="headerlink" href="#01_behrt_model_overviewmd" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> End-to-end pipeline from tokens to gradients</p>
-<p><strong>Structure:</strong>
-1. Overview (executive summary)
-2. Learning hierarchy (5 levels)
-3. Training objectives (3 types)
-4. Training strategies (3 modes)
-5. Optimization loop
-6. Architecture summary
-7. Key design decisions
-8. Implementation checklist
-9. Common pitfalls
-10. Next steps + references</p>
-<p><strong>Highlights:</strong>
-- ✅ Complete optimization story
-- ✅ Comparison tables for loss functions
-- ✅ Decision matrix for training strategies
-- ✅ Mathematical notation throughout
-- ✅ Code references to implementation</p>
-<hr />
-<h3 id="01a_visit_embeddingsmd">01a_visit_embeddings.md<a class="headerlink" href="#01a_visit_embeddingsmd" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Clarify visit ID vs aggregated visit embeddings</p>
-<p><strong>Structure:</strong>
-1. Overview (key distinction)
-2. Visit ID embedding (input-side)
-3. Aggregated visit embedding (output-side)
-4. Direct comparison table
-5. scatter_add mechanics (detailed)
-6. Why distinction matters
-7. Optimization implications
-8. Complete pipeline
-9. Common misconceptions
-10. Advanced topics</p>
-<p><strong>Highlights:</strong>
-- ✅ Side-by-side comparison
-- ✅ Step-by-step scatter_add explanation
-- ✅ Masking implementation details
-- ✅ Gradient flow analysis
-- ✅ Street/building analogy for intuition</p>
-<hr />
-<h3 id="01b_ehr_tokens_tensorsmd">01b_ehr_tokens_tensors.md<a class="headerlink" href="#01b_ehr_tokens_tensorsmd" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Explain flattening hierarchical EHR data</p>
-<p><strong>Structure:</strong>
-1. Overview (transformation problem)
-2. Natural EHR hierarchy
-3. Flattening operation
-4. Dual role of visit_ids
-5. Padding discipline (critical!)
-6. Hierarchical vs flat trade-offs
-7. What transformer sees
-8. Optimization implications
-9. Implementation best practices
-10. Advanced topics</p>
-<p><strong>Highlights:</strong>
-- ✅ Forest/vine analogy for flattening
-- ✅ Attention mask implementation
-- ✅ Padding bug examples
-- ✅ Testing correctness
-- ✅ Design trade-off analysis</p>
-<hr />
-<h3 id="readmemd">README.md<a class="headerlink" href="#readmemd" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Navigation hub and quick reference</p>
-<p><strong>Structure:</strong>
-1. Overview
-2. Document series summaries
-3. Quick navigation (by topic, use case, level)
-4. Common questions (FAQ)
-5. Implementation checklist
-6. Related documentation
-7. Code references
-8. Coming soon
-9. Notation reference</p>
-<p><strong>Highlights:</strong>
-- ✅ Multiple navigation paths
-- ✅ Experience-level guidance
-- ✅ Quick answer to common questions
-- ✅ Complete cross-referencing
-- ✅ Mathematical notation table</p>
-<hr />
-<h2 id="fixes-applied">Fixes Applied<a class="headerlink" href="#fixes-applied" title="Permanent link">&para;</a></h2>
-<h3 id="typos-fixed">Typos Fixed<a class="headerlink" href="#typos-fixed" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ "bhert" → "behrt" (in filename and content)</li>
-<li>✅ "tokes" → "tokens" (in filename)</li>
-<li>✅ Consistent capitalization (BEHRT, LoRA, etc.)</li>
-<li>✅ Mathematical notation standardized</li>
-</ul>
-<h3 id="structural-issues-resolved">Structural Issues Resolved<a class="headerlink" href="#structural-issues-resolved" title="Permanent link">&para;</a></h3>
-<p><strong>Before:</strong>
-- No table of contents
-- Unclear section boundaries
-- Mixed abstraction levels
-- No code examples</p>
-<p><strong>After:</strong>
-- Complete ToC in every document
-- Clear section hierarchy
-- Progressive detail (overview → deep dive)
-- Runnable code snippets</p>
-<h3 id="content-enhancements">Content Enhancements<a class="headerlink" href="#content-enhancements" title="Permanent link">&para;</a></h3>
-<p><strong>Added:</strong>
-- ✅ Mathematical definitions for all concepts
-- ✅ Implementation code snippets
-- ✅ Comparison tables
-- ✅ Decision matrices
-- ✅ Common pitfalls sections
-- ✅ Testing guidance
-- ✅ Debugging checklists
-- ✅ Cross-references between docs</p>
-<p><strong>Preserved:</strong>
-- ✅ Technical accuracy
-- ✅ Mathematical rigor
-- ✅ Insightful analogies
-- ✅ Deep conceptual explanations</p>
-<hr />
-<h2 id="tutorial-principles-applied">Tutorial Principles Applied<a class="headerlink" href="#tutorial-principles-applied" title="Permanent link">&para;</a></h2>
-<h3 id="1-progressive-disclosure">1. Progressive Disclosure<a class="headerlink" href="#1-progressive-disclosure" title="Permanent link">&para;</a></h3>
-<p><strong>Beginner path:</strong>
-- Start with overviews
-- Skip math details first pass
-- Focus on intuition</p>
-<p><strong>Advanced path:</strong>
-- Deep dive into mathematics
-- Study gradient flow
-- Understand implementation choices</p>
-<h3 id="2-multiple-entry-points">2. Multiple Entry Points<a class="headerlink" href="#2-multiple-entry-points" title="Permanent link">&para;</a></h3>
-<p><strong>By topic:</strong>
-- Architecture → Overview
-- Data processing → Tokens/tensors
-- Aggregation → Visit embeddings</p>
-<p><strong>By use case:</strong>
-- "I want to train" → Overview
-- "I want to implement" → Embeddings + tokens
-- "I want to debug" → All three</p>
-<h3 id="3-consistent-structure">3. Consistent Structure<a class="headerlink" href="#3-consistent-structure" title="Permanent link">&para;</a></h3>
-<p><strong>Every document:</strong>
-1. Overview (what, why, key insight)
-2. Main content (structured sections)
-3. Summary (key takeaways)
-4. References (code, papers, related docs)</p>
-<h3 id="4-accessibility">4. Accessibility<a class="headerlink" href="#4-accessibility" title="Permanent link">&para;</a></h3>
-<p><strong>Technical depth preserved:</strong>
-- Complete mathematical formulations
-- Detailed gradient flow analysis
-- Low-level implementation details</p>
-<p><strong>But made accessible via:</strong>
-- Plain English explanations first
-- Analogies and mental models
-- Code examples
-- Comparison tables
-- Visual structure (tables, lists, sections)</p>
-<hr />
-<h2 id="quality-metrics">Quality Metrics<a class="headerlink" href="#quality-metrics" title="Permanent link">&para;</a></h2>
-<h3 id="completeness">Completeness<a class="headerlink" href="#completeness" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>100%</strong> topic coverage (tokens → gradients)</li>
-<li>✅ <strong>All</strong> key concepts explained</li>
-<li>✅ <strong>Zero</strong> broken references</li>
-<li>✅ <strong>Complete</strong> cross-linking</li>
-</ul>
-<h3 id="usability">Usability<a class="headerlink" href="#usability" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>Multiple</strong> navigation paths</li>
-<li>✅ <strong>Clear</strong> section structure</li>
-<li>✅ <strong>Comprehensive</strong> ToC</li>
-<li>✅ <strong>Quick</strong> reference (README)</li>
-</ul>
-<h3 id="technical-accuracy">Technical Accuracy<a class="headerlink" href="#technical-accuracy" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>Verified</strong> against code implementation</li>
-<li>✅ <strong>Consistent</strong> mathematical notation</li>
-<li>✅ <strong>Correct</strong> gradient flow analysis</li>
-<li>✅ <strong>Accurate</strong> complexity analysis</li>
-</ul>
-<h3 id="maintainability">Maintainability<a class="headerlink" href="#maintainability" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>Modular</strong> document structure</li>
-<li>✅ <strong>Clear</strong> section boundaries</li>
-<li>✅ <strong>Consistent</strong> formatting</li>
-<li>✅ <strong>Version</strong> tracking (dates, changelogs)</li>
-</ul>
-<hr />
-<h2 id="file-organization">File Organization<a class="headerlink" href="#file-organization" title="Permanent link">&para;</a></h2>
-<h3 id="before">Before<a class="headerlink" href="#before" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docs/methods/discrete_time_survival_analysis/
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── 01_bhert_model_overview.md (Q&amp;A draft)
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├── 01a_visit_embeddings.md (Q&amp;A draft)
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>└── 01b_ehr_tokes_tensors.md (Q&amp;A draft, typo)
-</span></code></pre></div>
-<h3 id="after">After<a class="headerlink" href="#after" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docs/methods/discrete_time_survival_analysis/
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── README.md (NEW: Navigation hub)
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── 01_behrt_model_overview.md (Polished, typo fixed)
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── 01a_visit_embeddings.md (Polished)
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>├── 01b_ehr_tokens_tensors.md (Polished, typo fixed)
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>└── POLISHING_SUMMARY.md (NEW: This file)
-</span></code></pre></div>
-<hr />
-<h2 id="integration">Integration<a class="headerlink" href="#integration" title="Permanent link">&para;</a></h2>
-<h3 id="cross-references-created">Cross-References Created<a class="headerlink" href="#cross-references-created" title="Permanent link">&para;</a></h3>
-<p><strong>To other docs:</strong>
-- <code>dev/models/pretrain_finetune/</code> - BEHRT pre-training
-- <code>dev/models/pretrain_finetune/07_lora_deep_dive.md</code> - LoRA details
-- <code>dev/models/pretrain_finetune/05_embedding_summation_and_quality_analysis.md</code> - Why sum embeddings</p>
-<p><strong>From other docs:</strong>
-- (Recommendation: Update <code>dev/models/pretrain_finetune/README.md</code> to link to survival docs)</p>
-<h3 id="code-references">Code References<a class="headerlink" href="#code-references" title="Permanent link">&para;</a></h3>
-<p><strong>All documents link to:</strong>
-- <code>src/ehrsequencing/models/behrt.py</code>
-- <code>src/ehrsequencing/models/embeddings.py</code>
-- <code>src/ehrsequencing/models/behrt_survival.py</code>
-- <code>src/ehrsequencing/models/losses.py</code>
-- <code>examples/survival_analysis/train_lstm.py</code></p>
-<hr />
-<h2 id="next-steps-recommended">Next Steps (Recommended)<a class="headerlink" href="#next-steps-recommended" title="Permanent link">&para;</a></h2>
-<h3 id="1-update-cross-references">1. Update Cross-References<a class="headerlink" href="#1-update-cross-references" title="Permanent link">&para;</a></h3>
-<p><strong>In:</strong> <code>dev/models/pretrain_finetune/README.md</code></p>
-<p><strong>Add:</strong>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="gu">### Downstream Tasks</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Survival analysis:**</span> <span class="sb">`docs/methods/discrete_time_survival_analysis/`</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Model overview, visit embeddings, data processing
-</span></code></pre></div></p>
-<h3 id="2-create-additional-docs-planned">2. Create Additional Docs (Planned)<a class="headerlink" href="#2-create-additional-docs-planned" title="Permanent link">&para;</a></h3>
-<ul>
-<li><code>02_survival_losses.md</code> - Mathematical derivation</li>
-<li><code>03_evaluation_metrics.md</code> - Comprehensive metrics guide</li>
-<li><code>04_training_recipes.md</code> - Practical configurations</li>
-<li><code>05_troubleshooting.md</code> - Common issues + solutions</li>
-</ul>
-<h3 id="3-add-examples">3. Add Examples<a class="headerlink" href="#3-add-examples" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Minimal working example (50 lines)</li>
-<li>Complete training pipeline</li>
-<li>Custom loss functions</li>
-<li>Multi-task learning</li>
-</ul>
-<h3 id="4-create-diagrams">4. Create Diagrams<a class="headerlink" href="#4-create-diagrams" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Data flow diagram (patient → visits → codes → embeddings)</li>
-<li>Architecture diagram (embeddings → transformer → heads)</li>
-<li>Aggregation visualization (scatter_add process)</li>
-</ul>
-<hr />
-<h2 id="user-feedback-integration">User Feedback Integration<a class="headerlink" href="#user-feedback-integration" title="Permanent link">&para;</a></h2>
-<h3 id="original-request">Original Request<a class="headerlink" href="#original-request" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p>"Please help me polish these documents. Remember to apply the skill that rewrites Q&amp;A documents to tutorials."</p>
-</blockquote>
-<h3 id="delivered">Delivered<a class="headerlink" href="#delivered" title="Permanent link">&para;</a></h3>
-<p>✅ <strong>Polished all 3 documents</strong> from Q&amp;A to tutorial format<br />
-✅ <strong>Fixed typos</strong> (bhert → behrt, tokes → tokens)<br />
-✅ <strong>Added README</strong> for navigation<br />
-✅ <strong>Created comprehensive structure</strong> with ToC, sections, examples<br />
-✅ <strong>Preserved technical depth</strong> while improving accessibility<br />
-✅ <strong>Added cross-references</strong> and code links<br />
-✅ <strong>Standardized notation</strong> and formatting  </p>
-<hr />
-<h2 id="statistics">Statistics<a class="headerlink" href="#statistics" title="Permanent link">&para;</a></h2>
-<h3 id="document-sizes">Document Sizes<a class="headerlink" href="#document-sizes" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Document</th>
-<th>Lines</th>
-<th>Topics</th>
-<th>Code Examples</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>README</td>
-<td>380</td>
-<td>Navigation + FAQ</td>
-<td>5</td>
-</tr>
-<tr>
-<td>01_behrt_model_overview</td>
-<td>1,020</td>
-<td>10 major sections</td>
-<td>12</td>
-</tr>
-<tr>
-<td>01a_visit_embeddings</td>
-<td>1,050</td>
-<td>10 major sections</td>
-<td>15</td>
-</tr>
-<tr>
-<td>01b_ehr_tokens_tensors</td>
-<td>1,010</td>
-<td>10 major sections</td>
-<td>18</td>
-</tr>
-<tr>
-<td><strong>Total</strong></td>
-<td><strong>3,460</strong></td>
-<td><strong>30+</strong></td>
-<td><strong>50+</strong></td>
-</tr>
-</tbody>
-</table>
-<h3 id="quality-indicators">Quality Indicators<a class="headerlink" href="#quality-indicators" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>100%</strong> section headers with anchors</li>
-<li>✅ <strong>50+</strong> code examples</li>
-<li>✅ <strong>30+</strong> comparison tables</li>
-<li>✅ <strong>15+</strong> mathematical formulations</li>
-<li>✅ <strong>20+</strong> analogies and mental models</li>
-<li>✅ <strong>Zero</strong> broken internal links</li>
-</ul>
-<hr />
-<h2 id="final-status">Final Status<a class="headerlink" href="#final-status" title="Permanent link">&para;</a></h2>
-<h3 id="completion">Completion<a class="headerlink" href="#completion" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>All documents polished</strong> and ready for use</li>
-<li>✅ <strong>Navigation structure</strong> complete</li>
-<li>✅ <strong>Cross-references</strong> established</li>
-<li>✅ <strong>Code integration</strong> verified</li>
-</ul>
-<h3 id="quality">Quality<a class="headerlink" href="#quality" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>Tutorial format</strong> applied consistently</li>
-<li>✅ <strong>Technical accuracy</strong> preserved</li>
-<li>✅ <strong>Accessibility</strong> improved</li>
-<li>✅ <strong>Maintainability</strong> enhanced</li>
-</ul>
-<h3 id="readiness">Readiness<a class="headerlink" href="#readiness" title="Permanent link">&para;</a></h3>
-<ul>
-<li>✅ <strong>Production ready</strong> - Documents can be used as-is</li>
-<li>✅ <strong>Complete coverage</strong> - No gaps in explanation</li>
-<li>✅ <strong>Self-contained</strong> - Each doc stands alone</li>
-<li>✅ <strong>Well-integrated</strong> - Docs reference each other appropriately</li>
-</ul>
-<hr />
-<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p><strong>Input:</strong> 3 Q&amp;A draft documents with typos<br />
-<strong>Output:</strong> 4 polished tutorial documents with comprehensive navigation<br />
-<strong>Quality:</strong> Production-ready technical documentation<br />
-<strong>Impact:</strong> Complete survival analysis documentation from scratch  </p>
-<p><strong>Result:</strong> ✅ Task complete and exceeds requirements!</p>
+<p><strong>Next:</strong> <code>08_architecture_decisions.md</code> — BEHRT vs LSTM comparison and broader architectural tradeoffs.</p>
 
 
 

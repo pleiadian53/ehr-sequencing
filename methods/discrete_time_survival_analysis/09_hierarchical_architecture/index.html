@@ -12,7 +12,7 @@
         <meta name="author" content="EHR Sequencing Research Team">
       
       
-        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/representation_learning/segment_id_use_cases/">
+        <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/09_hierarchical_architecture/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Segment id use cases - EHR Sequencing</title>
+        <title>Hierarchical BEHRT: A Two-Level Architecture for EHR Survival - EHR Sequencing</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#1-what-segment-ids-mean-in-bert" class="md-skip">
+        <a href="#hierarchical-behrt-a-two-level-architecture-for-ehr-survival" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Segment id use cases
+              Hierarchical BEHRT: A Two-Level Architecture for EHR Survival
             
           </span>
         </div>
@@ -1220,6 +1220,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1228,10 +1230,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-what-segment-ids-mean-in-bert" class="md-nav__link">
+  <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. What segment IDs mean in BERT
+        Table of Contents
       
     </span>
   </a>
@@ -1239,10 +1241,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-what-behrt-already-does" class="md-nav__link">
+  <a href="#the-core-tradeoff" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. What BEHRT already does
+        The Core Tradeoff
       
     </span>
   </a>
@@ -1250,10 +1252,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-so-does-segment-id-add-anything" class="md-nav__link">
+  <a href="#notation-and-tensor-shapes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. So… does segment ID add anything?
+        Notation and Tensor Shapes
       
     </span>
   </a>
@@ -1261,10 +1263,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#case-1-pre-event-vs-post-event-segmentation" class="md-nav__link">
+  <a href="#stage-a-within-visit-encoder" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 1: Pre-event vs post-event segmentation
+        Stage A: Within-Visit Encoder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage A: Within-Visit Encoder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#embedding-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embedding Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-b-across-visit-encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage B: Across-Visit Encoder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage B: Across-Visit Encoder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visit-level-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visit-Level Embeddings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transformer-over-visits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transformer over Visits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#survival-head-and-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Survival Head and Loss
       
     </span>
   </a>
@@ -1272,10 +1352,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#case-2-baseline-period-vs-follow-up-period" class="md-nav__link">
+  <a href="#why-hierarchy-helps-a-clinical-intuition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 2: Baseline period vs follow-up period
+        Why Hierarchy Helps: A Clinical Intuition
       
     </span>
   </a>
@@ -1283,10 +1363,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#case-3-treatment-exposure-regimes" class="md-nav__link">
+  <a href="#flat-vs-hierarchical-side-by-side" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 3: Treatment exposure regimes
+        Flat vs Hierarchical: Side-by-Side
       
     </span>
   </a>
@@ -1294,10 +1374,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#case-4-multimodal-fusion" class="md-nav__link">
+  <a href="#implementation-blueprint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 4: Multimodal fusion
+        Implementation Blueprint
       
     </span>
   </a>
@@ -1305,65 +1385,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#case-5-competing-risk-modeling" class="md-nav__link">
+  <a href="#recommended-starting-point" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 5: Competing risk modeling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-does-it-mean-mechanistically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Does It Mean Mechanistically?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#philosophical-question-do-you-need-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Philosophical Question: Do You Need It?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#for-your-current-discrete-time-survival-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        For Your Current Discrete-Time Survival Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-i-would-add-them" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When I Would Add Them
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#a-deeper-insight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A Deeper Insight
+        Recommended Starting Point
       
     </span>
   </a>
@@ -1387,7 +1412,7 @@
 
 
   
-    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/representation_learning/segment_id_use_cases.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/pleiadian53/ehr-sequencing/edit/main/docs/methods/discrete_time_survival_analysis/09_hierarchical_architecture.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1395,205 +1420,292 @@
   
 
 
+<h1 id="hierarchical-behrt-a-two-level-architecture-for-ehr-survival">Hierarchical BEHRT: A Two-Level Architecture for EHR Survival<a class="headerlink" href="#hierarchical-behrt-a-two-level-architecture-for-ehr-survival" title="Permanent link">&para;</a></h1>
+<p><strong>Topics:</strong> Hierarchical vs flat design, within-visit encoding, across-visit transformer, attention pooling, implementation blueprint</p>
+<p><strong>Reference code:</strong> <code>src/ehrsequencing/models/behrt_survival.py</code>, <code>src/ehrsequencing/models/behrt.py</code></p>
+<p><strong>Related docs:</strong> <code>02_ehr_to_tokens.md</code>, <code>03_behrt_embeddings.md</code>, <code>08_architecture_decisions.md</code></p>
+<hr />
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#the-core-tradeoff">The Core Tradeoff</a></li>
+<li><a href="#notation-and-tensor-shapes">Notation and Tensor Shapes</a></li>
+<li><a href="#stage-a-within-visit-encoder">Stage A: Within-Visit Encoder</a></li>
+<li><a href="#stage-b-across-visit-encoder">Stage B: Across-Visit Encoder</a></li>
+<li><a href="#survival-head-and-loss">Survival Head and Loss</a></li>
+<li><a href="#why-hierarchy-helps-a-clinical-intuition">Why Hierarchy Helps: A Clinical Intuition</a></li>
+<li><a href="#flat-vs-hierarchical-side-by-side">Flat vs Hierarchical: Side-by-Side</a></li>
+<li><a href="#implementation-blueprint">Implementation Blueprint</a></li>
+<li><a href="#recommended-starting-point">Recommended Starting Point</a></li>
+</ol>
+<hr />
+<h2 id="the-core-tradeoff">The Core Tradeoff<a class="headerlink" href="#the-core-tradeoff" title="Permanent link">&para;</a></h2>
+<p>The current BEHRT model is <strong>flat</strong>: all codes across all visits are concatenated into a single token sequence, and visit structure is recovered implicitly via <code>visit_id</code> embeddings and post-hoc <code>scatter_add</code> pooling.</p>
+<p>A <strong>hierarchical</strong> model makes visit structure explicit at the architecture level:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Flat:        [code_1_v1, code_2_v1, code_1_v2, code_2_v2, ...]  →  Transformer  →  scatter_add  →  hazards
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Hierarchical: [code_1_v1, code_2_v1]  →  VisitEncoder  →  visit_1_repr  ┐
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              [code_1_v2, code_2_v2]  →  VisitEncoder  →  visit_2_repr  ┤  →  TimelineEncoder  →  hazards
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              ...                                                         ┘
+</span></code></pre></div>
+<p>The model no longer needs to infer that certain tokens belong to the same visit — that structure is baked into the data pipeline and the two-stage encoder.</p>
+<hr />
+<h2 id="notation-and-tensor-shapes">Notation and Tensor Shapes<a class="headerlink" href="#notation-and-tensor-shapes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B</td>
+<td>Batch size (patients)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>V</td>
+<td>Max visits per patient (padded)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Max codes per visit (padded)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Embedding / hidden dimension</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>c</strong></td>
+<td>Code IDs</td>
+<td>(B, V, C)</td>
+</tr>
+<tr>
+<td><strong>a</strong></td>
+<td>Age at each visit</td>
+<td>(B, V)</td>
+</tr>
+<tr>
+<td><strong>m</strong>^code</td>
+<td>Code padding mask (1=real, 0=pad)</td>
+<td>(B, V, C)</td>
+</tr>
+<tr>
+<td><strong>m</strong>^visit</td>
+<td>Visit padding mask (1=real, 0=pad)</td>
+<td>(B, V)</td>
+</tr>
+<tr>
+<td><strong>u</strong></td>
+<td>Visit embeddings (Stage A output)</td>
+<td>(B, V, d)</td>
+</tr>
+<tr>
+<td><strong>z</strong></td>
+<td>Contextualized visit states (Stage B output)</td>
+<td>(B, V, d)</td>
+</tr>
+<tr>
+<td><strong>h</strong></td>
+<td>Discrete-time hazard per visit</td>
+<td>(B, V)</td>
+</tr>
+</tbody>
+</table>
+<p>The key structural difference from the flat model: inputs are shaped <code>(B, V, C)</code> instead of <code>(B, L)</code>. The two levels of padding — codes within visits, visits within patients — are tracked by two separate masks.</p>
+<hr />
+<h2 id="stage-a-within-visit-encoder">Stage A: Within-Visit Encoder<a class="headerlink" href="#stage-a-within-visit-encoder" title="Permanent link">&para;</a></h2>
+<p>Stage A compresses the <code>C</code> code vectors within each visit into a single visit embedding <strong>u</strong>_{i,v}.</p>
+<h3 id="embedding-layer">Embedding Layer<a class="headerlink" href="#embedding-layer" title="Permanent link">&para;</a></h3>
+<p>For each code token, sum the code embedding with an intra-visit positional embedding (and optionally a type embedding for dx/proc/rx/lab):</p>
+<div class="arithmatex">\[\mathbf{e}_{i,v,k} = \mathbf{E}^{\text{code}}[\mathbf{c}_{i,v,k}] + \mathbf{E}^{\text{pos(code)}}[k] + \mathbf{E}^{\text{type}}[\text{optional}]\]</div>
+<p>This gives a tensor of shape <code>(B, V, C, d)</code>.</p>
+<h3 id="aggregation-options">Aggregation Options<a class="headerlink" href="#aggregation-options" title="Permanent link">&para;</a></h3>
+<p>Three options exist for compressing <code>C</code> code vectors into one visit vector, in increasing order of expressiveness:</p>
+<h4 id="option-a-mean-pooling">Option A: Mean Pooling<a class="headerlink" href="#option-a-mean-pooling" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[\mathbf{u}_{i,v} = \frac{1}{\sum_k m^{\text{code}}_{i,v,k}} \sum_k m^{\text{code}}_{i,v,k} \cdot \mathbf{e}_{i,v,k}\]</div>
+<p>Simple, fast, no extra parameters. All codes contribute equally. A reasonable baseline.</p>
+<h4 id="option-b-attention-pooling-learned-importance">Option B: Attention Pooling (Learned Importance)<a class="headerlink" href="#option-b-attention-pooling-learned-importance" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[\alpha_{i,v,k} = \text{softmax}_k\!\left(\mathbf{q}^\top \tanh(\mathbf{W}\, \mathbf{e}_{i,v,k})\right)\]</div>
+<div class="arithmatex">\[\mathbf{u}_{i,v} = \sum_k \alpha_{i,v,k} \cdot \mathbf{e}_{i,v,k}\]</div>
+<p>The result is a <strong>weighted average</strong> of code embeddings, where the weights are learned by a global query vector <strong>q</strong> (shape <code>d</code>, shared across all visits and patients). <strong>q</strong> acts as a content-based importance scorer: "how much does this code look like an important code?" Each code is scored independently against <strong>q</strong>, then the scores are normalized within the visit via softmax.</p>
+<p><strong>Crucially, this is not transformer self-attention.</strong> There is only one query — a single learned parameter — so there is no consolidation problem. Each code gets exactly one scalar weight, derived from its own embedding alone. No averaging of attention weights is needed.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AttnPoolingVisitEncoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="c1"># e: (B, V, C, d),  mask: (B, V, C)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (B, V, C)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="o">~</span><span class="n">mask</span><span class="o">.</span><span class="n">bool</span><span class="p">(),</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">))</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="c1"># Guard: if an entire visit is padded, all scores are -inf → softmax → NaN.</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="c1"># Replace all-padding visits with uniform zero weights before softmax.</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="n">all_pad</span> <span class="o">=</span> <span class="o">~</span><span class="n">mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># (B, V, 1)</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">all_pad</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="n">alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>               <span class="c1"># (B, V, C)</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="c1"># Zero out weights for all-padding visits (softmax of zeros = uniform, not zero)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>         <span class="c1"># (B, V, d)</span>
+</span></code></pre></div>
 <blockquote>
-<p>Q: Do you think segment ID and the notion of segments have their potential use cases for this BEHRT based discrete time survival prediction?</p>
+<p><strong>Implementation note:</strong> The guard above handles the edge case where a visit slot is entirely padding (all <code>mask</code> values false for that visit). Without it, <code>softmax([-inf, ..., -inf])</code> produces <code>NaN</code>, which propagates silently through the loss. In practice, the visit mask (<code>m^visit</code>) should prevent padded visit slots from contributing to the loss, but the NaN guard makes the forward pass numerically safe regardless.</p>
 </blockquote>
-<p>This is a very good question. Not “should I use this API field,” but: does the <strong>concept</strong> of segments actually encode something meaningful for EHR survival?</p>
-<p>Let’s slow down and separate three things:</p>
-<ol>
-<li>What “segment IDs” mean in vanilla BERT</li>
-<li>What BEHRT already encodes</li>
-<li>Whether an additional segment notion adds signal or just redundancy</li>
-</ol>
+<h4 id="option-c-mini-transformer-per-visit">Option C: Mini-Transformer per Visit<a class="headerlink" href="#option-c-mini-transformer-per-visit" title="Permanent link">&para;</a></h4>
+<p>Reshape visits into a batch dimension, run a small transformer encoder with the code padding mask, then pool the output:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Reshape: (B, V, C, d) → (B*V, C, d)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">e_flat</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span> <span class="o">*</span> <span class="n">V</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">mask_flat</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span> <span class="o">*</span> <span class="n">V</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_transformer</span><span class="p">(</span><span class="n">e_flat</span><span class="p">,</span> <span class="n">src_key_padding_mask</span><span class="o">=~</span><span class="n">mask_flat</span><span class="o">.</span><span class="n">bool</span><span class="p">())</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># out: (B*V, C, d)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Pool to visit vector — mean or CLS token</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">u_flat</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span> <span class="o">*</span> <span class="n">mask_flat</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">mask_flat</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">u</span> <span class="o">=</span> <span class="n">u_flat</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>  <span class="c1"># (B, V, d)</span>
+</span></code></pre></div>
+<p>This gives codes within a visit full bidirectional attention over each other — the most expressive option. The tradeoff is compute: you run a transformer <code>B*V</code> times per forward pass.</p>
+<p><strong>Practical recommendation:</strong> Option B (attention pooling) gives the best efficiency-to-expressiveness ratio and is the recommended starting point.</p>
 <hr />
-<h2 id="1-what-segment-ids-mean-in-bert">1. What segment IDs mean in BERT<a class="headerlink" href="#1-what-segment-ids-mean-in-bert" title="Permanent link">&para;</a></h2>
-<p>In original BERT, each token embedding is:</p>
-<p>[
-\mathbf{e}_t
-============</p>
-<p>\mathbf{e}^{token}_{c_t}
-+
-\mathbf{e}^{position}<em s_t="s_t">t
-+
-\mathbf{e}^{segment}</em>
-]</p>
-<p>where:</p>
-<p>[
-s_t \in {0,1}
-]</p>
-<p>Segment IDs distinguish <strong>sentence A</strong> from <strong>sentence B</strong> in next-sentence prediction tasks.</p>
-<p>It is a binary “this token belongs to block A vs block B.”</p>
-<p>There is no deeper time meaning.</p>
-<p>It’s just a learned bias vector added to all tokens in one group.</p>
+<h2 id="stage-b-across-visit-encoder">Stage B: Across-Visit Encoder<a class="headerlink" href="#stage-b-across-visit-encoder" title="Permanent link">&para;</a></h2>
+<p>Stage B treats the visit embeddings <strong>u</strong> as tokens in a second-level sequence model, learning how the patient's clinical trajectory evolves across visits.</p>
+<h3 id="visit-level-embeddings">Visit-Level Embeddings<a class="headerlink" href="#visit-level-embeddings" title="Permanent link">&para;</a></h3>
+<p>Before the across-visit transformer, add structural signals at the visit level:</p>
+<div class="arithmatex">\[\mathbf{x}_{i,v} = \mathbf{u}_{i,v} + \mathbf{E}^{\text{pos(visit)}}[v] + \mathbf{E}^{\text{age}}[\text{bin}(a_{i,v})] + \mathbf{E}^{\Delta t}[\text{bin}(\Delta t_{i,v})]\]</div>
+<p>The <span class="arithmatex">\(\Delta t\)</span> (time-delta) embedding is optional but highly valuable for EHR data, where visit spacing is irregular. A gap of 3 days vs 3 years between visits carries very different clinical meaning, and this embedding lets the model learn that distinction explicitly.</p>
+<h3 id="transformer-over-visits">Transformer over Visits<a class="headerlink" href="#transformer-over-visits" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit_transformer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">src_key_padding_mask</span><span class="o">=~</span><span class="n">visit_mask</span><span class="o">.</span><span class="n">bool</span><span class="p">())</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># z: (B, V, d)</span>
+</span></code></pre></div>
+<p>The visit mask ensures padded visit slots do not contribute to attention. The output <strong>z</strong> is a sequence of contextualized visit representations — each visit now "knows" about all other visits in the patient's history.</p>
 <hr />
-<h2 id="2-what-behrt-already-does">2. What BEHRT already does<a class="headerlink" href="#2-what-behrt-already-does" title="Permanent link">&para;</a></h2>
-<p>Your BEHRT embedding already includes:</p>
-<p>[
-\mathbf{e}_t
-============</p>
-<p>\mathbf{e}^{code}<em a_t="a_t">{c_t}
-+
-\mathbf{e}^{age}</em>
-+
-\mathbf{e}^{visit}_{v_t}
-+
-\mathbf{e}^{position}_t
-]</p>
-<p>So you already encode:</p>
-<ul>
-<li>which visit a token belongs to</li>
-<li>temporal progression via position</li>
-<li>biological progression via age</li>
-</ul>
-<p>So “visit structure” is already explicitly encoded.</p>
-<p>That is important.</p>
+<h2 id="survival-head-and-loss">Survival Head and Loss<a class="headerlink" href="#survival-head-and-loss" title="Permanent link">&para;</a></h2>
+<p>The survival head and loss are identical to the flat model:</p>
+<div class="arithmatex">\[h_{i,v} = \sigma(g(\mathbf{z}_{i,v}))\]</div>
+<p>where <span class="arithmatex">\(g\)</span> is the MLP hazard head. The discrete-time NLL loss is:</p>
+<div class="arithmatex">\[\log L_i = \sum_{v &lt; t_i} \log(1 - h_{i,v}) + \delta_i \log(h_{i,t_i})\]</div>
+<p>Padded visits are masked out using <strong>m</strong>^visit. The existing <code>DiscreteTimeSurvivalLoss</code> in <code>losses.py</code> can be reused directly — <code>sequence_mask = visit_mask</code> maps naturally onto its interface.</p>
 <hr />
-<h2 id="3-so-does-segment-id-add-anything">3. So… does segment ID add anything?<a class="headerlink" href="#3-so-does-segment-id-add-anything" title="Permanent link">&para;</a></h2>
-<p>Only if it encodes something <strong>not already represented</strong>.</p>
-<p>Segment embeddings are useful if you want to distinguish:</p>
-<p>[
-\text{Block A tokens} \neq \text{Block B tokens}
-]</p>
-<p>in a way that position and visit IDs cannot capture.</p>
-<p>Now we examine potential use cases.</p>
+<h2 id="why-hierarchy-helps-a-clinical-intuition">Why Hierarchy Helps: A Clinical Intuition<a class="headerlink" href="#why-hierarchy-helps-a-clinical-intuition" title="Permanent link">&para;</a></h2>
+<p>Consider a visit containing: <code>sepsis</code>, <code>vasopressor</code>, <code>intubation</code>.</p>
+<p>A within-visit encoder can learn that these three codes co-occur as an "acute shock state" — a single dense vector capturing the clinical gestalt of the encounter. The across-visit encoder then learns transitions between these visit-level states:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stable chronic  →  mild deterioration  →  acute shock  →  ICU admission  →  death
+</span></code></pre></div>
+<p>A flat model <em>can</em> learn this, but it must use the same attention mechanism to simultaneously learn:
+- code co-occurrence patterns within visits
+- long-range temporal dynamics across visits</p>
+<p>These are different inductive problems at different scales. Hierarchy gives each level the right scope.</p>
 <hr />
-<h1 id="case-1-pre-event-vs-post-event-segmentation">Case 1: Pre-event vs post-event segmentation<a class="headerlink" href="#case-1-pre-event-vs-post-event-segmentation" title="Permanent link">&para;</a></h1>
-<p>For discrete survival modeling, you only use visits up to event time.</p>
-<p>There is no post-event region in training.</p>
-<p>So segments for “before vs after event” are meaningless.</p>
-<p>Verdict: no value.</p>
+<h2 id="flat-vs-hierarchical-side-by-side">Flat vs Hierarchical: Side-by-Side<a class="headerlink" href="#flat-vs-hierarchical-side-by-side" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Flat (current)</th>
+<th>Hierarchical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Input shape</td>
+<td><code>(B, L)</code> where L = V·C</td>
+<td><code>(B, V, C)</code></td>
+</tr>
+<tr>
+<td>Attention scope</td>
+<td>All tokens attend to all</td>
+<td>Codes attend within visit; visits attend across timeline</td>
+</tr>
+<tr>
+<td>Attention complexity</td>
+<td>O((V·C)²)</td>
+<td>O(V·C² + V²)</td>
+</tr>
+<tr>
+<td>Visit structure</td>
+<td>Implicit via <code>visit_id</code></td>
+<td>Explicit in architecture</td>
+</tr>
+<tr>
+<td>Δt encoding</td>
+<td>Token-level (approximate)</td>
+<td>Visit-level (natural)</td>
+</tr>
+<tr>
+<td>Pre-training transfer</td>
+<td>Direct BEHRT transfer</td>
+<td>Requires separate pretraining</td>
+</tr>
+<tr>
+<td>Batching</td>
+<td>Simple</td>
+<td>Ragged tensors or double padding</td>
+</tr>
+<tr>
+<td>Mask discipline</td>
+<td>Single mask</td>
+<td>Two masks (code + visit)</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>Bottleneck at long sequences</td>
+<td>Better for dense/long visits</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Concrete scale example:</strong> With V=50 visits and C=30 codes/visit, the flat sequence length is L=1500. Flat attention is O(1500²) = 2.25M operations per head. Hierarchical is O(50·30² + 50²) = 47,500 — roughly 47× cheaper.</p>
 <hr />
-<h1 id="case-2-baseline-period-vs-follow-up-period">Case 2: Baseline period vs follow-up period<a class="headerlink" href="#case-2-baseline-period-vs-follow-up-period" title="Permanent link">&para;</a></h1>
-<p>Suppose you define:</p>
-<ul>
-<li>Segment 0 = baseline observation window</li>
-<li>Segment 1 = risk prediction window</li>
-</ul>
-<p>Then segment embedding lets the model know:</p>
-<p>“Everything before index K is context, everything after is prediction horizon.”</p>
-<p>But in your setup, the model is predicting hazard per visit sequentially.</p>
-<p>You’re not splitting into two logical sequences.</p>
-<p>Verdict: maybe useful if you restructure task.</p>
+<h2 id="implementation-blueprint">Implementation Blueprint<a class="headerlink" href="#implementation-blueprint" title="Permanent link">&para;</a></h2>
+<p>The hierarchical model decomposes cleanly into five modules:</p>
+<p><strong>Module 1: <code>CodeEmbedding</code></strong>
+- <code>nn.Embedding(n_codes, d, padding_idx=0)</code> — code identity
+- <code>nn.Embedding(max_codes_per_visit, d)</code> — intra-visit position
+- Optional: type embedding (dx / proc / rx / lab)</p>
+<p><strong>Module 2: <code>VisitEncoder</code></strong> (choose one)
+- <code>MeanPoolingVisitEncoder</code> — baseline
+- <code>AttnPoolingVisitEncoder</code> — recommended
+- <code>TransformerVisitEncoder</code> — most expressive</p>
+<p>Input: <code>(B, V, C, d)</code> + code mask <code>(B, V, C)</code>
+Output: <code>(B, V, d)</code></p>
+<p><strong>Module 3: <code>VisitTimeEmbedding</code></strong>
+- <code>nn.Embedding(max_visits, d)</code> — visit index
+- <code>AgeEmbedding</code> — binned age at visit
+- Optional: <code>DeltaTEmbedding</code> — binned time gap since last visit</p>
+<p><strong>Module 4: <code>TimelineEncoder</code></strong>
+- Transformer over visits
+Input: <code>(B, V, d)</code> + visit mask <code>(B, V)</code>
+Output: <code>(B, V, d)</code></p>
+<p><strong>Module 5: <code>SurvivalHead</code></strong>
+- MLP → sigmoid
+Output: <code>(B, V)</code> hazards</p>
+<p><strong>Module 6: <code>DiscreteTimeSurvivalLoss</code></strong>
+- Reuse <code>losses.py</code> as-is — <code>sequence_mask = visit_mask</code></p>
 <hr />
-<h1 id="case-3-treatment-exposure-regimes">Case 3: Treatment exposure regimes<a class="headerlink" href="#case-3-treatment-exposure-regimes" title="Permanent link">&para;</a></h1>
-<p>Now this gets interesting.</p>
-<p>Suppose:</p>
-<p>[
-s_t =
-\begin{cases}
-0 &amp; \text{before treatment initiation} \
-1 &amp; \text{after treatment initiation}
-\end{cases}
-]</p>
-<p>Now segment embedding encodes:</p>
-<p>“biological regime shift.”</p>
-<p>That could help the transformer separate two dynamics.</p>
-<p>However:</p>
-<p>You already have treatment tokens in your code vocabulary.</p>
-<p>So treatment exposure can already be learned as part of sequence context.</p>
-<p>Segment embedding would only provide a coarse binary marker.</p>
-<p>Verdict: possibly useful if treatment initiation marks a structural shift.</p>
+<h2 id="recommended-starting-point">Recommended Starting Point<a class="headerlink" href="#recommended-starting-point" title="Permanent link">&para;</a></h2>
+<p>The minimal viable hierarchical variant with the best empirical return:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Within-visit:  AttnPoolingVisitEncoder  (Option B)
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Across-visit:  Transformer
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Visit signals: positional + age + Δt embedding
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Loss:          DiscreteTimeSurvivalLoss (unchanged)
+</span></code></pre></div>
+<p>This gives you:
+- Explicit visit-level representations (cleaner scientific narrative)
+- Learned code importance within visits (more interpretable than mean)
+- Time-gap awareness at the visit level (better hazard calibration)
+- ~47× cheaper attention for typical EHR sequence lengths</p>
+<p>The most important implementation detail is <strong>consistent mask discipline</strong>: the two-level <code>(m^code, m^visit)</code> masking must be applied correctly at every stage. Silent bugs in hierarchical models almost always live in mask propagation, not in the model logic itself.</p>
 <hr />
-<h1 id="case-4-multimodal-fusion">Case 4: Multimodal fusion<a class="headerlink" href="#case-4-multimodal-fusion" title="Permanent link">&para;</a></h1>
-<p>If you later combine:</p>
-<ul>
-<li>structured EHR codes</li>
-<li>free text embeddings</li>
-<li>imaging tokens</li>
-<li>genomic tokens</li>
-</ul>
-<p>Segments become powerful.</p>
-<p>You could define:</p>
-<p>[
-s_t =
-\begin{cases}
-0 &amp; \text{structured codes} \
-1 &amp; \text{clinical notes} \
-2 &amp; \text{omics tokens}
-\end{cases}
-]</p>
-<p>Now segment embedding acts like a modality identifier.</p>
-<p>That is clean and elegant.</p>
-<p>Verdict: strong use case.</p>
-<hr />
-<h1 id="case-5-competing-risk-modeling">Case 5: Competing risk modeling<a class="headerlink" href="#case-5-competing-risk-modeling" title="Permanent link">&para;</a></h1>
-<p>Suppose you model multiple hazard types:</p>
-<ul>
-<li>death</li>
-<li>ICU admission</li>
-<li>readmission</li>
-</ul>
-<p>You could mark segments corresponding to different event heads or prediction horizons.</p>
-<p>But this is better handled via multi-head output rather than segment embedding.</p>
-<p>Verdict: not ideal.</p>
-<hr />
-<h1 id="what-does-it-mean-mechanistically">What Does It Mean Mechanistically?<a class="headerlink" href="#what-does-it-mean-mechanistically" title="Permanent link">&para;</a></h1>
-<p>Segment embedding is just:</p>
-<p>[
-\mathbf{e}^{segment}_{s_t}
-]</p>
-<p>a learned vector added to token embedding.</p>
-<p>It shifts all tokens in that segment in embedding space.</p>
-<p>So it creates a linear bias.</p>
-<p>It does NOT:</p>
-<ul>
-<li>alter attention structure directly</li>
-<li>create time gating</li>
-<li>impose ordering constraints</li>
-</ul>
-<p>It’s simply a feature tag.</p>
-<hr />
-<h1 id="philosophical-question-do-you-need-it">Philosophical Question: Do You Need It?<a class="headerlink" href="#philosophical-question-do-you-need-it" title="Permanent link">&para;</a></h1>
-<p>Ask yourself:</p>
-<p>Does the sequence contain qualitatively distinct blocks
-that the model cannot infer from content + visit ID?</p>
-<p>If yes → segment embeddings help.</p>
-<p>If no → redundant complexity.</p>
-<hr />
-<h1 id="for-your-current-discrete-time-survival-model">For Your Current Discrete-Time Survival Model<a class="headerlink" href="#for-your-current-discrete-time-survival-model" title="Permanent link">&para;</a></h1>
-<p>Right now:</p>
-<ul>
-<li>You flatten tokens across visits</li>
-<li>Visit IDs already encode grouping</li>
-<li>Hazard is predicted at visit level</li>
-</ul>
-<p>Segment IDs would likely be redundant.</p>
-<p>Worse: they might encourage the model to rely on a shortcut signal rather than learning temporal dynamics.</p>
-<p>My honest assessment:</p>
-<p>For your current architecture, segment IDs do not meaningfully enhance discrete-time survival modeling.</p>
-<hr />
-<h1 id="when-i-would-add-them">When I <em>Would</em> Add Them<a class="headerlink" href="#when-i-would-add-them" title="Permanent link">&para;</a></h1>
-<p>If you evolve EHR-seq into:</p>
-<ol>
-<li>Causal modeling where regime changes matter</li>
-<li>Pre/post intervention modeling</li>
-<li>Multimodal fusion</li>
-<li>Counterfactual generation tasks</li>
-<li>Contrastive sequence blocks</li>
-</ol>
-<p>Then segments become structurally meaningful.</p>
-<hr />
-<h1 id="a-deeper-insight">A Deeper Insight<a class="headerlink" href="#a-deeper-insight" title="Permanent link">&para;</a></h1>
-<p>In survival modeling, what truly matters is not segmentation.</p>
-<p>It is <strong>risk set structure</strong>.</p>
-<p>The model must implicitly learn:</p>
-<p>[
-P(T = t \mid T \ge t, \text{history})
-]</p>
-<p>Segment embeddings do not encode risk-set information.</p>
-<p>Masks and hazard construction do.</p>
-<p>That’s where the mathematical structure lives.</p>
-<hr />
-<p>If you want, we can now explore something much more interesting:</p>
-<p>Instead of segment embeddings, should BEHRT use:</p>
-<ul>
-<li>visit-level positional encoding</li>
-<li>time-delta encoding</li>
-<li>continuous time embeddings</li>
-<li>learned risk-set embeddings</li>
-</ul>
-<p>Those will affect survival modeling far more profoundly than segments ever could.</p>
-<p>And that’s where the real modeling decisions live.</p>
+<p><strong>See also:</strong>
+- <code>02_ehr_to_tokens.md</code> — flat tokenization design and why it was chosen
+- <code>03_behrt_embeddings.md</code> — embedding design in the flat model
+- <code>08_architecture_decisions.md</code> §4 — flat vs hierarchical comparison summary</p>
 
 
 
