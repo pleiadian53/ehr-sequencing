@@ -15,10 +15,6 @@
         <link rel="canonical" href="https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/">
       
       
-        <link rel="prev" href="../">
-      
-      
-        <link rel="next" href="../TUTORIAL_02_synthetic_data_design/">
       
       
         
@@ -29,7 +25,7 @@
     
     
       
-        <title>Tutorial 1: Prediction Problem - EHR Sequencing</title>
+        <title>Tutorial 1: The Survival Prediction Problem - EHR Sequencing</title>
       
     
     
@@ -122,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tutorial 1: Prediction Problem
+              Tutorial 1: The Survival Prediction Problem
             
           </span>
         </div>
@@ -266,13 +262,31 @@
   
   
   
+  
     
+    
+      <li class="md-tabs__item">
+        <a href="../../../data/" class="md-tabs__link">
+          
+  
+  
+  Data
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
   
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../survival_analysis/" class="md-tabs__link">
           
   
   
@@ -312,11 +326,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../data_generation/" class="md-tabs__link">
+        <a href="../../../implementation/resource-aware-models/" class="md-tabs__link">
           
   
   
-  Data Generation
+  Implementation
 
         </a>
       </li>
@@ -332,11 +346,51 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../pretrained_embeddings_guide/" class="md-tabs__link">
+        <a href="../../../pretrained_embeddings/" class="md-tabs__link">
           
   
   
-  Guides
+  Pretrained Embeddings
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../applications/benchmarking/" class="md-tabs__link">
+          
+  
+  
+  Applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../products/" class="md-tabs__link">
+          
+  
+  
+  Products
 
         </a>
       </li>
@@ -504,6 +558,146 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../setup/synthea_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthea Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../setup/data_generation_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Generation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../setup/synthea_csv_export_troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthea CSV Export Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../setup/runpods_training_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RunPods Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -515,38 +709,35 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Survival Analysis
+    Data
   
 
     
@@ -557,12 +748,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Survival Analysis
+    Data
   
 
           </label>
@@ -575,7 +766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../../data/" class="md-nav__link">
         
   
   
@@ -600,26 +791,17 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
+    <li class="md-nav__item">
+      <a href="../../../data/data_generation/" class="md-nav__link">
         
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
   
   
   <span class="md-ellipsis">
     
   
-    Tutorial 1: Prediction Problem
+    Data Generation
   
 
     
@@ -627,10 +809,255 @@
   
   
 
-          <span class="md-nav__icon md-icon"></span>
-        </label>
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
       
-      <a href="./" class="md-nav__link md-nav__link--active">
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exploration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Exploration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/exploration/data_shape_transformations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Shape Transformations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_synthea_data_exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notebook: Synthea Data Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../survival_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../survival_analysis/TUTORIAL_01_prediction_problem/" class="md-nav__link">
         
   
   
@@ -646,387 +1073,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#table-of-contents" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Table of Contents
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-is-survival-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What is Survival Analysis?
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What is Survival Analysis?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#key-concepts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Concepts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-use-survival-analysis-for-ehr-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why Use Survival Analysis for EHR Data?
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Why Use Survival Analysis for EHR Data?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-temporal-information-is-critical" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Temporal Information is Critical
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-censoring-is-inevitable" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Censoring is Inevitable
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-risk-stratification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Risk Stratification
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-clinical-relevance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Clinical Relevance
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-prediction-problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Prediction Problem
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The Prediction Problem">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#problem-formulation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem Formulation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mathematical-framework" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mathematical Framework
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-diabetes-prediction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Diabetes Prediction
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#discrete-time-vs-continuous-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Discrete-Time vs. Continuous-Time
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Discrete-Time vs. Continuous-Time">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#continuous-time-survival" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Continuous-Time Survival
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#discrete-time-survival" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Discrete-Time Survival
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-discrete-time-for-ehr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why Discrete-Time for EHR?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#evaluation-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Evaluation Metrics
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Evaluation Metrics">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-concordance-index-c-index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Concordance Index (C-index)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-calibration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Calibration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-time-dependent-auc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Time-Dependent AUC
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#putting-it-all-together" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Putting It All Together
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Putting It All Together">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-complete-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Complete Workflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-heart-failure-prediction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Heart Failure Prediction
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-takeaways" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Takeaways
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#further-reading" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Further Reading
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Further Reading">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#textbooks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Textbooks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#papers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Papers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#software" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Software
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1039,7 +1085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
+      <a href="../../../survival_analysis/TUTORIAL_02_synthetic_data_design/" class="md-nav__link">
         
   
   
@@ -1067,7 +1113,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../TUTORIAL_03_loss_function/" class="md-nav__link">
+      <a href="../../../survival_analysis/TUTORIAL_02a_refining_comorbidity_proxies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 2a: Refining Comorbidity Proxies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../survival_analysis/TUTORIAL_03_loss_function/" class="md-nav__link">
         
   
   
@@ -1145,10 +1219,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1166,8 +1240,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1227,10 +1301,610 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
         
           
-          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discrete-Time Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discrete-Time Survival Analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/00_behrt_model_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BEHRT Model Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/00a_visit_embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visit Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/00b_ehr_tokens_tensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EHR Tokens and Tensors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/01_survival_framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/02_ehr_to_tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EHR to Tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/03_behrt_embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BEHRT Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/04_pretraining_objectives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretraining Objectives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/05_survival_head_and_aggregation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Head and Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/06_loss_functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loss Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/07_optimization_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimization Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/08_architecture_decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/discrete_time_survival_analysis/09_hierarchical_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hierarchical Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Representation Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Representation Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/representation_learning/modern-code-embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modern Code Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/representation_learning/segment_id_use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Segment ID Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/representation_learning/variable-length-sequences/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variable-Length Sequences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methods/representation_learning/within-visit-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within-Visit Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
             
   
   
@@ -1248,8 +1922,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1266,7 +1940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../methods/causal-survival-analysis-1.md" class="md-nav__link">
+      <a href="../../../methods/causal_survival_analysis/causal-survival-analysis-1/" class="md-nav__link">
         
   
   
@@ -1294,7 +1968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../methods/causal-survival-analysis-2.md" class="md-nav__link">
+      <a href="../../../methods/causal_survival_analysis/causal-survival-analysis-2/" class="md-nav__link">
         
   
   
@@ -1330,103 +2004,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../methods/modern-code-embeddings.md" class="md-nav__link">
+      <a href="../../../methods/lstm_variable_length/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Modern Code Embeddings
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data Generation
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Data Generation
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../data_generation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
+    LSTM Variable-Length Analysis
   
 
     
@@ -1447,42 +2032,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../data_generation/data_generation_guide/" class="md-nav__link">
+      <a href="../../../methods/pretrained_models/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Data Generation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../data_generation/synthea_csv_export_troubleshooting/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Synthea CSV Export
+    Pretrained Models and Disease Progression
   
 
     
@@ -1535,7 +2092,7 @@
   <span class="md-ellipsis">
     
   
-    Guides
+    Implementation
   
 
     
@@ -1551,7 +2108,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Guides
+    Implementation
   
 
           </label>
@@ -1564,14 +2121,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../pretrained_embeddings_guide/" class="md-nav__link">
+      <a href="../../../implementation/resource-aware-models/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pretrained Embeddings
+    Resource-Aware Models
   
 
     
@@ -1592,14 +2149,337 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../runpods_training_guide/" class="md-nav__link">
+      <a href="../../../implementation/visit-grouped-sequences/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RunPods Training
+    Visit-Grouped Sequences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretrained Embeddings
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pretrained Embeddings
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pretrained_embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pretrained_embeddings/guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Applications
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Applications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../applications/benchmarking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../applications/survival_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Survival Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Products
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Products
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../products/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
   
 
     
