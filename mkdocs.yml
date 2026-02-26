@@ -126,25 +126,62 @@ nav:
   - Home: index.md
   - 'Getting Started':
       - 'Installation': INSTALL.md
+      - 'Setup Overview': setup/README.md
+      - 'Synthea Setup': setup/synthea_setup.md
+      - 'Data Generation Guide': setup/data_generation_guide.md
+      - 'Synthea CSV Export Troubleshooting': setup/synthea_csv_export_troubleshooting.md
+      - 'RunPods Training': setup/runpods_training_guide.md
+  - 'Data':
+      - 'Overview': data/README.md
+      - 'Data Generation': data/data_generation/README.md
+      - 'Exploration':
+          - 'Overview': data/exploration/README.md
+          - 'Data Shape Transformations': data/exploration/data_shape_transformations.md
+      - 'Notebook: Synthea Data Exploration': notebooks/01_synthea_data_exploration/README.md
   - 'Survival Analysis':
-      - 'Overview': notebooks/02_survival_analysis/README.md
-      - 'Tutorial 1: Prediction Problem': notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem.md
-      - 'Tutorial 2: Synthetic Data Design': notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design.md
-      - 'Tutorial 3: Loss Function': notebooks/02_survival_analysis/TUTORIAL_03_loss_function.md
+      - 'Overview': survival_analysis/README.md
+      - 'Tutorial 1: Prediction Problem': survival_analysis/TUTORIAL_01_prediction_problem.md
+      - 'Tutorial 2: Synthetic Data Design': survival_analysis/TUTORIAL_02_synthetic_data_design.md
+      - 'Tutorial 2a: Refining Comorbidity Proxies': survival_analysis/TUTORIAL_02a_refining_comorbidity_proxies.md
+      - 'Tutorial 3: Loss Function': survival_analysis/TUTORIAL_03_loss_function.md
       - 'Notebook: Discrete-Time Survival LSTM': notebooks/02_survival_analysis/01_discrete_time_survival_lstm.ipynb
   - 'Methods':
       - 'Overview': methods/README.md
+      - 'Discrete-Time Survival Analysis':
+          - 'Overview': methods/discrete_time_survival_analysis/README.md
+          - 'BEHRT Model Overview': methods/discrete_time_survival_analysis/00_behrt_model_overview.md
+          - 'Visit Embeddings': methods/discrete_time_survival_analysis/00a_visit_embeddings.md
+          - 'EHR Tokens and Tensors': methods/discrete_time_survival_analysis/00b_ehr_tokens_tensors.md
+          - 'Survival Framework': methods/discrete_time_survival_analysis/01_survival_framework.md
+          - 'EHR to Tokens': methods/discrete_time_survival_analysis/02_ehr_to_tokens.md
+          - 'BEHRT Embeddings': methods/discrete_time_survival_analysis/03_behrt_embeddings.md
+          - 'Pretraining Objectives': methods/discrete_time_survival_analysis/04_pretraining_objectives.md
+          - 'Survival Head and Aggregation': methods/discrete_time_survival_analysis/05_survival_head_and_aggregation.md
+          - 'Loss Functions': methods/discrete_time_survival_analysis/06_loss_functions.md
+          - 'Optimization Strategies': methods/discrete_time_survival_analysis/07_optimization_strategies.md
+          - 'Architecture Decisions': methods/discrete_time_survival_analysis/08_architecture_decisions.md
+          - 'Hierarchical Architecture': methods/discrete_time_survival_analysis/09_hierarchical_architecture.md
+      - 'Representation Learning':
+          - 'Modern Code Embeddings': methods/representation_learning/modern-code-embeddings.md
+          - 'Segment ID Use Cases': methods/representation_learning/segment_id_use_cases.md
+          - 'Variable-Length Sequences': methods/representation_learning/variable-length-sequences.md
+          - 'Within-Visit Structure': methods/representation_learning/within-visit-structure.md
       - 'Causal Survival Analysis':
-          - 'Part 1': methods/causal-survival-analysis-1.md
-          - 'Part 2': methods/causal-survival-analysis-2.md
-      - 'Modern Code Embeddings': methods/modern-code-embeddings.md
-  - 'Data Generation':
-      - 'Overview': data_generation/README.md
-      - 'Data Generation Guide': data_generation/data_generation_guide.md
-      - 'Synthea CSV Export': data_generation/synthea_csv_export_troubleshooting.md
-  - 'Guides':
-      - 'Pretrained Embeddings': pretrained_embeddings_guide.md
-      - 'RunPods Training': runpods_training_guide.md
+          - 'Part 1': methods/causal_survival_analysis/causal-survival-analysis-1.md
+          - 'Part 2': methods/causal_survival_analysis/causal-survival-analysis-2.md
+      - 'LSTM Variable-Length Analysis': methods/lstm_variable_length.md
+      - 'Pretrained Models and Disease Progression': methods/pretrained_models.md
+  - 'Implementation':
+      - 'Resource-Aware Models': implementation/resource-aware-models.md
+      - 'Visit-Grouped Sequences': implementation/visit-grouped-sequences.md
+  - 'Pretrained Embeddings':
+      - 'Overview': pretrained_embeddings/README.md
+      - 'Guide': pretrained_embeddings/guide.md
+  - 'Applications':
+      - 'Benchmarking': applications/benchmarking.md
+      - 'Survival Analysis': applications/survival_analysis.md
+  - 'Products':
+      - 'Overview': products/README.md
 
 # Extra configuration
 extra:

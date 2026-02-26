@@ -6,7 +6,7 @@ This directory contains guides for obtaining and using datasets with the EHR seq
 
 ### Synthea Synthetic Data
 
-- **[SYNTHEA_SETUP.md](SYNTHEA_SETUP.md)** - Complete guide for generating synthetic patient data
+- **[Synthea Setup](../setup/synthea_setup.md)** - Complete guide for generating synthetic patient data
   - Installation instructions
   - Data generation commands
   - Configuration options
