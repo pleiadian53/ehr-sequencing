@@ -11,6 +11,7 @@ Functions:
 """
 
 from typing import List, Tuple, Optional, Dict, Any
+import warnings
 import numpy as np
 import torch
 from dataclasses import dataclass
@@ -71,6 +72,14 @@ def generate_survival_patient_sequences(
             ``visits``: list of ``{'codes': [...], 'age': float, 'time': float}``
             ``outcome``: ``{'event_time': int, 'event_indicator': int}``
 
+    .. deprecated:: 0.3
+        Use :func:`ehrsequencing.synthetic.generate_hazard_process_sequences`
+        (v2) instead. The v1 outcome layer uses a deterministic
+        ``risk = ratio_of_high_risk_codes`` mapping and informative censoring,
+        which does not exercise temporal modelling and overstates model
+        performance. See
+        ``dev/planning/discrete_time_survival_analysis/synthetic_generator_v2.md``.
+
     Example:
         >>> from ehrsequencing.synthetic.survival import generate_survival_patient_sequences
         >>> sequences = generate_survival_patient_sequences(num_patients=500, seed=42)
@@ -79,6 +88,15 @@ def generate_survival_patient_sequences(
         >>> sequences[0]['outcome']
         {'event_time': 3, 'event_indicator': 1}
     """
+    warnings.warn(
+        "generate_survival_patient_sequences (v1) is deprecated; use "
+        "ehrsequencing.synthetic.generate_hazard_process_sequences (v2). "
+        "v1 uses a deterministic code-ratio outcome with informative "
+        "censoring and is being retained only for reproducibility of "
+        "pre-2026-05 benchmarks.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     from .realistic_synthetic import generate_realistic_dataset
 
     max_seq_length = max_visits * max_codes_per_visit

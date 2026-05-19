@@ -51,7 +51,12 @@ from ehrsequencing.data.hierarchical_survival_dataset import (
     collate_hierarchical_survival,
     prepare_hierarchical_survival_data,
 )
-from ehrsequencing.synthetic.survival import generate_survival_patient_sequences
+from ehrsequencing.synthetic import (
+    DATA_PRESETS,
+    HazardProcessConfig,
+    generate_hazard_process_sequences,
+    generate_survival_patient_sequences,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -62,6 +67,15 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train HierarchicalBEHRTForSurvival')
 
     # Data
+    parser.add_argument('--data-generator', type=str, default='v2',
+                        choices=['v1', 'v2'],
+                        help='v1: deprecated code-ratio outcome. '
+                             'v2: hazard-process with per-disease stage traces (default).')
+    parser.add_argument('--data-scale', type=str, default=None,
+                        choices=list(DATA_PRESETS.keys()),
+                        help='Preset data scale (smoke|local|pod). When set, '
+                             'overrides --num-patients / --max-visits / '
+                             '--max-codes-per-visit / --vocab-size.')
     parser.add_argument('--num-patients', type=int, default=5000,
                         help='Number of synthetic patients')
     parser.add_argument('--vocab-size', type=int, default=1000,
@@ -104,7 +118,16 @@ def parse_args():
     parser.add_argument('--seed', type=int, default=42,
                         help='Random seed')
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if args.data_scale is not None:
+        preset = DATA_PRESETS[args.data_scale]
+        args.num_patients        = preset['num_patients']
+        args.max_visits          = preset['max_visits']
+        args.max_codes_per_visit = preset['max_codes_per_visit']
+        args.vocab_size          = preset['vocab_size']
+
+    return args
 
 
 # ---------------------------------------------------------------------------
@@ -124,13 +147,22 @@ def generate_synthetic_data(args) -> list:
     print("Generating synthetic data...")
     print(f"{'='*80}")
 
-    patient_sequences = generate_survival_patient_sequences(
-        num_patients=args.num_patients,
-        vocab_size=args.vocab_size,
-        max_visits=args.max_visits,
-        max_codes_per_visit=args.max_codes_per_visit,
-        seed=args.seed,
-    )
+    if args.data_generator == 'v2':
+        patient_sequences = generate_hazard_process_sequences(
+            num_patients=args.num_patients,
+            vocab_size=args.vocab_size,
+            max_visits=args.max_visits,
+            max_codes_per_visit=args.max_codes_per_visit,
+            config=HazardProcessConfig(seed=args.seed),
+        )
+    else:
+        patient_sequences = generate_survival_patient_sequences(
+            num_patients=args.num_patients,
+            vocab_size=args.vocab_size,
+            max_visits=args.max_visits,
+            max_codes_per_visit=args.max_codes_per_visit,
+            seed=args.seed,
+        )
 
     print(f"Generated {len(patient_sequences)} patients")
     print(f"Average visits: {np.mean([len(s['visits']) for s in patient_sequences]):.1f}")

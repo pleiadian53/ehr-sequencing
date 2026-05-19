@@ -29,13 +29,24 @@ from .survival import (
     CompetingRisksGenerator,
     generate_survival_patient_sequences,
 )
+from .survival_v2 import (
+    HazardProcessConfig,
+    DATA_PRESETS,
+    STAGE_THRESHOLDS,
+    generate_hazard_process_sequences,
+)
 from .realistic_synthetic import generate_realistic_dataset, print_dataset_statistics
 from .domain_shift import generate_domain_shifted_datasets, list_scenarios, DOMAIN_SCENARIOS
 from .demo_synthetic import generate_demo_dataset, print_demo_dataset_statistics
 from .random_synthetic import generate_random_dataset
 
 __all__ = [
-    # Survival analysis
+    # Survival analysis — v2 (hazard process, per-disease state traces)
+    'HazardProcessConfig',
+    'DATA_PRESETS',
+    'STAGE_THRESHOLDS',
+    'generate_hazard_process_sequences',
+    # Survival analysis — v1 (legacy; generate_survival_patient_sequences is deprecated)
     'DiscreteTimeSurvivalGenerator',
     'ContinuousTimeSurvivalGenerator',
     'CompetingRisksGenerator',

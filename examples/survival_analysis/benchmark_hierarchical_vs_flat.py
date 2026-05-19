@@ -39,7 +39,12 @@ from ehrsequencing.data.behrt_survival_dataset import (
     BEHRTSurvivalDataset,
     collate_behrt_survival,
 )
-from ehrsequencing.synthetic.survival import generate_survival_patient_sequences
+from ehrsequencing.synthetic import (
+    DATA_PRESETS,
+    HazardProcessConfig,
+    generate_hazard_process_sequences,
+    generate_survival_patient_sequences,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -306,6 +311,15 @@ def eval_nll(model, loader, device, mode: str) -> float:
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Benchmark hierarchical vs flat BEHRT')
+    parser.add_argument('--data-generator', type=str, default='v2',
+                        choices=['v1', 'v2'],
+                        help='v1: deprecated code-ratio outcome. '
+                             'v2: hazard-process with per-disease stage traces (default).')
+    parser.add_argument('--data-scale', type=str, default=None,
+                        choices=list(DATA_PRESETS.keys()),
+                        help='Preset data scale (smoke|local|pod). '
+                             'When set, overrides --num-patients / --max-visits / '
+                             '--max-codes-per-visit / --vocab-size.')
     parser.add_argument('--num-patients', type=int, default=2000)
     parser.add_argument('--vocab-size', type=int, default=1000)
     parser.add_argument('--max-visits', type=int, default=50)
@@ -319,7 +333,17 @@ def parse_args():
     parser.add_argument('--patience', type=int, default=15)
     parser.add_argument('--output-dir', type=str, default='experiments/benchmark')
     parser.add_argument('--seed', type=int, default=42)
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    # Apply data-scale preset if set
+    if args.data_scale is not None:
+        preset = DATA_PRESETS[args.data_scale]
+        args.num_patients        = preset['num_patients']
+        args.max_visits          = preset['max_visits']
+        args.max_codes_per_visit = preset['max_codes_per_visit']
+        args.vocab_size          = preset['vocab_size']
+
+    return args
 
 
 def main():
@@ -331,16 +355,27 @@ def main():
         device = torch.device('mps')
     else:
         device = torch.device('cpu')
-    print(f"Device: {device}  |  model_size={args.model_size}  |  patients={args.num_patients}")
+    print(f"Device: {device}  |  model_size={args.model_size}  |  patients={args.num_patients}  "
+          f"|  data-generator={args.data_generator}"
+          + (f"  |  scale={args.data_scale}" if args.data_scale else ""))
 
     print("\nGenerating data...")
-    sequences = generate_survival_patient_sequences(
-        num_patients=args.num_patients,
-        vocab_size=args.vocab_size,
-        max_visits=args.max_visits,
-        max_codes_per_visit=args.max_codes_per_visit,
-        seed=args.seed,
-    )
+    if args.data_generator == 'v2':
+        sequences = generate_hazard_process_sequences(
+            num_patients=args.num_patients,
+            vocab_size=args.vocab_size,
+            max_visits=args.max_visits,
+            max_codes_per_visit=args.max_codes_per_visit,
+            config=HazardProcessConfig(seed=args.seed),
+        )
+    else:
+        sequences = generate_survival_patient_sequences(
+            num_patients=args.num_patients,
+            vocab_size=args.vocab_size,
+            max_visits=args.max_visits,
+            max_codes_per_visit=args.max_codes_per_visit,
+            seed=args.seed,
+        )
     train_seqs, val_seqs, test_seqs = split_sequences(sequences, seed=args.seed)
     print(f"Split: train={len(train_seqs)}, val={len(val_seqs)}, test={len(test_seqs)}")
 
