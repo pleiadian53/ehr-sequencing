@@ -2,242 +2,242 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/INSTALL/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/applications/benchmarking/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/applications/survival_analysis/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/data/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/data/data_generation/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/data/exploration/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/data/exploration/data_shape_transformations/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/implementation/resource-aware-models/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/implementation/visit-grouped-sequences/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/lstm_variable_length/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/pretrained_models/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/causal_survival_analysis/causal-survival-analysis-1/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/causal_survival_analysis/causal-survival-analysis-2/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/00_behrt_model_overview/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/00a_visit_embeddings/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/00b_ehr_tokens_tensors/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/01_survival_framework/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/02_ehr_to_tokens/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/03_behrt_embeddings/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/04_pretraining_objectives/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/05_survival_head_and_aggregation/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/06_loss_functions/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/07_optimization_strategies/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/08_architecture_decisions/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/discrete_time_survival_analysis/09_hierarchical_architecture/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/representation_learning/modern-code-embeddings/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/representation_learning/segment_id_use_cases/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/representation_learning/variable-length-sequences/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/methods/representation_learning/within-visit-structure/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/DATA_SETUP/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/01_synthea_data_exploration/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/01_synthea_data_exploration/01_synthea_data_exploration/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/01_synthea_data_exploration/01a_lstm_data_preparation/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/01_synthea_data_exploration/data_shape_transformations/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/01_discrete_time_survival_lstm/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_01_prediction_problem/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_02_synthetic_data_design/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_02a_refining_comorbidity_proxies/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/TUTORIAL_03_loss_function/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/test_synthetic_outcomes/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/notebooks/02_survival_analysis/validate_survival_model/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/pretrained_embeddings/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/pretrained_embeddings/guide/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/products/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/setup/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/setup/data_generation_guide/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/setup/runpods_training_guide/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/setup/synthea_csv_export_troubleshooting/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/setup/synthea_setup/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/survival_analysis/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/survival_analysis/TUTORIAL_01_prediction_problem/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/survival_analysis/TUTORIAL_02_synthetic_data_design/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/survival_analysis/TUTORIAL_02a_refining_comorbidity_proxies/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/survival_analysis/TUTORIAL_03_loss_function/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://pleiadian53.github.io/ehr-sequencing/testing/pretrain_finetune/TESTING_ROADMAP/</loc>
-         <lastmod>2026-02-26</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
 </urlset>
