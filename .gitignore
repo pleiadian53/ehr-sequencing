@@ -92,8 +92,8 @@ experiments/**/lora_weights_epoch_*.pt
 !experiments/*/*.txt
 !experiments/*/checkpoints/best_lora_weights.pt
 
-# Legacy code (preserved but not actively developed)
-# legacy/  # Uncomment if you want to ignore legacy
+# Legacy code (preserved locally, never shared publicly)
+legacy/
 
 # Data files
 *.csv
